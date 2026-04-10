@@ -692,7 +692,10 @@ function renderClients(){
       </div>
       <div class="card-footer">
         <div class="card-date">Updated ${dateStr}</div>
-        <button class="card-open" onclick="openClient('${c.id}')">Open &rarr;</button>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <button class="card-open" style="color:var(--crimson);font-size:10px;" onclick="event.stopPropagation();deleteClient('${c.id}')">Delete</button>
+          <button class="card-open" onclick="openClient('${c.id}')">Open &rarr;</button>
+        </div>
       </div>`;
 
     grid.appendChild(card);
@@ -735,6 +738,22 @@ function updateActiveClientBadge(){
 }
 
 // ── OPEN CLIENT ───────────────────────────────────────────────────────────────
+function deleteClient(id){
+  const clients = getClients();
+  const client = clients.find(c => c.id === id);
+  if(!client) return;
+  if(!confirm(`Delete "${client.orgName}"? This cannot be undone.`)) return;
+  const updated = clients.filter(c => c.id !== id);
+  saveClients(updated);
+  if(getActiveClientId() === id){
+    localStorage.removeItem('plinth_active_client');
+    localStorage.removeItem('plinth_op');
+  }
+  renderClients();
+  updateStats();
+  updateActiveClientBadge();
+}
+
 function openClient(id){
   const clients = getClients();
   const client = clients.find(c => c.id === id);
