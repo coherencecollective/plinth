@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Plinth · Job Architecture & Library</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js"></script>
+<style>
+:root{
+  --green:#1b4436;--green-light:#235a47;--green-deep:#122e24;
+  --mauve:#916179;--sand:#D2BB9F;--gold:#D99E32;--pale:#cccf8e;
+  --crimson:#A42F30;--beige:#F5EDE4;--white:#fff;--off-white:#faf8f5;
+  --text-dark:#1a1a1a;--text-mid:#444;--text-light:#777;--border:#e0d8cf;
+  --shadow:0 2px 16px rgba(27,68,54,0.08);--shadow-md:0 6px 28px rgba(27,68,54,0.13);
+  --radius:4px;--radius-md:8px;--radius-lg:12px;
+
+  /* Track colors */
+  --track-ic:#1b4436;
+  --track-lead:#916179;
+  --track-mgr:#D99E32;
+  --track-mom:#A42F30;
+  --track-exec:#122e24;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Jost',sans-serif;font-weight:300;font-size:14px;color:var(--text-dark);background:var(--off-white);min-height:100vh;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:var(--green);padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,0.2);}
+.nav-left{display:flex;align-items:center;gap:14px;}
+.back-btn{display:inline-flex;align-items:center;gap:5px;font-family:'Jost',sans-serif;font-size:11px;font-weight:300;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.5);padding:5px 10px;border:1px solid rgba(245,237,228,0.15);border-radius:var(--radius);transition:all 0.2s;background:none;cursor:pointer;}
+.back-btn:hover{color:var(--beige);border-color:rgba(245,237,228,0.35);}
+.nav-sep{width:1px;height:18px;background:rgba(255,255,255,0.15);}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:17px;color:var(--beige);}
+.nav-brand span{color:var(--gold);}
+.nav-sub{font-size:12px;font-weight:300;color:rgba(245,237,228,0.45);}
+.nav-right{display:flex;gap:7px;align-items:center;}
+.nbtn{font-family:'Jost',sans-serif;font-weight:300;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:5px 13px;border-radius:var(--radius);cursor:pointer;border:none;transition:all 0.2s;white-space:nowrap;}
+.nbtn-ghost{background:transparent;color:var(--sand);border:1px solid rgba(210,187,159,0.3);}
+.nbtn-ghost:hover{background:rgba(210,187,159,0.1);color:var(--beige);}
+.nbtn-gold{background:var(--gold);color:var(--green-deep);font-weight:400;}
+.nbtn-gold:hover{background:#e8aa38;}
+.save-flash{font-size:11px;color:var(--pale);margin-right:4px;opacity:0;transition:opacity 0.3s;}
+.save-flash.on{opacity:1;}
+
+/* TABS */
+.tabs{background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;display:flex;overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{font-size:11px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:13px 18px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.2s;display:flex;align-items:center;gap:6px;}
+.tab:hover{color:var(--green);}
+.tab.active{color:var(--green);border-bottom-color:var(--green);}
+.tab-ct{background:var(--green);color:var(--white);border-radius:10px;padding:1px 6px;font-size:9px;}
+
+/* HERO */
+.hero{background:linear-gradient(150deg,var(--green-deep) 0%,var(--green) 55%,var(--green-light) 100%);padding:44px 28px 38px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-60px;right:-40px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(204,207,142,0.07) 0%,transparent 70%);pointer-events:none;}
+.hero-inner{max-width:1060px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+.hero-eye{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--pale);margin-bottom:10px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:36px;color:var(--white);line-height:1.05;margin-bottom:8px;}
+.hero-title em{font-style:italic;color:var(--sand);}
+.hero-desc{font-size:12.5px;font-weight:300;color:rgba(245,237,228,0.65);max-width:500px;line-height:1.75;}
+.hero-meta{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-md);padding:14px 20px;text-align:right;flex-shrink:0;}
+.hero-meta-lbl{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,237,228,0.4);margin-bottom:4px;}
+.hero-meta-val{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--white);}
+.hero-meta-sub{font-size:11px;color:rgba(245,237,228,0.5);margin-top:2px;}
+
+/* MAIN LAYOUT */
+.main{max-width:1060px;margin:0 auto;padding:32px 28px 80px;display:grid;grid-template-columns:1fr 280px;gap:24px;align-items:start;}
+.main.wide{grid-template-columns:1fr;}
+
+/* CARDS */
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;opacity:0;transform:translateY(10px);transition:opacity 0.35s,transform 0.35s;}
+.card.vis{opacity:1;transform:translateY(0);}
+.card-hdr{padding:16px 22px 13px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.05));}
+.card-title{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:16px;color:var(--green);}
+.card-desc{font-size:11px;color:var(--text-light);margin-top:2px;line-height:1.5;}
+.card-body{padding:20px 22px;}
+
+/* FORM */
+.fg{display:grid;gap:14px;}
+.g2{grid-template-columns:1fr 1fr;}
+.g3{grid-template-columns:1fr 1fr 1fr;}
+.c2{grid-column:span 2;}
+.c3{grid-column:span 3;}
+.f label{display:block;font-size:11px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-mid);margin-bottom:5px;}
+.f label .req{color:var(--crimson);margin-left:2px;}
+.f label .tip{color:var(--text-light);font-size:9.5px;letter-spacing:0.03em;margin-left:5px;text-transform:none;font-style:italic;}
+input[type="text"],input[type="number"],select,textarea{width:100%;font-family:'Jost',sans-serif;font-weight:300;font-size:13px;color:var(--text-dark);background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:8px 11px;outline:none;transition:border-color 0.2s;appearance:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(27,68,54,0.07);}
+textarea{resize:vertical;min-height:80px;line-height:1.7;}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23777' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer;}
+.fhint{font-size:10.5px;color:var(--text-light);margin-top:4px;line-height:1.5;}
+
+/* TRACK LEGEND */
+.track-legend{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.track-pill{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:400;letter-spacing:0.04em;border:1px solid transparent;}
+.tp-ic{background:rgba(27,68,54,0.08);color:var(--green);border-color:rgba(27,68,54,0.15);}
+.tp-lead{background:rgba(145,97,121,0.08);color:var(--mauve);border-color:rgba(145,97,121,0.2);}
+.tp-mgr{background:rgba(217,158,50,0.1);color:#8a6010;border-color:rgba(217,158,50,0.25);}
+.tp-mom{background:rgba(164,47,48,0.07);color:var(--crimson);border-color:rgba(164,47,48,0.18);}
+.tp-exec{background:rgba(18,46,36,0.08);color:var(--green-deep);border-color:rgba(18,46,36,0.2);}
+.track-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.td-ic{background:var(--track-ic);}
+.td-lead{background:var(--track-lead);}
+.td-mgr{background:var(--track-mgr);}
+.td-mom{background:var(--track-mom);}
+.td-exec{background:var(--track-exec);}
+
+/* LEVEL NAMING CONVENTION PICKER */
+.convention-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px;}
+.convention-card{border:2px solid var(--border);border-radius:var(--radius-md);padding:14px 16px;cursor:pointer;transition:all 0.2s;}
+.convention-card:hover{border-color:var(--sand);}
+.convention-card.selected{border-color:var(--green);background:rgba(27,68,54,0.04);}
+.convention-name{font-size:12px;font-weight:400;color:var(--green);margin-bottom:6px;letter-spacing:0.04em;}
+.convention-levels{font-size:10.5px;color:var(--text-light);line-height:1.7;}
+
+/* ROLE CARDS IN LIBRARY */
+.role-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;}
+.role-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow);transition:all 0.2s;cursor:pointer;}
+.role-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--sand);}
+.role-card-accent{height:3px;}
+.rc-ic{background:linear-gradient(90deg,var(--track-ic),var(--pale));}
+.rc-lead{background:linear-gradient(90deg,var(--track-lead),var(--sand));}
+.rc-mgr{background:linear-gradient(90deg,var(--track-mgr),var(--pale));}
+.rc-mom{background:linear-gradient(90deg,var(--track-mom),var(--mauve));}
+.rc-exec{background:linear-gradient(90deg,var(--track-exec),var(--green-light));}
+.role-card-body{padding:14px 16px;}
+.role-title{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--text-dark);margin-bottom:3px;line-height:1.3;}
+.role-family{font-size:10.5px;color:var(--text-light);margin-bottom:8px;}
+.role-tags{display:flex;gap:5px;flex-wrap:wrap;}
+.role-tag{font-size:10px;padding:2px 8px;border-radius:10px;letter-spacing:0.04em;}
+.rt-track-ic{background:rgba(27,68,54,0.07);color:var(--green);}
+.rt-track-lead{background:rgba(145,97,121,0.08);color:var(--mauve);}
+.rt-track-mgr{background:rgba(217,158,50,0.1);color:#8a6010;}
+.rt-track-mom{background:rgba(164,47,48,0.07);color:var(--crimson);}
+.rt-track-exec{background:rgba(18,46,36,0.08);color:var(--green-deep);}
+.rt-flsa-exempt{background:rgba(204,207,142,0.2);color:#5a6020;}
+.rt-flsa-nonexempt{background:rgba(210,187,159,0.2);color:#6a5020;}
+.rt-flsa-review{background:rgba(164,47,48,0.07);color:var(--crimson);}
+.role-card-footer{padding:8px 16px;border-top:1px solid rgba(224,216,207,0.5);display:flex;align-items:center;justify-content:space-between;background:rgba(27,68,54,0.015);}
+.role-card-actions{display:flex;gap:8px;}
+.rca-btn{font-size:10px;color:var(--green);background:none;border:none;cursor:pointer;font-family:'Jost',sans-serif;letter-spacing:0.06em;padding:0;transition:color 0.15s;}
+.rca-btn:hover{color:var(--gold);}
+.rca-btn.del{color:var(--text-light);}
+.rca-btn.del:hover{color:var(--crimson);}
+
+/* ADD ROLE CARD */
+.add-role-card{background:var(--white);border:2px dashed var(--border);border-radius:var(--radius-md);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:28px 16px;cursor:pointer;min-height:140px;transition:all 0.2s;color:var(--text-light);}
+.add-role-card:hover{border-color:var(--sand);color:var(--green);}
+
+/* ROLE DETAIL MODAL */
+.modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(18,46,36,0.65);backdrop-filter:blur(4px);display:flex;align-items:flex-start;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity 0.2s;overflow-y:auto;}
+.modal-overlay.open{opacity:1;pointer-events:auto;}
+.modal{background:var(--white);border-radius:var(--radius-lg);padding:0;max-width:720px;width:100%;box-shadow:0 16px 64px rgba(0,0,0,0.25);transform:translateY(16px);transition:transform 0.25s ease;margin:auto;}
+.modal-overlay.open .modal{transform:translateY(0);}
+.modal-hdr{background:linear-gradient(135deg,var(--green-deep),var(--green));padding:22px 28px;border-radius:var(--radius-lg) var(--radius-lg) 0 0;display:flex;align-items:flex-start;justify-content:space-between;}
+.modal-hdr-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--white);margin-bottom:2px;}
+.modal-hdr-sub{font-size:11px;color:rgba(245,237,228,0.55);}
+.modal-close{background:none;border:none;color:rgba(245,237,228,0.5);font-size:20px;cursor:pointer;padding:0;line-height:1;transition:color 0.15s;}
+.modal-close:hover{color:var(--beige);}
+.modal-body{padding:24px 28px;max-height:70vh;overflow-y:auto;}
+.modal-section{margin-bottom:20px;}
+.modal-section-title{font-size:11px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.modal-footer{padding:16px 28px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;background:rgba(27,68,54,0.02);}
+.mbtn{padding:9px 18px;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:12px;font-weight:300;letter-spacing:0.06em;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--text-mid);transition:all 0.2s;}
+.mbtn:hover{background:rgba(27,68,54,0.04);}
+.mbtn-p{background:linear-gradient(135deg,var(--green),var(--green-light));color:var(--white);border-color:transparent;}
+.mbtn-p:hover{background:linear-gradient(135deg,var(--green-light),var(--green));color:var(--white);}
+.mbtn-mauve{background:linear-gradient(135deg,var(--mauve),#7a4f68);color:var(--white);border-color:transparent;}
+
+/* FLSA PANEL */
+.flsa-result{border-radius:var(--radius-md);padding:14px 16px;margin-top:10px;}
+.flsa-exempt{background:rgba(204,207,142,0.15);border:1px solid rgba(204,207,142,0.4);}
+.flsa-nonexempt{background:rgba(210,187,159,0.12);border:1px solid rgba(210,187,159,0.35);}
+.flsa-review{background:rgba(164,47,48,0.06);border:1px solid rgba(164,47,48,0.2);}
+.flsa-label{font-size:11px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:5px;}
+.flsa-label.exempt{color:#5a6020;}
+.flsa-label.nonexempt{color:#6a5020;}
+.flsa-label.review{color:var(--crimson);}
+.flsa-reasoning{font-size:12px;color:var(--text-mid);line-height:1.6;}
+
+/* ALERTS */
+.al{border-radius:var(--radius);padding:9px 12px;font-size:12px;line-height:1.6;margin-bottom:10px;display:flex;gap:8px;align-items:flex-start;}
+.al-ic{font-size:13px;flex-shrink:0;margin-top:1px;}
+.al-c{background:rgba(145,97,121,0.07);border-left:3px solid var(--mauve);color:var(--text-mid);}
+.al-w{background:rgba(217,158,50,0.07);border-left:3px solid var(--gold);color:var(--text-mid);}
+.al-i{background:rgba(27,68,54,0.05);border-left:3px solid var(--pale);color:var(--text-mid);}
+
+/* DIVIDER */
+.div{height:1px;background:var(--border);margin:16px 0;}
+.div-lbl{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);margin:-14px 0 12px;display:flex;align-items:center;gap:8px;}
+.div-lbl::before,.div-lbl::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* SIDEBAR */
+.sidebar{position:sticky;top:76px;}
+.sb-panel{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow);margin-bottom:14px;}
+.sbph{background:linear-gradient(135deg,var(--green-deep),var(--green));padding:13px 16px;}
+.sbpt{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:15px;color:var(--white);margin-bottom:2px;}
+.sbps{font-size:10.5px;color:rgba(245,237,228,0.55);}
+.sbpb{padding:14px 16px;}
+.stat-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(224,216,207,0.4);font-size:12px;}
+.stat-row:last-child{border-bottom:none;}
+.stat-lbl{color:var(--text-light);}
+.stat-val{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--green);}
+
+/* EXPORT SECTION */
+.export-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;}
+.exp-btn{padding:8px 16px;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;font-weight:300;letter-spacing:0.06em;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--text-mid);transition:all 0.2s;display:flex;align-items:center;gap:5px;}
+.exp-btn:hover{background:rgba(27,68,54,0.04);border-color:var(--sand);color:var(--green);}
+.exp-btn-p{background:linear-gradient(135deg,var(--green),var(--green-light));color:var(--white);border-color:transparent;}
+.exp-btn-p:hover{background:linear-gradient(135deg,var(--green-light),var(--green));color:var(--white);}
+.exp-btn-m{background:linear-gradient(135deg,var(--mauve),#7a4f68);color:var(--white);border-color:transparent;}
+
+/* IMPORT AREA */
+.import-area{border:2px dashed var(--border);border-radius:var(--radius-md);padding:20px;background:rgba(27,68,54,0.02);transition:all 0.2s;}
+.import-area:hover{border-color:var(--sand);}
+.import-area textarea{background:transparent;border:none;padding:0;font-size:12.5px;min-height:100px;}
+.import-area textarea:focus{box-shadow:none;border:none;}
+
+/* TOGGLE */
+.tog{position:relative;width:37px;height:20px;flex-shrink:0;}
+.tog input{opacity:0;width:0;height:0;}
+.tog-t{position:absolute;inset:0;background:var(--border);border-radius:10px;cursor:pointer;transition:background 0.2s;}
+.tog-t::after{content:'';position:absolute;left:3px;top:3px;width:14px;height:14px;border-radius:50%;background:var(--white);box-shadow:0 1px 3px rgba(0,0,0,0.2);transition:transform 0.2s;}
+.tog input:checked+.tog-t{background:var(--green);}
+.tog input:checked+.tog-t::after{transform:translateX(17px);}
+
+/* FOOTER */
+footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:center;justify-content:space-between;}
+.fb{font-family:'Cormorant Garamond',serif;font-size:13px;color:rgba(245,237,228,0.4);letter-spacing:0.05em;}
+.fb span{color:var(--sand);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.fu{animation:fadeUp 0.4s ease both;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <button class="back-btn" onclick="window.location.href='/'">&#8592; All Tools</button>
+    <div class="nav-sep"></div>
+    <div class="nav-brand">Pl<span>in</span>th</div>
+    <div class="nav-sub">&nbsp;·&nbsp; Job Architecture &amp; Library</div>
+  </div>
+  <div class="nav-right">
+    <span class="save-flash" id="saveFlash">Saved</span>
+    <button class="nbtn nbtn-ghost" onclick="saveArch()">Save</button>
+    <button class="nbtn nbtn-ghost" onclick="showTab('export')">Export</button>
+    <button class="nbtn nbtn-gold" onclick="openAddRole()">+ Add Role</button>
+  </div>
+</nav>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('framework')" id="tab-framework">Architecture Framework</div>
+  <div class="tab" onclick="showTab('library')" id="tab-library">Role Library <span class="tab-ct" id="roleCount">0</span></div>
+  <div class="tab" onclick="showTab('matrix')" id="tab-matrix">Level Matrix</div>
+  <div class="tab" onclick="showTab('import')" id="tab-import">Import Existing Roles</div>
+  <div class="tab" onclick="showTab('export')" id="tab-export">Export</div>
+</div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eye">Plinth · Tool 03</div>
+      <div class="hero-title">Job Architecture &amp; <em>Role Library</em></div>
+      <div class="hero-desc">Build the org's role structure from the ground up or import and clean up what already exists. Every role gets a track, a level, a function, and an FLSA determination before it becomes a job description.</div>
+    </div>
+    <div class="hero-meta">
+      <div class="hero-meta-lbl">Active Client</div>
+      <div class="hero-meta-val" id="heroClientName">No client loaded</div>
+      <div class="hero-meta-sub" id="heroClientMeta">Complete Tool 01 first</div>
+    </div>
+  </div>
+</div>
+
+<!-- FRAMEWORK TAB -->
+<div id="view-framework" class="main">
+<div>
+
+  <!-- IN-PAGE SECTION NAV -->
+  <div style="display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--white);border-radius:var(--radius-md) var(--radius-md) 0 0;margin-bottom:16px;overflow:hidden;box-shadow:var(--shadow)" class="fu">
+    <a href="#sec-tracks" style="font-size:11px;font-weight:400;letter-spacing:0.09em;text-transform:uppercase;color:var(--text-light);padding:11px 18px;text-decoration:none;border-bottom:2px solid transparent;transition:all 0.2s;white-space:nowrap" onmouseover="this.style.color='var(--green)'" onmouseout="this.style.color='var(--text-light)'">Career Tracks</a>
+    <a href="#sec-convention" style="font-size:11px;font-weight:400;letter-spacing:0.09em;text-transform:uppercase;color:var(--text-light);padding:11px 18px;text-decoration:none;border-bottom:2px solid transparent;transition:all 0.2s;white-space:nowrap" onmouseover="this.style.color='var(--green)'" onmouseout="this.style.color='var(--text-light)'">Level Naming</a>
+    <a href="#sec-functions" style="font-size:11px;font-weight:400;letter-spacing:0.09em;text-transform:uppercase;color:var(--text-light);padding:11px 18px;text-decoration:none;border-bottom:2px solid transparent;transition:all 0.2s;white-space:nowrap" onmouseover="this.style.color='var(--green)'" onmouseout="this.style.color='var(--text-light)'">Job Functions</a>
+  </div>
+
+  <!-- TRACK EXPLAINER -->
+  <div class="card fu" id="sec-tracks">
+    <div class="card-hdr">
+      <div class="card-title">The Five Career Tracks</div>
+      <div class="card-desc">Every role in every organization fits one of these five tracks. Classification happens here before titles or levels are assigned.</div>
+    </div>
+    <div class="card-body">
+      <div class="track-legend">
+        <div class="track-pill tp-ic"><div class="track-dot td-ic"></div>Individual Contributor</div>
+        <div class="track-pill tp-lead"><div class="track-dot td-lead"></div>Lead</div>
+        <div class="track-pill tp-mgr"><div class="track-dot td-mgr"></div>Manager</div>
+        <div class="track-pill tp-mom"><div class="track-dot td-mom"></div>Manager of Managers</div>
+        <div class="track-pill tp-exec"><div class="track-dot td-exec"></div>Executive</div>
+      </div>
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="border-bottom:2px solid var(--border)">
+            <th style="padding:8px 16px 8px 0;font-size:10px;font-weight:400;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);text-align:left;width:200px">Track</th>
+            <th style="padding:8px 0;font-size:10px;font-weight:400;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);text-align:left">Scope &amp; Authority</th>
+            <th style="padding:8px 0;font-size:10px;font-weight:400;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);text-align:left;width:140px">FLSA Default</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:14px 16px 14px 0;vertical-align:top">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="width:3px;height:36px;background:var(--track-ic);border-radius:2px;flex-shrink:0"></div>
+                <div style="font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:600;color:var(--green)">Individual Contributor</div>
+              </div>
+            </td>
+            <td style="padding:14px 16px 14px 0;font-size:12px;color:var(--text-mid);line-height:1.65;vertical-align:top">Executes independently. No direction of others' work. Can deepen expertise indefinitely without moving into management. Depth of impact grows within the function.</td>
+            <td style="padding:14px 0;font-size:11px;color:var(--text-light);vertical-align:top;line-height:1.5">Varies — salary threshold and duties test required. Often nonexempt at junior levels.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:14px 16px 14px 0;vertical-align:top">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="width:3px;height:36px;background:var(--track-lead);border-radius:2px;flex-shrink:0"></div>
+                <div style="font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:600;color:var(--mauve)">Lead</div>
+              </div>
+            </td>
+            <td style="padding:14px 16px 14px 0;font-size:12px;color:var(--text-mid);line-height:1.65;vertical-align:top">Directs work of interns, part-time staff, or peers on a project. No formal management authority — no hiring input, no performance reviews, no org chart accountability. Still primarily a doer. <em>Most commonly misclassified as Manager.</em></td>
+            <td style="padding:14px 0;font-size:11px;color:var(--text-light);vertical-align:top;line-height:1.5">Usually nonexempt unless salary threshold and administrative exemption duties are met. High misclassification risk.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:14px 16px 14px 0;vertical-align:top">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="width:3px;height:36px;background:var(--track-mgr);border-radius:2px;flex-shrink:0"></div>
+                <div style="font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:600;color:#8a6010">Manager</div>
+              </div>
+            </td>
+            <td style="padding:14px 16px 14px 0;font-size:12px;color:var(--text-mid);line-height:1.65;vertical-align:top">Formal management authority over ICs and/or Leads. Accountable for team performance. Participates in hiring decisions and performance documentation. Manages people — not other managers.</td>
+            <td style="padding:14px 0;font-size:11px;color:var(--text-light);vertical-align:top;line-height:1.5">Exempt under executive exemption if salary threshold met and duties test satisfied. Salary below $35,568 = nonexempt regardless of title.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:14px 16px 14px 0;vertical-align:top">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="width:3px;height:36px;background:var(--track-mom);border-radius:2px;flex-shrink:0"></div>
+                <div style="font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:600;color:var(--crimson)">Manager of Managers</div>
+              </div>
+            </td>
+            <td style="padding:14px 16px 14px 0;font-size:12px;color:var(--text-mid);line-height:1.65;vertical-align:top">Manages other Managers. Strategic scope, cross-functional coordination, budget authority. Rarely in day-to-day execution. Director and VP-level roles typically land here.</td>
+            <td style="padding:14px 0;font-size:11px;color:var(--text-light);vertical-align:top;line-height:1.5">Exempt under executive exemption when salary threshold met. Salary threshold failure is a critical compliance risk at this level.</td>
+          </tr>
+          <tr>
+            <td style="padding:14px 16px 14px 0;vertical-align:top">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="width:3px;height:36px;background:var(--track-exec);border-radius:2px;flex-shrink:0"></div>
+                <div style="font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:600;color:var(--green-deep)">Executive</div>
+              </div>
+            </td>
+            <td style="padding:14px 16px 14px 0;font-size:12px;color:var(--text-mid);line-height:1.65;vertical-align:top">Sets organizational direction. Accountable to board or CEO. Organization-wide scope and impact. C-suite and Executive Director roles. Compensation decisions, strategic planning, external representation.</td>
+            <td style="padding:14px 0;font-size:11px;color:var(--text-light);vertical-align:top;line-height:1.5">Exempt under executive exemption. Confirm salary threshold is met. Document management duties and hiring/firing authority.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- NAMING CONVENTION -->
+  <div class="card fu" id="sec-convention" style="animation-delay:0.07s">
+    <div class="card-hdr">
+      <div class="card-title">Level Naming Convention</div>
+      <div class="card-desc">Choose the naming system that fits this org's culture, or define custom level names. This drives how roles are titled in job descriptions and the level matrix.</div>
+    </div>
+    <div class="card-body">
+      <div class="convention-grid" id="conventionGrid">
+        <div class="convention-card selected" onclick="selectConvention('nonprofit')" id="conv-nonprofit">
+          <div class="convention-name">Nonprofit / Mission-Driven</div>
+          <div style="margin-top:10px;display:flex;flex-direction:column;gap:0">
+            <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid var(--border)">Individual Contributor</div>
+            <div style="font-size:10.5px;color:var(--text-mid);line-height:1.9">Coordinator &nbsp;|&nbsp; Associate &nbsp;|&nbsp; Specialist &nbsp;|&nbsp; Senior Specialist</div>
+            <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin:8px 0 6px;padding-bottom:5px;border-bottom:1px solid var(--border)">Lead</div>
+            <div style="font-size:10.5px;color:var(--text-mid);line-height:1.9">Lead &nbsp;|&nbsp; Senior Lead</div>
+            <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin:8px 0 6px;padding-bottom:5px;border-bottom:1px solid var(--border)">Manager</div>
+            <div style="font-size:10.5px;color:var(--text-mid);line-height:1.9">Manager &nbsp;|&nbsp; Senior Manager</div>
+            <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin:8px 0 6px;padding-bottom:5px;border-bottom:1px solid var(--border)">Manager of Managers</div>
+            <div style="font-size:10.5px;color:var(--text-mid);line-height:1.9">Director &nbsp;|&nbsp; Senior Director &nbsp;|&nbsp; VP</div>
+            <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin:8px 0 6px;padding-bottom:5px;border-bottom:1px solid var(--border)">Executive</div>
+            <div style="font-size:10.5px;color:var(--text-mid);line-height:1.9">Chief of Staff &nbsp;|&nbsp; COO &nbsp;|&nbsp; CEO &nbsp;|&nbsp; Executive Director</div>
+          </div>
+        </div>
+        <div class="convention-card" onclick="selectConvention('professional')" id="conv-professional">
+          <div class="convention-name">Professional Services</div>
+          <div style="margin-top:10px;display:flex;flex-direction:column;gap:0">
+            <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid var(--border)">Individual Contributor</div>
+            <div style="font-size:10.5px;color:var(--text-mid);line-height:1.9">Associate &nbsp;|&nbsp; Analyst &nbsp;|&nbsp; Senior Analyst</div>
+            <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin:8px 0 6px;padding-bottom:5px;border-bottom:1px solid var(--border)">Lead</div>
+            <div style="font-size:10.5px;color:var(--text-mid);line-height:1.9">Lead Analyst &nbsp;|&nbsp; Senior Lead</div>
+            <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin:8px 0 6px;padding-bottom:5px;border-bottom:1px solid var(--border)">Manager</div>
+            <div style="font-size:10.5px;color:var(--text-mid);line-height:1.9">Manager &nbsp;|&nbsp; Senior Manager</div>
+            <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin:8px 0 6px;padding-bottom:5px;border-bottom:1px solid var(--border)">Manager of Managers</div>
+            <div style="font-size:10.5px;color:var(--text-mid);line-height:1.9">Director &nbsp;|&nbsp; Principal &nbsp;|&nbsp; VP</div>
+            <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin:8px 0 6px;padding-bottom:5px;border-bottom:1px solid var(--border)">Executive</div>
+            <div style="font-size:10.5px;color:var(--text-mid);line-height:1.9">Senior VP &nbsp;|&nbsp; C-Suite &nbsp;|&nbsp; Executive Director</div>
+          </div>
+        </div>
+        <div class="convention-card" onclick="selectConvention('flat')" id="conv-flat">
+          <div class="convention-name">Flat / Growth-Stage</div>
+          <div style="margin-top:10px;display:flex;flex-direction:column;gap:0">
+            <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid var(--border)">Individual Contributor</div>
+            <div style="font-size:10.5px;color:var(--text-mid);line-height:1.9">Associate &nbsp;|&nbsp; Specialist &nbsp;|&nbsp; Senior Specialist</div>
+            <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin:8px 0 6px;padding-bottom:5px;border-bottom:1px solid var(--border)">Lead</div>
+            <div style="font-size:10.5px;color:var(--text-mid);line-height:1.9">Lead &nbsp;|&nbsp; Senior Lead</div>
+            <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin:8px 0 6px;padding-bottom:5px;border-bottom:1px solid var(--border)">Manager</div>
+            <div style="font-size:10.5px;color:var(--text-mid);line-height:1.9">Manager</div>
+            <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin:8px 0 6px;padding-bottom:5px;border-bottom:1px solid var(--border)">Manager of Managers</div>
+            <div style="font-size:10.5px;color:var(--text-mid);line-height:1.9">Director &nbsp;|&nbsp; Executive</div>
+            <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin:8px 0 6px;padding-bottom:5px;border-bottom:1px solid var(--border)">Executive</div>
+            <div style="font-size:10.5px;color:var(--text-mid);line-height:1.9">Executive &nbsp;|&nbsp; Founder</div>
+          </div>
+        </div>
+      </div>
+      <div class="div" style="margin-top:16px"></div>
+      <div class="div-lbl">Custom Level Names</div>
+      <div class="fg g2">
+        <div class="f"><label>IC Levels <span class="tip">(comma-separated, lowest to highest)</span></label><input type="text" id="customIC" placeholder="e.g., Associate, Specialist, Senior Specialist" oninput="saveArch()"></div>
+        <div class="f"><label>Lead Levels</label><input type="text" id="customLead" placeholder="e.g., Lead, Senior Lead" oninput="saveArch()"></div>
+        <div class="f"><label>Manager Levels</label><input type="text" id="customMgr" placeholder="e.g., Manager, Senior Manager" oninput="saveArch()"></div>
+        <div class="f"><label>Manager of Managers Levels</label><input type="text" id="customMoM" placeholder="e.g., Director, Senior Director, VP" oninput="saveArch()"></div>
+        <div class="f c2"><label>Executive Levels</label><input type="text" id="customExec" placeholder="e.g., Chief of Staff, COO, CEO, Executive Director" oninput="saveArch()"></div>
+      </div>
+      <div class="al al-i" style="margin-top:12px">
+        <span class="al-ic">ℹ</span>
+        <span>Custom levels override the selected convention for this org. Leave blank to use the selected convention above. Level names appear on job descriptions and the level matrix.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- JOB FUNCTIONS -->
+  <div class="card fu" id="sec-functions" style="animation-delay:0.12s">
+    <div class="card-hdr">
+      <div class="card-title">Job Functions</div>
+      <div class="card-desc">Select the functions that exist in this organization. These become the job families in the role library and the level matrix.</div>
+    </div>
+    <div class="card-body">
+      <div id="functionGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px"></div>
+      <div class="fg g2">
+        <div class="f">
+          <label>Add Custom Function</label>
+          <div style="display:flex;gap:8px">
+            <input type="text" id="customFuncInput" placeholder="e.g., Research, Advocacy, Policy">
+            <button onclick="addCustomFunction()" style="padding:8px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:12px;cursor:pointer;white-space:nowrap">Add</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sb-panel">
+    <div class="sbph"><div class="sbpt">Architecture Summary</div><div class="sbps">Current state</div></div>
+    <div class="sbpb">
+      <div class="stat-row"><span class="stat-lbl">Total Roles</span><span class="stat-val" id="statTotal">0</span></div>
+      <div class="stat-row"><span class="stat-lbl">Individual Contributor</span><span class="stat-val" id="statIC">0</span></div>
+      <div class="stat-row"><span class="stat-lbl">Lead</span><span class="stat-val" id="statLead">0</span></div>
+      <div class="stat-row"><span class="stat-lbl">Manager</span><span class="stat-val" id="statMgr">0</span></div>
+      <div class="stat-row"><span class="stat-lbl">Manager of Managers</span><span class="stat-val" id="statMoM">0</span></div>
+      <div class="stat-row"><span class="stat-lbl">Executive</span><span class="stat-val" id="statExec">0</span></div>
+      <div class="stat-row"><span class="stat-lbl">FLSA Review Needed</span><span class="stat-val" id="statReview" style="color:var(--crimson)">0</span></div>
+    </div>
+  </div>
+  <div class="sb-panel">
+    <div class="sbph"><div class="sbpt">Profile Snapshot</div><div class="sbps">From Tool 01</div></div>
+    <div class="sbpb" id="profileSnap">
+      <div style="font-size:11px;color:var(--text-light)">No profile loaded.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- LIBRARY TAB -->
+<div id="view-library" class="main wide" style="display:none">
+  <div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px" class="fu">
+      <div>
+        <select id="filterTrack" onchange="renderLibrary()" style="width:auto;display:inline-block;margin-right:8px;font-size:12px;padding:6px 28px 6px 10px">
+          <option value="">All Tracks</option>
+          <option value="ic">Individual Contributor</option>
+          <option value="lead">Lead</option>
+          <option value="manager">Manager</option>
+          <option value="mom">Manager of Managers</option>
+          <option value="exec">Executive</option>
+        </select>
+        <select id="filterFunction" onchange="renderLibrary()" style="width:auto;display:inline-block;font-size:12px;padding:6px 28px 6px 10px">
+          <option value="">All Functions</option>
+        </select>
+      </div>
+      <button class="nbtn nbtn-gold" onclick="openAddRole()">+ Add Role</button>
+    </div>
+    <div class="role-grid" id="roleGrid"></div>
+  </div>
+</div>
+
+<!-- MATRIX TAB -->
+<div id="view-matrix" class="main wide" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div class="card-title">Level Matrix</div>
+      <div class="card-desc">All roles organized by track and function. Use this to identify gaps, duplicate titles, and misaligned levels.</div>
+    </div>
+    <div class="card-body">
+      <div id="matrixContent" style="overflow-x:auto"></div>
+    </div>
+  </div>
+</div>
+
+<!-- IMPORT TAB -->
+<div id="view-import" class="main wide" style="display:none">
+  <div>
+    <div class="card fu">
+      <div class="card-hdr">
+        <div class="card-title">Import Existing Roles</div>
+        <div class="card-desc">Paste in a list of current job titles. Plinth will sort each into the five-track architecture, flag misalignments, and suggest corrections — giving you a starting point to clean up rather than build from scratch.</div>
+      </div>
+      <div class="card-body">
+        <div class="al al-i" style="margin-bottom:14px">
+          <span class="al-ic">ℹ</span>
+          <span>Paste one job title per line. Include the title exactly as it currently appears — Plinth will analyze the language and assign a track, flag anomalies, and surface misalignments for your review. You confirm or correct each before it goes into the library.</span>
+        </div>
+        <div class="import-area">
+          <textarea id="importInput" placeholder="Program Coordinator&#10;Senior Program Manager&#10;Director of Operations&#10;Development Associate&#10;Chief Executive Officer&#10;Communications Specialist II&#10;..."></textarea>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:10px">
+          <button class="nbtn nbtn-gold" onclick="runImport()">Analyze Titles</button>
+          <button class="nbtn nbtn-ghost" onclick="document.getElementById('importInput').value=''">Clear</button>
+        </div>
+        <div id="importResults" style="margin-top:20px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EXPORT TAB -->
+<div id="view-export" class="main wide" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div class="card-title">Export Options</div>
+      <div class="card-desc">Export job descriptions, the architecture summary, or the FLSA classification log.</div>
+    </div>
+    <div class="card-body">
+      <div class="div-lbl">Job Descriptions</div>
+      <p style="font-size:12px;color:var(--text-mid);margin-bottom:12px;line-height:1.6">Export all roles or a filtered subset. Each role generates two versions — a clean external-facing JD and an internal advisor version with FLSA reasoning and classification notes.</p>
+      <div class="export-row">
+        <button class="exp-btn exp-btn-p" onclick="exportAllJDs('external')">&#8681; All JDs — External (HTML)</button>
+        <button class="exp-btn exp-btn-m" onclick="exportAllJDs('docx')">&#8681; All JDs — Word (.docx)</button>
+        <button class="exp-btn" onclick="exportAllJDs('internal')">&#8681; All JDs — Internal / Advisor Version</button>
+      </div>
+      <div class="div" style="margin-top:20px"></div>
+      <div class="div-lbl">Architecture Documents</div>
+      <div class="export-row">
+        <button class="exp-btn exp-btn-p" onclick="exportArchSummary()">&#8681; Architecture Summary (HTML)</button>
+        <button class="exp-btn" onclick="exportFLSALog()">&#8681; FLSA Classification Log</button>
+        <button class="exp-btn" onclick="exportLevelMatrix()">&#8681; Level Matrix (Text)</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ROLE DETAIL MODAL -->
+<div class="modal-overlay" id="roleModal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div>
+        <div class="modal-hdr-title" id="modalTitle">Add Role</div>
+        <div class="modal-hdr-sub" id="modalSub">Define the role, track, and FLSA classification</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="modal-section">
+        <div class="modal-section-title">Role Identity</div>
+        <div class="fg g2">
+          <div class="f c2"><label>Job Title <span class="req">*</span></label><input type="text" id="rTitle" placeholder="e.g., Program Manager, Communications Specialist" oninput="runFLSA()"></div>
+          <div class="f"><label>Career Track <span class="req">*</span></label>
+            <select id="rTrack" onchange="saveArch();runFLSA();updateLevelOptions()">
+              <option value="">Select track</option>
+              <option value="ic">Individual Contributor</option>
+              <option value="lead">Lead</option>
+              <option value="manager">Manager</option>
+              <option value="mom">Manager of Managers</option>
+              <option value="exec">Executive</option>
+            </select>
+          </div>
+          <div class="f"><label>Level</label>
+            <select id="rLevel" onchange="saveArch();runFLSA()">
+              <option value="">Select level</option>
+            </select>
+          </div>
+          <div class="f"><label>Job Function <span class="req">*</span></label>
+            <select id="rFunction" onchange="saveArch()">
+              <option value="">Select function</option>
+            </select>
+          </div>
+          <div class="f"><label>Employment Type</label>
+            <select id="rEmpType" onchange="saveArch()">
+              <option value="">Select type</option>
+              <option value="ft">Full-time</option>
+              <option value="pt">Part-time</option>
+              <option value="pt-benefits">Part-time (benefits-eligible)</option>
+              <option value="seasonal">Seasonal</option>
+              <option value="contract">Contract / Fixed-term</option>
+            </select>
+          </div>
+          <div class="f"><label>Reports To</label><input type="text" id="rReportsTo" placeholder="Title of direct supervisor"></div>
+          <div class="f"><label>Direct Reports</label><input type="text" id="rDirectReports" placeholder="e.g., 2-4 Program Coordinators, or None"></div>
+          <div class="f"><label>Salary Range</label><input type="text" id="rSalary" placeholder="e.g., $45,000 — $55,000" oninput="runFLSA()"></div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">FLSA Classification</div>
+        <div class="fg g2">
+          <div class="f"><label>Estimated Annual Salary</label>
+            <input type="number" id="rSalaryNum" placeholder="Annual salary for FLSA test" oninput="runFLSA()" min="0">
+            <div class="fhint">2024 FLSA salary threshold: $684/week ($35,568/year). DOL has proposed increases — flag for counsel.</div>
+          </div>
+          <div class="f"><label>Primary Duty Category</label>
+            <select id="rDutyType" onchange="runFLSA()">
+              <option value="">Select primary duty</option>
+              <option value="exec-duty">Executive — manages 2+ FTEs, hires/fires authority</option>
+              <option value="admin-duty">Administrative — office/non-manual, discretion &amp; judgment</option>
+              <option value="pro-duty">Professional — advanced knowledge, specialized field</option>
+              <option value="outside-sales">Outside Sales</option>
+              <option value="computer">Computer — systems analyst, programmer, engineer</option>
+              <option value="manual">Manual / Physical labor</option>
+              <option value="routine">Routine clerical / data entry</option>
+            </select>
+          </div>
+        </div>
+        <div id="flsaResult"></div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">Role Description</div>
+        <div class="fg">
+          <div class="f"><label>Role Summary <span class="tip">(1-3 sentences for the JD opening)</span></label><textarea id="rSummary" placeholder="Brief description of the role's purpose and primary focus..." rows="3"></textarea></div>
+          <div class="f"><label>Key Responsibilities <span class="tip">(one per line)</span></label><textarea id="rResponsibilities" placeholder="Lead day-to-day program implementation across assigned sites&#10;Manage relationships with community partners and stakeholders&#10;Compile and analyze program data for reporting purposes" rows="6"></textarea></div>
+          <div class="f"><label>Minimum Qualifications <span class="tip">(one per line)</span></label><textarea id="rMinQuals" placeholder="Bachelor's degree in related field or equivalent experience&#10;2+ years of program management experience&#10;Strong written and verbal communication skills" rows="5"></textarea></div>
+          <div class="f"><label>Preferred Qualifications <span class="tip">(one per line)</span></label><textarea id="rPrefQuals" placeholder="Experience in nonprofit or social impact settings&#10;Bilingual (English/Spanish)" rows="3"></textarea></div>
+          <div class="f"><label>Essential Functions <span class="tip">(ADA language — what the person must be able to do physically/cognitively)</span></label><textarea id="rEssFunc" placeholder="Ability to remain in a stationary position for extended periods&#10;Ability to communicate effectively in person and remotely&#10;Ability to move about the workplace to access files and equipment" rows="4"></textarea></div>
+          <div class="f"><label>Advisor Notes <span class="tip">(internal only — not included in external JD)</span></label><textarea id="rAdvisorNotes" placeholder="Notes on misclassification risk, title history, compensation concerns, succession considerations..." rows="3"></textarea></div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="mbtn" onclick="closeModal()">Cancel</button>
+      <button class="mbtn mbtn-p" onclick="saveRole()">Save Role</button>
+    </div>
+  </div>
+</div>
+
+<footer><div class="fb">The Coherence Collective &nbsp;·&nbsp; <span>Plinth</span></div><div style="display:flex;gap:16px;align-items:center"><a href="handbook.html" style="font-size:11px;color:rgba(245,237,228,0.4);letter-spacing:0.06em;text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">&larr; Tool 02: Handbook</a><span style="color:rgba(245,237,228,0.2)">|</span><a href="compensation.html" style="font-size:11px;color:rgba(245,237,228,0.4);letter-spacing:0.06em;text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">Tool 04: Compensation &rarr;</a></div></footer>
+
+<script>
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let profile = {};
+let arch = {
+  convention: 'nonprofit',
+  customLevels: { ic:'', lead:'', mgr:'', mom:'', exec:'' },
+  functions: [],
+  roles: []
+};
+let editingRoleId = null;
+
+// ── FUNCTIONS LIST ────────────────────────────────────────────────────────────
+const DEFAULT_FUNCTIONS = [
+  'Programs','Operations','Finance','Development / Fundraising',
+  'Communications / Marketing','People / HR','Technology','Leadership / Executive',
+  'Policy / Advocacy','Research / Evaluation','Legal / Compliance','Education'
+];
+
+const CONVENTIONS = {
+  nonprofit: {
+    ic: ['Coordinator','Associate','Specialist','Senior Specialist','Principal Specialist'],
+    lead: ['Lead','Senior Lead'],
+    manager: ['Manager','Senior Manager'],
+    mom: ['Director','Senior Director','VP'],
+    exec: ['Chief of Staff','COO','CFO','CHRO','CEO','Executive Director']
+  },
+  professional: {
+    ic: ['Associate','Analyst','Senior Analyst','Principal Analyst'],
+    lead: ['Lead Analyst','Senior Lead'],
+    manager: ['Manager','Senior Manager'],
+    mom: ['Director','Principal','VP'],
+    exec: ['Senior VP','C-Suite','Executive Director']
+  },
+  flat: {
+    ic: ['Associate','Specialist','Senior Specialist'],
+    lead: ['Lead','Senior Lead'],
+    manager: ['Manager'],
+    mom: ['Director','Executive'],
+    exec: ['Executive','Founder']
+  }
+};
+
+const TRACK_LABELS = { ic:'Individual Contributor', lead:'Lead', manager:'Manager', mom:'Manager of Managers', exec:'Executive' };
+const TRACK_COLORS = { ic:'var(--track-ic)', lead:'var(--track-lead)', manager:'var(--track-mgr)', mom:'var(--track-mom)', exec:'var(--track-exec)' };
+const TRACK_TAG_CLASSES = { ic:'rt-track-ic', lead:'rt-track-lead', manager:'rt-track-mgr', mom:'rt-track-mom', exec:'rt-track-exec' };
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  loadProfile();
+  loadArch();
+  renderFunctionGrid();
+  renderLibrary();
+  renderStats();
+  animateCards();
+  initSectionNav();
+});
+
+function loadProfile(){
+  try{ const r = localStorage.getItem('plinth_op'); if(r) profile = JSON.parse(r); }catch(e){}
+  const tw2 = (parseInt(profile.wft)||0)+(parseInt(profile.wpt6)||0)+(parseInt(profile.wpt)||0);
+  const name = profile.legalName || 'No client loaded';
+  document.getElementById('heroClientName').textContent = name;
+  document.getElementById('heroClientMeta').textContent = `${profile.entityType||''} · ${profile.primaryState||''} · ${tw2} W-2 employees`;
+  const snap = document.getElementById('profileSnap');
+  if(profile.legalName){
+    snap.innerHTML = `
+      <div class="stat-row"><span class="stat-lbl">Org</span><span style="font-size:11px;color:var(--text-mid)">${profile.legalName}</span></div>
+      <div class="stat-row"><span class="stat-lbl">W-2 Employees</span><span class="stat-val">${tw2}</span></div>
+      <div class="stat-row"><span class="stat-lbl">State</span><span style="font-size:12px;color:var(--text-mid)">${profile.primaryState||'—'}</span></div>`;
+  }
+}
+
+function loadArch(){
+  try{
+    const r = localStorage.getItem('plinth_arch');
+    if(r){ const d = JSON.parse(r); Object.assign(arch, d); }
+  }catch(e){}
+  // Restore convention selection
+  selectConvention(arch.convention || 'nonprofit', false);
+  // Restore custom levels
+  if(arch.customLevels){
+    const idMap = { ic:'customIC', lead:'customLead', mgr:'customMgr', mom:'customMoM', exec:'customExec' };
+    Object.entries(idMap).forEach(([k,elId]) => {
+      const el = document.getElementById(elId);
+      if(el) el.value = arch.customLevels[k] || '';
+    });
+  }
+  // Restore custom functions
+  renderFunctionGrid();
+  renderLibrary();
+  renderStats();
+}
+
+function saveArch(){
+  // Collect custom levels
+  arch.customLevels = {
+    ic: document.getElementById('customIC')?.value||'',
+    lead: document.getElementById('customLead')?.value||'',
+    mgr: document.getElementById('customMgr')?.value||'',
+    mom: document.getElementById('customMoM')?.value||'',
+    exec: document.getElementById('customExec')?.value||''
+  };
+  localStorage.setItem('plinth_arch', JSON.stringify(arch));
+  flashSave();
+}
+
+function flashSave(){
+  const el = document.getElementById('saveFlash');
+  el.classList.add('on');
+  setTimeout(()=>el.classList.remove('on'), 1800);
+}
+
+// ── CONVENTION ───────────────────────────────────────────────────────────────
+function selectConvention(name, save=true){
+  arch.convention = name;
+  document.querySelectorAll('.convention-card').forEach(c => c.classList.remove('selected'));
+  const el = document.getElementById('conv-'+name);
+  if(el) el.classList.add('selected');
+  if(save) saveArch();
+}
+
+// ── FUNCTIONS ─────────────────────────────────────────────────────────────────
+function renderFunctionGrid(){
+  const grid = document.getElementById('functionGrid');
+  if(!grid) return;
+  // Merge default with custom
+  const allFuncs = [...new Set([...DEFAULT_FUNCTIONS, ...arch.functions])];
+  grid.innerHTML = allFuncs.map(f => {
+    const active = arch.functions.includes(f) || DEFAULT_FUNCTIONS.includes(f);
+    return `<label style="display:flex;align-items:center;gap:7px;padding:8px 10px;border:1px solid ${active&&arch.functions.includes(f)||DEFAULT_FUNCTIONS.includes(f)?'var(--border)':'var(--border)'};border-radius:var(--radius);cursor:pointer;font-size:12px;color:var(--text-mid);background:${arch.functions.includes(f)?'rgba(27,68,54,0.05)':'var(--white)'}">
+      <input type="checkbox" ${(arch.functions.length===0||arch.functions.includes(f))?'checked':''} 
+        onchange="toggleFunction('${f}',this.checked)" 
+        style="width:14px;height:14px;accent-color:var(--green)"> ${f}</label>`;
+  }).join('');
+  // Update function dropdown in modal and filters
+  updateFunctionDropdowns();
+}
+
+function toggleFunction(name, checked){
+  if(checked){ if(!arch.functions.includes(name)) arch.functions.push(name); }
+  else { arch.functions = arch.functions.filter(f=>f!==name); }
+  saveArch();
+  updateFunctionDropdowns();
+}
+
+function addCustomFunction(){
+  const inp = document.getElementById('customFuncInput');
+  const val = inp.value.trim();
+  if(!val) return;
+  if(!arch.functions.includes(val)) arch.functions.push(val);
+  inp.value = '';
+  renderFunctionGrid();
+  saveArch();
+}
+
+function updateFunctionDropdowns(){
+  const activeFuncs = arch.functions.length > 0 ? arch.functions : DEFAULT_FUNCTIONS;
+  ['rFunction','filterFunction'].forEach(id => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    const cur = el.value;
+    el.innerHTML = id==='filterFunction' ? '<option value="">All Functions</option>' : '<option value="">Select function</option>';
+    activeFuncs.forEach(f => {
+      const opt = document.createElement('option');
+      opt.value = f; opt.textContent = f;
+      if(f===cur) opt.selected = true;
+      el.appendChild(opt);
+    });
+  });
+}
+
+// ── LEVEL OPTIONS ─────────────────────────────────────────────────────────────
+function updateLevelOptions(){
+  const track = document.getElementById('rTrack')?.value;
+  const levelSel = document.getElementById('rLevel');
+  if(!levelSel||!track) return;
+  levelSel.innerHTML = '<option value="">Select level</option>';
+  // Use custom levels if defined, else convention
+  const customKey = { ic:'IC', lead:'Lead', manager:'Mgr', mom:'MoM', exec:'Exec' }[track];
+  const customVal = document.getElementById('custom'+customKey)?.value;
+  let levels;
+  if(customVal && customVal.trim()){
+    levels = customVal.split(',').map(l=>l.trim()).filter(Boolean);
+  } else {
+    const conv = CONVENTIONS[arch.convention] || CONVENTIONS.nonprofit;
+    const convKey = { ic:'ic', lead:'lead', manager:'manager', mom:'mom', exec:'exec' }[track];
+    levels = conv[convKey] || [];
+  }
+  levels.forEach(l => {
+    const opt = document.createElement('option');
+    opt.value = l; opt.textContent = l;
+    levelSel.appendChild(opt);
+  });
+}
+
+// ── FLSA ENGINE ───────────────────────────────────────────────────────────────
+function runFLSA(){
+  const track = document.getElementById('rTrack')?.value;
+  const salary = parseInt(document.getElementById('rSalaryNum')?.value) || 0;
+  const duty = document.getElementById('rDutyType')?.value;
+  const title = document.getElementById('rTitle')?.value || '';
+  const container = document.getElementById('flsaResult');
+  if(!container) return;
+
+  let status = '';
+  let reasoning = '';
+  const SALARY_THRESHOLD = 35568; // 2024
+
+  if(!track){ container.innerHTML = ''; return; }
+
+  if(track === 'ic'){
+    if(duty === 'manual' || duty === 'routine'){
+      status = 'nonexempt';
+      reasoning = 'Individual Contributor performing manual or routine clerical duties is classified as Nonexempt. Overtime pay at 1.5x applies for hours over 40/week.';
+    } else if(salary >= SALARY_THRESHOLD && (duty === 'pro-duty' || duty === 'computer' || duty === 'admin-duty')){
+      status = 'exempt';
+      reasoning = `Salary ($${salary.toLocaleString()}) meets the $35,568 threshold and duties suggest a potential professional or administrative exemption. Confirm duties test fully applies before finalizing. Counsel review recommended.`;
+    } else if(salary > 0 && salary < SALARY_THRESHOLD){
+      status = 'nonexempt';
+      reasoning = `Salary ($${salary.toLocaleString()}) is below the FLSA $35,568/year ($684/week) salary threshold. Exempt classification is not available at this salary level regardless of duties. Nonexempt status applies.`;
+    } else {
+      status = 'review';
+      reasoning = 'IC classification requires review. Enter salary and primary duty to complete the FLSA determination.';
+    }
+  } else if(track === 'lead'){
+    if(salary >= SALARY_THRESHOLD && duty === 'admin-duty'){
+      status = 'review';
+      reasoning = 'Lead roles with administrative duties and sufficient salary may qualify for the administrative exemption, but the "primary duty" and "discretion and independent judgment" tests must be satisfied. The Lead track typically does not have sufficient autonomy to meet the administrative exemption. Counsel review strongly recommended.';
+    } else if(salary > 0 && salary < SALARY_THRESHOLD){
+      status = 'nonexempt';
+      reasoning = `Salary ($${salary.toLocaleString()}) is below the $35,568 threshold. Nonexempt status applies. Lead roles frequently direct the work of others but lack formal management authority — this is a common misclassification scenario. Confirm title reflects actual authority.`;
+    } else {
+      status = 'review';
+      reasoning = 'Lead roles are frequently misclassified. They direct work informally but lack formal management authority. Unless a valid exemption applies, most Lead roles are Nonexempt. Enter salary and review duties carefully.';
+    }
+  } else if(track === 'manager'){
+    if(salary >= SALARY_THRESHOLD && duty === 'exec-duty'){
+      status = 'exempt';
+      reasoning = `Salary ($${salary.toLocaleString()}) meets threshold. Manager with executive duty classification (manages 2+ FTEs, input into hiring/firing) satisfies the FLSA executive exemption. Document the management duties and headcount in the job description.`;
+    } else if(salary >= SALARY_THRESHOLD && duty === 'admin-duty'){
+      status = 'exempt';
+      reasoning = `Salary ($${salary.toLocaleString()}) meets threshold. Administrative exemption may apply if primary duty involves office/non-manual work directly related to management and the employee exercises discretion and independent judgment on significant matters. Confirm duties test.`;
+    } else if(salary > 0 && salary < SALARY_THRESHOLD){
+      status = 'nonexempt';
+      reasoning = `Despite management title, salary ($${salary.toLocaleString()}) is below the $35,568 threshold. The salary basis test fails and the manager must be paid overtime. This is a compliance risk if the employee is currently being treated as exempt. Correct immediately.`;
+    } else {
+      status = 'review';
+      reasoning = 'Enter salary and confirm duty type to complete FLSA determination for this Manager role.';
+    }
+  } else if(track === 'mom'){
+    if(salary >= SALARY_THRESHOLD){
+      status = 'exempt';
+      reasoning = `Manager of Managers roles typically satisfy the executive exemption (manages managers who themselves supervise employees). Salary ($${salary.toLocaleString()}) meets the threshold. Confirm management-of-managers scope is documented in the job description.`;
+    } else if(salary > 0){
+      status = 'nonexempt';
+      reasoning = `Salary ($${salary.toLocaleString()}) is below the $35,568 threshold. Even Director and VP-level titles do not confer exempt status if the salary basis test fails. This is a significant compliance risk.`;
+    } else {
+      status = 'exempt';
+      reasoning = 'Manager of Managers roles typically qualify for the FLSA executive exemption. Enter salary to confirm the salary basis test is met.';
+    }
+  } else if(track === 'exec'){
+    if(salary >= SALARY_THRESHOLD || !salary){
+      status = 'exempt';
+      reasoning = `Executive roles meet the FLSA executive exemption when: (1) primary duty is management, (2) customarily manages 2+ FTEs, and (3) has authority to hire/fire or whose recommendations carry significant weight. ${salary?`Salary ($${salary.toLocaleString()}) meets the threshold.`:'Enter salary to confirm salary basis test.'}`;
+    } else {
+      status = 'review';
+      reasoning = `Salary ($${salary.toLocaleString()}) is below the $35,568 FLSA threshold. Even Executive-track roles must meet the salary basis test for exempt classification. Counsel review required.`;
+    }
+  }
+
+  const cls = { exempt:'flsa-exempt', nonexempt:'flsa-nonexempt', review:'flsa-review' }[status] || 'flsa-review';
+  const lbl = { exempt:'Likely Exempt', nonexempt:'Nonexempt', review:'Review Required' }[status] || 'Review Required';
+  const lblCls = { exempt:'exempt', nonexempt:'nonexempt', review:'review' }[status] || 'review';
+  container.innerHTML = `<div class="flsa-result ${cls}"><div class="flsa-label ${lblCls}">${lbl}</div><div class="flsa-reasoning">${reasoning}</div></div>`;
+}
+
+// ── ADD / EDIT ROLE ───────────────────────────────────────────────────────────
+function openAddRole(){
+  editingRoleId = null;
+  clearRoleForm();
+  document.getElementById('modalTitle').textContent = 'Add Role';
+  document.getElementById('modalSub').textContent = 'Define the role, track, and FLSA classification';
+  document.getElementById('roleModal').classList.add('open');
+  updateFunctionDropdowns();
+}
+
+function openEditRole(id){
+  const role = arch.roles.find(r=>r.id===id);
+  if(!role) return;
+  editingRoleId = id;
+  document.getElementById('modalTitle').textContent = 'Edit Role';
+  document.getElementById('modalSub').textContent = role.title || '';
+  // Populate form
+  const fields = ['rTitle','rTrack','rLevel','rFunction','rEmpType','rReportsTo','rDirectReports',
+    'rSalary','rSalaryNum','rDutyType','rSummary','rResponsibilities','rMinQuals','rPrefQuals','rEssFunc','rAdvisorNotes'];
+  const keys = ['title','track','level','function','empType','reportsTo','directReports',
+    'salary','salaryNum','dutyType','summary','responsibilities','minQuals','prefQuals','essFunc','advisorNotes'];
+  updateFunctionDropdowns();
+  fields.forEach((f,i) => {
+    const el = document.getElementById(f);
+    if(el) el.value = role[keys[i]] || '';
+  });
+  updateLevelOptions();
+  document.getElementById('rLevel').value = role.level || '';
+  document.getElementById('roleModal').classList.add('open');
+  runFLSA();
+}
+
+function clearRoleForm(){
+  ['rTitle','rTrack','rLevel','rFunction','rEmpType','rReportsTo','rDirectReports',
+   'rSalary','rSalaryNum','rDutyType','rSummary','rResponsibilities','rMinQuals',
+   'rPrefQuals','rEssFunc','rAdvisorNotes'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = '';
+  });
+  document.getElementById('flsaResult').innerHTML = '';
+}
+
+function saveRole(){
+  const title = document.getElementById('rTitle')?.value.trim();
+  if(!title){ document.getElementById('rTitle')?.focus(); return; }
+  const flsaEl = document.getElementById('flsaResult');
+  let flsaStatus = 'review', flsaReasoning = '';
+  if(flsaEl){
+    const dot = flsaEl.querySelector('.flsa-result');
+    if(dot){
+      if(dot.classList.contains('flsa-exempt')) flsaStatus = 'exempt';
+      else if(dot.classList.contains('flsa-nonexempt')) flsaStatus = 'nonexempt';
+      flsaReasoning = dot.querySelector('.flsa-reasoning')?.textContent || '';
+    }
+  }
+  const role = {
+    id: editingRoleId || 'role_' + Date.now(),
+    title, 
+    track: document.getElementById('rTrack')?.value,
+    level: document.getElementById('rLevel')?.value,
+    function: document.getElementById('rFunction')?.value,
+    empType: document.getElementById('rEmpType')?.value,
+    reportsTo: document.getElementById('rReportsTo')?.value,
+    directReports: document.getElementById('rDirectReports')?.value,
+    salary: document.getElementById('rSalary')?.value,
+    salaryNum: document.getElementById('rSalaryNum')?.value,
+    dutyType: document.getElementById('rDutyType')?.value,
+    summary: document.getElementById('rSummary')?.value,
+    responsibilities: document.getElementById('rResponsibilities')?.value,
+    minQuals: document.getElementById('rMinQuals')?.value,
+    prefQuals: document.getElementById('rPrefQuals')?.value,
+    essFunc: document.getElementById('rEssFunc')?.value,
+    advisorNotes: document.getElementById('rAdvisorNotes')?.value,
+    flsaStatus, flsaReasoning,
+    updatedAt: new Date().toISOString()
+  };
+  if(editingRoleId){
+    const idx = arch.roles.findIndex(r=>r.id===editingRoleId);
+    if(idx !== -1) arch.roles[idx] = role;
+  } else {
+    arch.roles.push(role);
+  }
+  saveArch();
+  closeModal();
+  renderLibrary();
+  renderStats();
+  document.getElementById('roleCount').textContent = arch.roles.length;
+}
+
+function deleteRole(id){
+  if(!confirm('Delete this role? This cannot be undone.')) return;
+  arch.roles = arch.roles.filter(r=>r.id!==id);
+  saveArch();
+  renderLibrary();
+  renderStats();
+  document.getElementById('roleCount').textContent = arch.roles.length;
+}
+
+function closeModal(){
+  document.getElementById('roleModal').classList.remove('open');
+}
+
+// ── RENDER LIBRARY ────────────────────────────────────────────────────────────
+function renderLibrary(){
+  const grid = document.getElementById('roleGrid');
+  if(!grid) return;
+  const trackFilter = document.getElementById('filterTrack')?.value || '';
+  const funcFilter = document.getElementById('filterFunction')?.value || '';
+  let roles = arch.roles;
+  if(trackFilter) roles = roles.filter(r=>r.track===trackFilter);
+  if(funcFilter) roles = roles.filter(r=>r.function===funcFilter);
+  grid.innerHTML = '';
+  if(roles.length === 0){
+    grid.innerHTML = `<div style="grid-column:1/-1;padding:40px;text-align:center;background:var(--white);border:2px dashed var(--border);border-radius:var(--radius-md);color:var(--text-light);font-size:12px">
+      <div style="font-size:28px;opacity:0.25;margin-bottom:10px">◫</div>
+      No roles yet. Add your first role or use Import to bring in existing titles.
+    </div>`;
+  } else {
+    roles.forEach((r,i) => {
+      const card = document.createElement('div');
+      card.className = 'role-card fu';
+      card.style.animationDelay = (i*0.04)+'s';
+      const accentClass = { ic:'rc-ic', lead:'rc-lead', manager:'rc-mgr', mom:'rc-mom', exec:'rc-exec' }[r.track] || 'rc-ic';
+      const tagClass = TRACK_TAG_CLASSES[r.track] || 'rt-track-ic';
+      const flsaTagClass = { exempt:'rt-flsa-exempt', nonexempt:'rt-flsa-nonexempt', review:'rt-flsa-review' }[r.flsaStatus] || 'rt-flsa-review';
+      const flsaLabel = { exempt:'Exempt', nonexempt:'Nonexempt', review:'FLSA Review' }[r.flsaStatus] || 'FLSA Review';
+      card.innerHTML = `
+        <div class="role-card-accent ${accentClass}"></div>
+        <div class="role-card-body">
+          <div class="role-title">${r.title}</div>
+          <div class="role-family">${r.function||'Function not set'} · ${r.level||'Level not set'}</div>
+          <div class="role-tags">
+            <span class="role-tag ${tagClass}">${TRACK_LABELS[r.track]||r.track}</span>
+            <span class="role-tag ${flsaTagClass}">${flsaLabel}</span>
+            ${r.empType?`<span class="role-tag" style="background:rgba(0,0,0,0.04);color:var(--text-light)">${r.empType==='ft'?'Full-time':r.empType==='pt'?'Part-time':'Variable'}</span>`:''}
+          </div>
+        </div>
+        <div class="role-card-footer">
+          <span style="font-size:10px;color:var(--text-light)">${r.reportsTo?'→ '+r.reportsTo:''}</span>
+          <div class="role-card-actions">
+            <button class="rca-btn" onclick="exportSingleJD('${r.id}','external')">JD</button>
+            <button class="rca-btn" onclick="openEditRole('${r.id}')">Edit</button>
+            <button class="rca-btn del" onclick="deleteRole('${r.id}')">Delete</button>
+          </div>
+        </div>`;
+      grid.appendChild(card);
+      setTimeout(()=>card.classList.add('vis'),20+i*35);
+    });
+  }
+  // Add card
+  const addCard = document.createElement('div');
+  addCard.className = 'add-role-card';
+  addCard.onclick = openAddRole;
+  addCard.innerHTML = '<div style="font-size:24px;opacity:0.4">+</div><div style="font-size:11px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase">Add Role</div>';
+  grid.appendChild(addCard);
+  document.getElementById('roleCount').textContent = arch.roles.length;
+}
+
+// ── STATS ─────────────────────────────────────────────────────────────────────
+function renderStats(){
+  const totals = { ic:0, lead:0, manager:0, mom:0, exec:0, review:0 };
+  arch.roles.forEach(r=>{
+    if(totals[r.track]!==undefined) totals[r.track]++;
+    if(r.flsaStatus==='review') totals.review++;
+  });
+  document.getElementById('statTotal').textContent = arch.roles.length;
+  document.getElementById('statIC').textContent = totals.ic;
+  document.getElementById('statLead').textContent = totals.lead;
+  document.getElementById('statMgr').textContent = totals.manager;
+  document.getElementById('statMoM').textContent = totals.mom;
+  document.getElementById('statExec').textContent = totals.exec;
+  document.getElementById('statReview').textContent = totals.review;
+}
+
+// ── IMPORT ────────────────────────────────────────────────────────────────────
+function runImport(){
+  const input = document.getElementById('importInput')?.value.trim();
+  if(!input){ alert('Paste in some job titles first.'); return; }
+  const titles = input.split('\n').map(t=>t.trim()).filter(Boolean);
+  const results = titles.map(title => analyzeTitle(title));
+  renderImportResults(results);
+}
+
+function analyzeTitle(title){
+  const t = title.toLowerCase();
+  let track = 'ic', confidence = 'medium', flags = [], suggestion = '';
+
+  // Executive signals
+  if(/(^ceo$|^coo$|^cfo$|^chro$|^cto$|^cmo$|executive director|chief |president$)/.test(t)){ track='exec'; confidence='high'; }
+  // Manager of Managers signals
+  else if(/(^vp |vice president|^senior director|^director of|^director,)/.test(t)){ track='mom'; confidence='high'; }
+  else if(/\bdirector\b/.test(t) && !/associate director|assistant director/.test(t)){ track='mom'; confidence='medium'; }
+  // Manager signals
+  else if(/\bmanager\b/.test(t)){ track='manager'; confidence='high'; }
+  else if(/\bsupervisor\b/.test(t)){ track='manager'; confidence='medium'; }
+  // Lead signals
+  else if(/\blead\b/.test(t) || /\bteam lead\b/.test(t)){ track='lead'; confidence='high'; }
+  else if(/\bsenior\b/.test(t) && !/senior director|senior vp/.test(t)){ track='ic'; confidence='medium'; flags.push('Senior IC — may have informal lead responsibilities. Confirm whether this role directs others\' work.'); }
+  // IC default
+  else if(/(coordinator|associate|specialist|analyst|assistant|officer|advisor)/.test(t)){ track='ic'; confidence='high'; }
+
+  // Flag anomalies
+  if(track==='manager' && /associate|coordinator|assistant/.test(t)){
+    flags.push('Title contains Manager but also IC-level language. Verify actual management authority before classifying as Manager track.');
+    confidence='low';
+  }
+  if(track==='mom' && /associate|coordinator/.test(t)){
+    flags.push('Director-level title with IC language. Review scope — may be an inflated title for an IC or Manager-track role.');
+    confidence='low';
+  }
+  if(/ii$|iii$|iv$|\bii\b|\biii\b/.test(t)){
+    flags.push('Numeric suffix (II, III) detected. These often indicate leveling without a coherent level framework. Recommend converting to named levels.');
+  }
+  if(/senior/.test(t) && /manager/.test(t)){ track='manager'; }
+
+  return { title, track, confidence, flags };
+}
+
+function renderImportResults(results){
+  const container = document.getElementById('importResults');
+  if(!results.length){ container.innerHTML=''; return; }
+  container.innerHTML = `
+    <div style="font-size:11px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:12px">${results.length} titles analyzed</div>
+    ${results.map((r,i)=>`
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px 16px;margin-bottom:8px;display:flex;align-items:flex-start;gap:14px;" id="ir-${i}">
+        <div style="flex:1">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--text-dark);margin-bottom:4px">${r.title}</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">
+            <span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(27,68,54,0.07);color:var(--green)">${TRACK_LABELS[r.track]||r.track}</span>
+            <span style="font-size:10px;padding:2px 8px;border-radius:10px;background:${r.confidence==='high'?'rgba(204,207,142,0.2)':r.confidence==='medium'?'rgba(217,158,50,0.1)':'rgba(164,47,48,0.07)'};color:${r.confidence==='high'?'#5a6020':r.confidence==='medium'?'#8a6010':'var(--crimson)'}">
+              ${r.confidence} confidence
+            </span>
+          </div>
+          ${r.flags.map(f=>`<div style="font-size:11px;color:var(--text-mid);background:rgba(217,158,50,0.06);border-left:2px solid var(--gold);padding:5px 10px;border-radius:2px;margin-top:4px;line-height:1.5">△ ${f}</div>`).join('')}
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0">
+          <select style="font-size:11px;padding:5px 24px 5px 8px;width:auto" id="ir-track-${i}">
+            <option value="ic" ${r.track==='ic'?'selected':''}>IC</option>
+            <option value="lead" ${r.track==='lead'?'selected':''}>Lead</option>
+            <option value="manager" ${r.track==='manager'?'selected':''}>Manager</option>
+            <option value="mom" ${r.track==='mom'?'selected':''}>Mgr of Mgrs</option>
+            <option value="exec" ${r.track==='exec'?'selected':''}>Executive</option>
+          </select>
+          <button onclick="acceptImport(${i},'${r.title.replace(/'/g,"\\'")}',${i})" style="padding:5px 10px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-size:11px;cursor:pointer;font-family:'Jost',sans-serif">Add to Library</button>
+        </div>
+      </div>`).join('')}
+    <div style="margin-top:12px;display:flex;gap:10px">
+      <button onclick="acceptAllImports(${JSON.stringify(results.map((_,i)=>i))})" class="nbtn nbtn-gold" style="font-size:11px">Accept All &amp; Add to Library</button>
+    </div>`;
+}
+
+function acceptImport(idx, title, resultIdx){
+  const trackEl = document.getElementById(`ir-track-${resultIdx}`);
+  const track = trackEl?.value || 'ic';
+  const role = {
+    id: 'role_' + Date.now() + '_' + idx,
+    title, track,
+    level:'', function:'', empType:'ft',
+    reportsTo:'', directReports:'', salary:'', salaryNum:'',
+    dutyType:'', summary:'', responsibilities:'', minQuals:'',
+    prefQuals:'', essFunc:'', advisorNotes:'Imported from existing title list. Review and complete all fields.',
+    flsaStatus:'review', flsaReasoning:'Imported role — complete salary and duty type to run FLSA determination.',
+    updatedAt: new Date().toISOString()
+  };
+  arch.roles.push(role);
+  saveArch();
+  renderLibrary();
+  renderStats();
+  document.getElementById('roleCount').textContent = arch.roles.length;
+  // Visual confirmation
+  const row = document.getElementById(`ir-${resultIdx}`);
+  if(row){ row.style.opacity='0.4'; row.style.pointerEvents='none'; }
+}
+
+function acceptAllImports(indices){
+  indices.forEach(i => {
+    const trackEl = document.getElementById(`ir-track-${i}`);
+    const track = trackEl?.value || 'ic';
+    const titleEl = document.querySelector(`#ir-${i} .role-title-text`);
+    // Get title from rendered result
+    const titleNode = document.querySelector(`#ir-${i} div[style*="Cormorant"]`);
+    const title = titleNode?.textContent || '';
+    if(!title) return;
+    arch.roles.push({
+      id:'role_'+Date.now()+'_'+i,title,track,level:'',function:'',empType:'ft',
+      reportsTo:'',directReports:'',salary:'',salaryNum:'',dutyType:'',
+      summary:'',responsibilities:'',minQuals:'',prefQuals:'',essFunc:'',
+      advisorNotes:'Imported — review and complete.',
+      flsaStatus:'review',flsaReasoning:'Imported role — complete FLSA fields.',
+      updatedAt:new Date().toISOString()
+    });
+  });
+  saveArch();
+  renderLibrary();
+  renderStats();
+  document.getElementById('importResults').innerHTML = `<div class="al al-i"><span class="al-ic">✓</span><span>All titles added to the Role Library. Open each role to complete the profile and run the FLSA determination.</span></div>`;
+}
+
+// ── MATRIX ────────────────────────────────────────────────────────────────────
+function renderMatrix(){
+  const funcs = arch.functions.length > 0 ? arch.functions : DEFAULT_FUNCTIONS;
+  const usedFuncs = [...new Set(arch.roles.map(r=>r.function))].filter(Boolean);
+  const tracks = ['exec','mom','manager','lead','ic'];
+  const container = document.getElementById('matrixContent');
+  if(!container) return;
+  if(arch.roles.length === 0){ container.innerHTML='<div style="padding:20px;font-size:12px;color:var(--text-light)">No roles in the library yet. Add roles to see the matrix.</div>'; return; }
+
+  let html = `<table style="border-collapse:collapse;width:100%;font-size:12px">
+    <thead><tr style="background:rgba(27,68,54,0.06)">
+      <th style="padding:8px 12px;text-align:left;border-bottom:2px solid var(--border);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);white-space:nowrap">Track</th>
+      ${usedFuncs.map(f=>`<th style="padding:8px 12px;text-align:left;border-bottom:2px solid var(--border);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);white-space:nowrap">${f}</th>`).join('')}
+    </tr></thead><tbody>`;
+
+  tracks.forEach(track => {
+    const trackRoles = arch.roles.filter(r=>r.track===track);
+    if(trackRoles.length === 0) return;
+    html += `<tr><td style="padding:8px 12px;border-bottom:1px solid var(--border);font-size:11px;font-weight:400;color:${TRACK_COLORS[track]};white-space:nowrap;vertical-align:top">${TRACK_LABELS[track]}</td>`;
+    usedFuncs.forEach(func => {
+      const matching = trackRoles.filter(r=>r.function===func);
+      html += `<td style="padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top">`;
+      if(matching.length){
+        matching.forEach(r => {
+          html += `<div style="margin-bottom:4px"><span style="font-size:11px;color:var(--text-dark)">${r.title}</span>`;
+          if(r.level) html += `<span style="font-size:9px;color:var(--text-light);margin-left:4px">${r.level}</span>`;
+          if(r.flsaStatus==='review') html += `<span style="font-size:9px;color:var(--crimson);margin-left:4px">⚠ FLSA</span>`;
+          html += `</div>`;
+        });
+      } else { html += `<span style="color:var(--border)">—</span>`; }
+      html += `</td>`;
+    });
+    html += `</tr>`;
+  });
+  html += `</tbody></table>`;
+  container.innerHTML = html;
+}
+
+// ── EXPORT ────────────────────────────────────────────────────────────────────
+function buildJDHTML(role, mode='external'){
+  const orgName = profile.legalName || '[Organization Name]';
+  const internal = mode === 'internal';
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${role.title} — ${orgName}</title>
+  <style>
+    body{font-family:Georgia,serif;font-size:11pt;color:#1a1a1a;max-width:680px;margin:0 auto;padding:40px 32px;line-height:1.75;}
+    h1{font-size:20pt;font-weight:400;color:#1b4436;margin:0 0 4px 0;}
+    h2{font-size:12pt;font-weight:600;margin:24px 0 8px 0;color:#1a1a1a;}
+    .meta{font-size:9pt;color:#777;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid #e0d8cf;line-height:1.8;}
+    .meta strong{color:#444;}
+    ul{margin:0 0 12px 0;padding-left:20px;}
+    li{margin-bottom:4px;font-size:10.5pt;}
+    .internal-section{background:#f9f5f0;border-left:3px solid #916179;padding:12px 16px;margin-top:24px;font-size:9.5pt;color:#555;}
+    .flsa-box{background:#f0f4f0;border:1px solid #cccf8e;padding:10px 14px;border-radius:4px;font-size:9.5pt;color:#444;margin-top:8px;}
+    @page{size:letter;margin:1in;}
+  </style></head><body>
+  <h1>${role.title}</h1>
+  <div class="meta">
+    <strong>Organization:</strong> ${orgName}<br>
+    <strong>Function:</strong> ${role.function||'Not specified'} &nbsp;·&nbsp; <strong>Track:</strong> ${TRACK_LABELS[role.track]||role.track} &nbsp;·&nbsp; <strong>Level:</strong> ${role.level||'Not specified'}<br>
+    ${role.empType?`<strong>Type:</strong> ${role.empType==='ft'?'Full-time':role.empType==='pt'?'Part-time':role.empType}<br>`:''}
+    ${role.reportsTo?`<strong>Reports To:</strong> ${role.reportsTo}<br>`:''}
+    ${role.directReports?`<strong>Direct Reports:</strong> ${role.directReports}<br>`:''}
+    ${role.salary?`<strong>Salary Range:</strong> ${role.salary}<br>`:''}
+    ${!internal?'':'<strong>FLSA Status:</strong> '+({exempt:'Exempt',nonexempt:'Nonexempt',review:'Review Required'}[role.flsaStatus]||'Review Required')}
+  </div>
+  ${role.summary?`<p>${role.summary}</p>`:''}
+  ${role.responsibilities?`<h2>Key Responsibilities</h2><ul>${role.responsibilities.split('\n').filter(Boolean).map(l=>`<li>${l.trim()}</li>`).join('')}</ul>`:''}
+  ${role.minQuals?`<h2>Minimum Qualifications</h2><ul>${role.minQuals.split('\n').filter(Boolean).map(l=>`<li>${l.trim()}</li>`).join('')}</ul>`:''}
+  ${role.prefQuals?`<h2>Preferred Qualifications</h2><ul>${role.prefQuals.split('\n').filter(Boolean).map(l=>`<li>${l.trim()}</li>`).join('')}</ul>`:''}
+  ${role.essFunc?`<h2>Essential Functions</h2><ul>${role.essFunc.split('\n').filter(Boolean).map(l=>`<li>${l.trim()}</li>`).join('')}</ul>`:''}
+  ${internal&&role.advisorNotes?`<div class="internal-section"><strong>Advisor Notes (Internal Only)</strong><br>${role.advisorNotes}</div>`:''}
+  ${internal?`<div class="flsa-box"><strong>FLSA Classification:</strong> ${({exempt:'Likely Exempt',nonexempt:'Nonexempt',review:'Review Required'}[role.flsaStatus]||'Review Required')}<br>${role.flsaReasoning||''}</div>`:''}
+  </body></html>`;
+}
+
+function exportSingleJD(id, mode){
+  const role = arch.roles.find(r=>r.id===id);
+  if(!role) return;
+  const html = buildJDHTML(role, mode);
+  const blob = new Blob([html],{type:'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${role.title.replace(/\s+/g,'-')}_JD${mode==='internal'?'_Internal':''}.html`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function exportAllJDs(mode){
+  if(arch.roles.length===0){ alert('No roles in the library yet.'); return; }
+  if(mode==='docx'){ exportAllJDsDocx(); return; }
+  // For HTML: zip would be ideal but without a library, export each individually
+  arch.roles.forEach((role,i) => {
+    setTimeout(()=>{
+      const html = buildJDHTML(role, mode);
+      const blob = new Blob([html],{type:'text/html'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `${role.title.replace(/\s+/g,'-')}_JD${mode==='internal'?'_Internal':''}.html`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }, i * 300);
+  });
+}
+
+async function exportAllJDsDocx(){
+  if(typeof docx==='undefined'){ alert('Word export library not loaded. Check your connection.'); return; }
+  const { Document, Paragraph, TextRun, HeadingLevel, PageBreak, AlignmentType, BorderStyle } = docx;
+  const orgName = profile.legalName || '[Organization Name]';
+  const children = [];
+
+  arch.roles.forEach((role, i) => {
+    if(i > 0) children.push(new Paragraph({ children:[new PageBreak()] }));
+    children.push(new Paragraph({ children:[new TextRun({ text: role.title, size:36, bold:true, color:'1b4436', font:'Georgia' })], spacing:{before:0,after:120} }));
+    children.push(new Paragraph({ children:[new TextRun({ text:`${orgName} · ${role.function||''} · ${TRACK_LABELS[role.track]||''} · ${role.level||''}`, size:18, color:'777777', font:'Arial' })], spacing:{before:0,after:60} }));
+    if(role.salary) children.push(new Paragraph({ children:[new TextRun({ text:`Salary Range: ${role.salary}`, size:18, color:'444444', font:'Arial' })], spacing:{before:0,after:160} }));
+    if(role.summary) children.push(new Paragraph({ children:[new TextRun({ text:role.summary, size:22, font:'Georgia' })], spacing:{before:60,after:160} }));
+    const addSection = (heading, text) => {
+      if(!text) return;
+      children.push(new Paragraph({ children:[new TextRun({ text:heading, size:24, bold:true, font:'Georgia' })], spacing:{before:200,after:80}, border:{ bottom:{style:BorderStyle.SINGLE,size:4,color:'e0d8cf',space:4} } }));
+      text.split('\n').filter(Boolean).forEach(line => {
+        children.push(new Paragraph({ children:[new TextRun({ text:line.trim(), size:22, font:'Georgia' })], bullet:{level:0}, spacing:{before:40,after:40} }));
+      });
+    };
+    addSection('Key Responsibilities', role.responsibilities);
+    addSection('Minimum Qualifications', role.minQuals);
+    addSection('Preferred Qualifications', role.prefQuals);
+    addSection('Essential Functions', role.essFunc);
+  });
+
+  const doc = new Document({
+    creator:'The Coherence Collective — Plinth',
+    title:`${orgName} — Job Descriptions`,
+    sections:[{ properties:{ page:{ margin:{top:1080,bottom:1080,left:1260,right:1260} } }, children }]
+  });
+  try{
+    const blob = await docx.Packer.toBlob(doc);
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${orgName.replace(/\s+/g,'-')}_JobDescriptions.docx`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }catch(e){ console.error(e); alert('Export failed. Try the HTML option.'); }
+}
+
+function exportArchSummary(){
+  const orgName = profile.legalName || '[Organization Name]';
+  const tracks = ['exec','mom','manager','lead','ic'];
+  let sections = tracks.map(t => {
+    const roles = arch.roles.filter(r=>r.track===t);
+    if(!roles.length) return '';
+    return `<div style="margin-bottom:24px">
+      <h2 style="font-size:13pt;font-weight:600;color:#1b4436;border-bottom:1px solid #e0d8cf;padding-bottom:6px;margin-bottom:12px">${TRACK_LABELS[t]}</h2>
+      ${roles.map(r=>`<div style="padding:8px 0;border-bottom:1px solid #f0ebe4;display:flex;justify-content:space-between;align-items:center">
+        <div><span style="font-size:11pt">${r.title}</span><span style="font-size:9pt;color:#777;margin-left:12px">${r.function||''} · ${r.level||''}</span></div>
+        <span style="font-size:9pt;color:${r.flsaStatus==='exempt'?'#5a6020':r.flsaStatus==='nonexempt'?'#6a5020':'#A42F30'}">${{exempt:'Exempt',nonexempt:'Nonexempt',review:'FLSA Review'}[r.flsaStatus]||'Review'}</span>
+      </div>`).join('')}
+    </div>`;
+  }).join('');
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${orgName} — Job Architecture</title>
+  <style>body{font-family:Georgia,serif;font-size:11pt;color:#1a1a1a;max-width:680px;margin:0 auto;padding:40px 32px;line-height:1.7;}h1{font-size:22pt;font-weight:400;color:#1b4436;}@page{size:letter;margin:1in;}</style>
+  </head><body>
+  <h1>${orgName}</h1>
+  <p style="font-size:9pt;color:#777;margin-bottom:32px">Job Architecture Summary · ${new Date().toLocaleDateString()} · The Coherence Collective</p>
+  ${sections}
+  </body></html>`;
+  const blob = new Blob([html],{type:'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${orgName.replace(/\s+/g,'-')}_ArchSummary.html`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function exportFLSALog(){
+  const orgName = profile.legalName || '[Organization Name]';
+  let lines = [`FLSA Classification Log`, `${orgName}`, `Generated: ${new Date().toLocaleDateString()}`, `The Coherence Collective — Plinth`, '='.repeat(50),''];
+  ['exempt','nonexempt','review'].forEach(status => {
+    const roles = arch.roles.filter(r=>r.flsaStatus===status);
+    if(!roles.length) return;
+    lines.push({exempt:'LIKELY EXEMPT',nonexempt:'NONEXEMPT',review:'REVIEW REQUIRED'}[status]);
+    lines.push('-'.repeat(30));
+    roles.forEach(r => {
+      lines.push(`${r.title} | ${TRACK_LABELS[r.track]||r.track} | ${r.function||'—'}`);
+      lines.push(`  Salary: ${r.salary||'Not entered'}`);
+      lines.push(`  Reasoning: ${r.flsaReasoning||'Not completed'}`);
+      lines.push('');
+    });
+    lines.push('');
+  });
+  const blob = new Blob([lines.join('\n')],{type:'text/plain'});
+  const a = document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`${orgName.replace(/\s+/g,'-')}_FLSA_Log.txt`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function exportLevelMatrix(){
+  const orgName = profile.legalName || '[Organization Name]';
+  let lines = [`Level Matrix — ${orgName}`, `Generated: ${new Date().toLocaleDateString()}`, ''];
+  ['exec','mom','manager','lead','ic'].forEach(t => {
+    const roles = arch.roles.filter(r=>r.track===t);
+    if(!roles.length) return;
+    lines.push(TRACK_LABELS[t].toUpperCase());
+    roles.forEach(r => lines.push(`  ${r.level||'—'} · ${r.title} · ${r.function||'—'}`));
+    lines.push('');
+  });
+  const blob = new Blob([lines.join('\n')],{type:'text/plain'});
+  const a = document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`${orgName.replace(/\s+/g,'-')}_LevelMatrix.txt`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// ── TABS ─────────────────────────────────────────────────────────────────────
+function showTab(tab){
+  ['framework','library','matrix','import','export'].forEach(t => {
+    const view = document.getElementById('view-'+t);
+    if(view) view.style.display = t===tab ? (t==='framework'?'grid':'block') : 'none';
+    const tabEl = document.getElementById('tab-'+t);
+    if(tabEl) tabEl.classList.toggle('active', t===tab);
+  });
+  if(tab==='library') renderLibrary();
+  if(tab==='matrix') renderMatrix();
+}
+
+// ── ANIMATIONS ────────────────────────────────────────────────────────────────
+function animateCards(){
+  const obs = new IntersectionObserver(es=>{ es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('vis'); }); },{threshold:0.04});
+  document.querySelectorAll('.card').forEach(c=>obs.observe(c));
+}
+function initSectionNav(){
+  // nothing needed for now
+}
+
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+</script>
+</body>
+</html>
