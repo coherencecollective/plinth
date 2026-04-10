@@ -383,7 +383,7 @@ footer{background:var(--green-deep);padding:14px 32px;display:flex;align-items:c
         <div class="hero-stat-l">Active</div>
       </div>
       <div class="hero-stat">
-        <div class="hero-stat-n">1</div>
+        <div class="hero-stat-n">3</div>
         <div class="hero-stat-l">Tools Live</div>
       </div>
     </div>
@@ -407,7 +407,7 @@ footer{background:var(--green-deep);padding:14px 32px;display:flex;align-items:c
   <div>
     <div class="sec-hdr">
       <div class="sec-title">Tool Directory</div>
-      <span style="font-size:11px;color:var(--text-light);letter-spacing:0.04em">1 of 15 live</span>
+      <span style="font-size:11px;color:var(--text-light);letter-spacing:0.04em">3 of 15 live</span>
     </div>
     <div class="tool-dir">
       <div class="tool-card available" onclick="openTool('org-profile')">
@@ -416,17 +416,17 @@ footer{background:var(--green-deep);padding:14px 32px;display:flex;align-items:c
         <div class="tool-desc">Entity setup, workforce composition, pay practices, benefits, and full law applicability resolution.</div>
         <div class="tool-status live dot-live">Live</div>
       </div>
-      <div class="tool-card coming">
+      <div class="tool-card available" onclick="openTool('handbook')">
         <div class="tool-num">Tool 02</div>
         <div class="tool-name">Policy &amp; Handbook Generator</div>
         <div class="tool-desc">Applicability-driven policy library with editable draft language and full handbook assembly.</div>
-        <div class="tool-status soon dot-soon">Coming next</div>
+        <div class="tool-status live dot-live">Live</div>
       </div>
-      <div class="tool-card coming">
+      <div class="tool-card available" onclick="openTool('job-architecture')">
         <div class="tool-num">Tool 03</div>
         <div class="tool-name">Job Architecture &amp; Library</div>
-        <div class="tool-desc">Role design, leveling framework, job descriptions, and FLSA classification tracking.</div>
-        <div class="tool-status soon dot-soon">In queue</div>
+        <div class="tool-desc">Five-track role framework, FLSA engine, level naming, import and clean-up of existing titles, and full JD export.</div>
+        <div class="tool-status live dot-live">Live</div>
       </div>
       <div class="tool-card coming">
         <div class="tool-num">Tool 04</div>
@@ -577,7 +577,7 @@ footer{background:var(--green-deep);padding:14px 32px;display:flex;align-items:c
 
 <script>
 // ── PASSWORD ──────────────────────────────────────────────────────────────────
-const PW = 'AmplifyingImpact2026!'; // ← replace this with your password before uploading
+const PW = 'YOUR_PASSWORD_HERE'; // ← replace this with your password before uploading
 
 function checkPW(){
   const v = document.getElementById('pwInput').value;
@@ -776,22 +776,22 @@ function openClient(id){
 }
 
 function openTool(tool){
-  if(tool === 'org-profile'){
-    const id = getActiveClientId();
-    if(!id){
-      // No active client — prompt to select or create one
-      const clients = getClients();
-      if(clients.length === 0){
-        openModal();
-        return;
-      }
-      // Auto-select most recently updated client
-      const sorted = [...clients].sort((a,b) => new Date(b.updatedAt||0) - new Date(a.updatedAt||0));
-      openClient(sorted[0].id);
-      return;
-    }
-    window.location.href = 'org-profile.html';
+  const toolMap = {
+    'org-profile': 'org-profile.html',
+    'handbook': 'handbook.html',
+    'job-architecture': 'job-architecture.html'
+  };
+  const url = toolMap[tool];
+  if(!url) return;
+  const id = getActiveClientId();
+  if(!id){
+    const clients = getClients();
+    if(clients.length === 0){ openModal(); return; }
+    const sorted = [...clients].sort((a,b)=>new Date(b.updatedAt||0)-new Date(a.updatedAt||0));
+    openClient(sorted[0].id);
+    return;
   }
+  window.location.href = url;
 }
 
 // ── SYNC BACK FROM TOOL ───────────────────────────────────────────────────────
