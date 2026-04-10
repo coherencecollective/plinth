@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Plinth · Policy & Handbook Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#1b4436;--green-light:#235a47;--green-deep:#122e24;
+  --mauve:#916179;--sand:#D2BB9F;--gold:#D99E32;--pale:#cccf8e;
+  --crimson:#A42F30;--beige:#F5EDE4;--white:#fff;--off-white:#faf8f5;
+  --text-dark:#1a1a1a;--text-mid:#444;--text-light:#777;--border:#e0d8cf;
+  --shadow:0 2px 16px rgba(27,68,54,0.08);--shadow-md:0 6px 28px rgba(27,68,54,0.13);
+  --radius:4px;--radius-md:8px;--radius-lg:12px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Jost',sans-serif;font-weight:300;font-size:14px;color:var(--text-dark);background:var(--off-white);min-height:100vh;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:var(--green);padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,0.2);}
+.nav-left{display:flex;align-items:center;gap:14px;}
+.back-btn{display:inline-flex;align-items:center;gap:5px;font-family:'Jost',sans-serif;font-size:11px;font-weight:300;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.5);text-decoration:none;padding:5px 10px;border:1px solid rgba(245,237,228,0.15);border-radius:var(--radius);transition:all 0.2s;background:none;cursor:pointer;}
+.back-btn:hover{color:var(--beige);border-color:rgba(245,237,228,0.35);}
+.nav-sep{width:1px;height:18px;background:rgba(255,255,255,0.15);}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:17px;color:var(--beige);letter-spacing:0.02em;}
+.nav-brand span{color:var(--gold);}
+.nav-sub{font-size:12px;font-weight:300;color:rgba(245,237,228,0.45);}
+.nav-right{display:flex;gap:7px;align-items:center;}
+.nbtn{font-family:'Jost',sans-serif;font-weight:300;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:5px 13px;border-radius:var(--radius);cursor:pointer;border:none;transition:all 0.2s;white-space:nowrap;}
+.nbtn-ghost{background:transparent;color:var(--sand);border:1px solid rgba(210,187,159,0.3);}
+.nbtn-ghost:hover{background:rgba(210,187,159,0.1);color:var(--beige);}
+.nbtn-gold{background:var(--gold);color:var(--green-deep);font-weight:400;}
+.nbtn-gold:hover{background:#e8aa38;}
+
+/* HERO */
+.hero{background:linear-gradient(150deg,var(--green-deep) 0%,var(--green) 55%,var(--green-light) 100%);padding:44px 28px 38px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-60px;right:-40px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(204,207,142,0.07) 0%,transparent 70%);pointer-events:none;}
+.hero-inner{max-width:1060px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+.hero-eye{font-size:11px;font-weight:400;letter-spacing:0.2em;text-transform:uppercase;color:var(--pale);margin-bottom:10px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:36px;color:var(--white);line-height:1.05;margin-bottom:8px;}
+.hero-title em{font-style:italic;color:var(--sand);}
+.hero-desc{font-size:12.5px;font-weight:300;color:rgba(245,237,228,0.65);max-width:520px;line-height:1.75;}
+.hero-client{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-md);padding:14px 20px;text-align:right;flex-shrink:0;}
+.hero-client-lbl{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,237,228,0.4);margin-bottom:4px;}
+.hero-client-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--white);}
+.hero-client-meta{font-size:11px;color:rgba(245,237,228,0.5);margin-top:2px;}
+
+/* TABS */
+.tabs{background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;display:flex;max-width:100%;overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{font-size:11px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:13px 18px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.2s;display:flex;align-items:center;gap:6px;}
+.tab:hover{color:var(--green);}
+.tab.active{color:var(--green);border-bottom-color:var(--green);}
+.tab-badge{background:var(--green);color:var(--white);border-radius:10px;padding:1px 6px;font-size:9px;font-weight:400;}
+.tab-badge.gold{background:var(--gold);color:var(--green-deep);}
+
+/* MAIN */
+.main{max-width:1060px;margin:0 auto;padding:32px 28px 80px;display:grid;grid-template-columns:1fr 280px;gap:24px;align-items:start;}
+.main.full{grid-template-columns:1fr;}
+
+/* POLICY PANELS */
+.panel{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;margin-bottom:16px;box-shadow:var(--shadow);opacity:0;transform:translateY(10px);transition:opacity 0.35s,transform 0.35s;}
+.panel.vis{opacity:1;transform:translateY(0);}
+.panel-hdr{padding:14px 20px 12px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.05));display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.panel-hdr-left{display:flex;align-items:center;gap:10px;}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.sd-req{background:var(--crimson);box-shadow:0 0 6px rgba(164,47,48,0.35);}
+.sd-rec{background:var(--gold);box-shadow:0 0 6px rgba(217,158,50,0.35);}
+.sd-opt{background:var(--pale);}
+.sd-na{background:var(--border);}
+.panel-title{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:15px;color:var(--green);}
+.panel-reason{font-size:10.5px;color:var(--text-light);margin-top:1px;}
+.panel-hdr-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.status-pill{font-size:10px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;padding:3px 9px;border-radius:10px;}
+.sp-req{background:rgba(164,47,48,0.08);color:var(--crimson);}
+.sp-rec{background:rgba(217,158,50,0.1);color:#8a6010;}
+.sp-opt{background:rgba(204,207,142,0.2);color:#5a6020;}
+.sp-na{background:rgba(0,0,0,0.04);color:var(--text-light);}
+.counsel-flag{font-size:10px;color:var(--mauve);display:flex;align-items:center;gap:3px;letter-spacing:0.04em;}
+.chevron{font-size:12px;color:var(--text-light);transition:transform 0.2s;}
+.chevron.open{transform:rotate(180deg);}
+.panel-body{display:none;padding:18px 20px;}
+.panel-body.open{display:block;}
+
+/* POLICY CONTENT */
+.policy-meta{display:flex;gap:16px;margin-bottom:14px;flex-wrap:wrap;}
+.pmeta-item{font-size:11px;color:var(--text-light);display:flex;align-items:center;gap:4px;}
+.pmeta-item strong{color:var(--text-mid);font-weight:400;}
+.policy-textarea{
+  width:100%;font-family:'Jost',sans-serif;font-weight:300;font-size:12.5px;
+  color:var(--text-dark);background:rgba(27,68,54,0.02);
+  border:1px solid var(--border);border-radius:var(--radius);
+  padding:14px 16px;outline:none;resize:vertical;min-height:200px;
+  line-height:1.75;transition:border-color 0.2s;
+}
+.policy-textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(27,68,54,0.06);}
+.policy-textarea.placeholder-mode{color:var(--text-light);font-style:italic;}
+.policy-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.pact-btn{
+  padding:7px 14px;border-radius:var(--radius);font-family:'Jost',sans-serif;
+  font-size:11px;font-weight:300;letter-spacing:0.06em;cursor:pointer;
+  border:1px solid var(--border);background:var(--white);color:var(--text-mid);
+  transition:all 0.2s;display:flex;align-items:center;gap:5px;
+}
+.pact-btn:hover{background:rgba(27,68,54,0.04);border-color:var(--sand);color:var(--green);}
+.pact-btn-primary{background:linear-gradient(135deg,var(--green),var(--green-light));color:var(--white);border-color:transparent;}
+.pact-btn-primary:hover{background:linear-gradient(135deg,var(--green-light),var(--green));color:var(--white);}
+.pact-btn:disabled{opacity:0.45;cursor:not-allowed;}
+.generating{
+  display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-light);
+  padding:12px 0;
+}
+.spin{width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* INCLUDE TOGGLE */
+.include-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(--border);margin-top:12px;}
+.include-lbl{font-size:12px;color:var(--text-mid);}
+.tog{position:relative;width:37px;height:20px;flex-shrink:0;}
+.tog input{opacity:0;width:0;height:0;}
+.tog-t{position:absolute;inset:0;background:var(--border);border-radius:10px;cursor:pointer;transition:background 0.2s;}
+.tog-t::after{content:'';position:absolute;left:3px;top:3px;width:14px;height:14px;border-radius:50%;background:var(--white);box-shadow:0 1px 3px rgba(0,0,0,0.2);transition:transform 0.2s;}
+.tog input:checked+.tog-t{background:var(--green);}
+.tog input:checked+.tog-t::after{transform:translateX(17px);}
+
+/* ALERTS */
+.al{border-radius:var(--radius);padding:9px 12px;font-size:12px;line-height:1.6;margin-bottom:10px;display:flex;gap:8px;align-items:flex-start;}
+.al-ic{font-size:13px;flex-shrink:0;margin-top:1px;}
+.al-c{background:rgba(145,97,121,0.07);border-left:3px solid var(--mauve);color:var(--text-mid);}
+.al-w{background:rgba(217,158,50,0.07);border-left:3px solid var(--gold);color:var(--text-mid);}
+.al-i{background:rgba(27,68,54,0.05);border-left:3px solid var(--pale);color:var(--text-mid);}
+
+/* SIDEBAR */
+.sidebar{position:sticky;top:76px;}
+.sb-panel{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow);margin-bottom:14px;}
+.sbph{background:linear-gradient(135deg,var(--green-deep),var(--green));padding:13px 16px;}
+.sbpt{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:15px;color:var(--white);margin-bottom:2px;}
+.sbps{font-size:10.5px;color:rgba(245,237,228,0.55);}
+.sbpb{padding:14px 16px;}
+.summary-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(224,216,207,0.4);font-size:12px;}
+.summary-row:last-child{border-bottom:none;}
+.summary-lbl{color:var(--text-light);}
+.summary-val{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--green);}
+.summary-val.red{color:var(--crimson);}
+.summary-val.gold{color:var(--gold);}
+.profile-missing{font-size:11px;color:var(--text-light);padding:4px 0;line-height:1.5;}
+
+/* SECTION DIVIDERS */
+.section-divider{margin:24px 0 16px;display:flex;align-items:center;gap:10px;}
+.section-divider-label{font-size:10px;font-weight:400;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-light);white-space:nowrap;}
+.section-divider-line{flex:1;height:1px;background:var(--border);}
+
+/* HANDBOOK ASSEMBLY TAB */
+.assembly-view{display:none;}
+.assembly-view.active{display:block;}
+.hb-cover-form{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);padding:24px;box-shadow:var(--shadow);margin-bottom:20px;}
+.hb-cover-title{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--green);margin-bottom:14px;}
+.fg{display:grid;gap:14px;}
+.g2{grid-template-columns:1fr 1fr;}
+.f label{display:block;font-size:11px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-mid);margin-bottom:5px;}
+.f input,.f select,.f textarea{width:100%;font-family:'Jost',sans-serif;font-weight:300;font-size:13px;color:var(--text-dark);background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:8px 11px;outline:none;transition:border-color 0.2s;appearance:none;}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(27,68,54,0.08);}
+.f select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23777' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;}
+
+.policy-order-list{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow);}
+.pol-order-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid rgba(224,216,207,0.5);cursor:grab;}
+.pol-order-item:last-child{border-bottom:none;}
+.pol-order-item:hover{background:rgba(27,68,54,0.02);}
+.pol-order-item.dragging{opacity:0.5;background:rgba(27,68,54,0.05);}
+.pol-drag-handle{color:var(--border);font-size:16px;cursor:grab;flex-shrink:0;}
+.pol-order-num{font-size:10px;color:var(--text-light);width:20px;flex-shrink:0;text-align:center;}
+.pol-order-name{font-size:13px;color:var(--text-dark);flex:1;}
+.pol-order-status{font-size:10px;color:var(--text-light);}
+.pol-order-remove{font-size:14px;color:var(--text-light);cursor:pointer;background:none;border:none;transition:color 0.15s;padding:0 4px;}
+.pol-order-remove:hover{color:var(--crimson);}
+
+/* EXPORT PREVIEW */
+.export-actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;}
+.exp-btn{padding:10px 20px;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:12px;font-weight:300;letter-spacing:0.06em;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--text-mid);transition:all 0.2s;display:flex;align-items:center;gap:6px;}
+.exp-btn:hover{background:rgba(27,68,54,0.04);border-color:var(--sand);color:var(--green);}
+.exp-btn-primary{background:linear-gradient(135deg,var(--green),var(--green-light));color:var(--white);border-color:transparent;}
+.exp-btn-primary:hover{background:linear-gradient(135deg,var(--green-light),var(--green));color:var(--white);}
+
+/* FOOTER */
+footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:center;justify-content:space-between;}
+.fb{font-family:'Cormorant Garamond',serif;font-size:13px;color:rgba(245,237,228,0.4);letter-spacing:0.05em;}
+.fb span{color:var(--sand);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.fu{animation:fadeUp 0.4s ease both;}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <button class="back-btn" onclick="window.location.href='/'">&#8592; All Tools</button>
+    <div class="nav-sep"></div>
+    <div class="nav-brand">Pl<span>in</span>th</div>
+    <div class="nav-sub">&nbsp;·&nbsp; Policy &amp; Handbook Generator</div>
+  </div>
+  <div class="nav-right">
+    <button class="nbtn nbtn-ghost" onclick="saveHandbook()">Save Draft</button>
+    <button class="nbtn nbtn-ghost" onclick="generateAll()">Generate All</button>
+    <button class="nbtn nbtn-gold" onclick="showTab('assembly')">Assemble Handbook &rarr;</button>
+  </div>
+</nav>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('required')" id="tab-required">Required by Law <span class="tab-badge" id="badge-required">0</span></div>
+  <div class="tab" onclick="showTab('recommended')" id="tab-recommended">Recommended <span class="tab-badge gold" id="badge-recommended">0</span></div>
+  <div class="tab" onclick="showTab('optional')" id="tab-optional">Optional</div>
+  <div class="tab" onclick="showTab('assembly')" id="tab-assembly">Handbook Assembly</div>
+</div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eye">Plinth · Tool 02</div>
+      <div class="hero-title">Policy &amp; <em>Handbook Generator</em></div>
+      <div class="hero-desc">Policies are resolved from the Organization Profile. Required policies are determined by law and employee count. Generate draft language for each, edit directly, then assemble and export the complete handbook.</div>
+    </div>
+    <div class="hero-client" id="heroClient">
+      <div class="hero-client-lbl">Active Client</div>
+      <div class="hero-client-name" id="heroClientName">No client loaded</div>
+      <div class="hero-client-meta" id="heroClientMeta">Complete Tool 01 to resolve policies</div>
+    </div>
+  </div>
+</div>
+
+<!-- REQUIRED TAB -->
+<div id="view-required" class="main">
+  <div>
+    <div id="noProfileAlert" class="al al-w fu" style="margin-bottom:16px;display:none">
+      <span class="al-ic">△</span>
+      <span>No Organization Profile found for this client. <a href="org-profile.html" style="color:var(--green);font-weight:400">Complete Tool 01</a> first to resolve which policies are required, recommended, and applicable for this organization.</span>
+    </div>
+    <div id="requiredPolicies"></div>
+  </div>
+  <div class="sidebar" id="sidebar-required">
+    <div class="sb-panel">
+      <div class="sbph"><div class="sbpt">Policy Summary</div><div class="sbps">Based on org profile</div></div>
+      <div class="sbpb" id="summarySidebar">
+        <div class="summary-row"><span class="summary-lbl">Required</span><span class="summary-val red" id="sum-req">—</span></div>
+        <div class="summary-row"><span class="summary-lbl">Recommended</span><span class="summary-val gold" id="sum-rec">—</span></div>
+        <div class="summary-row"><span class="summary-lbl">Optional</span><span class="summary-val" id="sum-opt">—</span></div>
+        <div class="summary-row"><span class="summary-lbl">Generated</span><span class="summary-val" id="sum-gen">0</span></div>
+        <div class="summary-row"><span class="summary-lbl">In Handbook</span><span class="summary-val" id="sum-hb">0</span></div>
+      </div>
+    </div>
+    <div class="sb-panel">
+      <div class="sbph"><div class="sbpt">Profile Snapshot</div><div class="sbps">Driving policy resolution</div></div>
+      <div class="sbpb" id="profileSnapshot">
+        <div class="profile-missing">Load an org profile to see the snapshot.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RECOMMENDED TAB -->
+<div id="view-recommended" class="main" style="display:none">
+  <div>
+    <div id="recommendedPolicies"></div>
+  </div>
+  <div class="sidebar">
+    <div class="sb-panel">
+      <div class="sbph"><div class="sbpt">Why These?</div></div>
+      <div class="sbpb">
+        <p style="font-size:12px;color:var(--text-mid);line-height:1.7">Recommended policies are not legally mandated at this org's current size or structure but represent sound practice for mission-driven organizations and significantly reduce operational and legal risk.</p>
+        <p style="font-size:12px;color:var(--text-mid);line-height:1.7;margin-top:10px">Including them in the handbook signals organizational maturity to funders, board members, and prospective hires.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OPTIONAL TAB -->
+<div id="view-optional" class="main" style="display:none">
+  <div>
+    <div id="optionalPolicies"></div>
+  </div>
+  <div class="sidebar">
+    <div class="sb-panel">
+      <div class="sbph"><div class="sbpt">Optional Policies</div></div>
+      <div class="sbpb">
+        <p style="font-size:12px;color:var(--text-mid);line-height:1.7">These policies are not required or broadly recommended but may be appropriate depending on the organization's culture, stage, and specific circumstances.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ASSEMBLY TAB -->
+<div id="view-assembly" class="main full" style="display:none">
+  <div>
+    <div class="hb-cover-form fu">
+      <div class="hb-cover-title">Handbook Cover &amp; Document Settings</div>
+      <div class="fg g2">
+        <div class="f"><label>Organization Name</label><input type="text" id="hbOrgName" placeholder="As it should appear on the cover"></div>
+        <div class="f"><label>Effective Date</label><input type="text" id="hbEffDate" placeholder="e.g., January 1, 2025"></div>
+        <div class="f"><label>Version</label><input type="text" id="hbVersion" placeholder="e.g., 1.0"></div>
+        <div class="f"><label>Prepared By</label><input type="text" id="hbPrepBy" value="The Coherence Collective, LLC"></div>
+        <div class="f" style="grid-column:span 2"><label>Handbook Subtitle / Tagline (optional)</label><input type="text" id="hbSubtitle" placeholder="e.g., Employee Handbook & Policies"></div>
+        <div class="f" style="grid-column:span 2"><label>Attorney Review Note (appears on cover)</label><input type="text" id="hbAttorney" placeholder="e.g., Draft for Attorney Review — Not for Distribution"></div>
+      </div>
+    </div>
+
+    <div class="section-divider fu"><div class="section-divider-line"></div><div class="section-divider-label">Policy Order</div><div class="section-divider-line"></div></div>
+    <p style="font-size:12px;color:var(--text-light);margin-bottom:14px;line-height:1.6">Drag to reorder. Only policies marked for inclusion appear below. Go back to individual policies to toggle inclusion on or off.</p>
+
+    <div class="policy-order-list fu" id="policyOrderList">
+      <div style="padding:24px;text-align:center;color:var(--text-light);font-size:12px;">No policies included yet. Generate and include policies from the Required and Recommended tabs.</div>
+    </div>
+
+    <div class="export-actions fu">
+      <button class="exp-btn exp-btn-primary" onclick="exportHandbook()">&#8681; Export as HTML (PDF-ready)</button>
+      <button class="exp-btn exp-btn-primary" style="background:linear-gradient(135deg,var(--mauve),#7a4f68)" onclick="exportDOCX()">&#8681; Export as Word (.docx)</button>
+      <button class="exp-btn" onclick="previewHandbook()">&#9654; Preview Handbook</button>
+      <button class="exp-btn" onclick="exportPolicyList()">&#8681; Export Policy List (Text)</button>
+    </div>
+  </div>
+</div>
+
+<footer><div class="fb">The Coherence Collective &nbsp;·&nbsp; <span>Plinth</span></div><div style="font-size:11px;color:rgba(245,237,228,0.25);letter-spacing:0.05em">Policy &amp; Handbook Generator · Proprietary · Not for Distribution</div></footer>
+
+<script>
+// ── PROFILE DATA ──────────────────────────────────────────────────────────────
+let profile = {};
+let policies = {};    // { policyKey: { text, included, generated } }
+let policyOrder = []; // array of policyKeys in order
+
+function loadProfile(){
+  try{
+    const raw = localStorage.getItem('plinth_op');
+    if(raw) profile = JSON.parse(raw);
+  }catch(e){ profile = {}; }
+  // Load saved handbook state
+  try{
+    const hbRaw = localStorage.getItem('plinth_hb');
+    if(hbRaw){
+      const hb = JSON.parse(hbRaw);
+      policies = hb.policies || {};
+      policyOrder = hb.policyOrder || [];
+      if(hb.cover){
+        ['hbOrgName','hbEffDate','hbVersion','hbPrepBy','hbSubtitle','hbAttorney'].forEach(id=>{
+          const el=document.getElementById(id);if(el&&hb.cover[id])el.value=hb.cover[id];
+        });
+      }
+    }
+  }catch(e){}
+}
+
+function saveHandbook(){
+  const cover = {};
+  ['hbOrgName','hbEffDate','hbVersion','hbPrepBy','hbSubtitle','hbAttorney'].forEach(id=>{
+    const el=document.getElementById(id);if(el)cover[id]=el.value;
+  });
+  localStorage.setItem('plinth_hb', JSON.stringify({ policies, policyOrder, cover }));
+  showSaveFlash();
+}
+
+function showSaveFlash(){
+  // brief visual confirmation
+  const nav = document.querySelector('nav');
+  const flash = document.createElement('span');
+  flash.textContent = 'Saved';
+  flash.style.cssText = 'font-size:11px;color:var(--pale);margin-right:8px;opacity:1;transition:opacity 0.5s';
+  nav.querySelector('.nav-right').prepend(flash);
+  setTimeout(()=>{ flash.style.opacity='0'; setTimeout(()=>flash.remove(),500); }, 1500);
+}
+
+// ── POLICY DEFINITIONS ────────────────────────────────────────────────────────
+function buildPolicyDefs(){
+  const tw2 = (parseInt(profile.wft)||0)+(parseInt(profile.wpt6)||0)+(parseInt(profile.wpt)||0);
+  const ic = parseInt(profile.wic)||0;
+  const state = profile.primaryState || 'TX';
+  const hasHealth = profile.benH;
+  const hasWC = profile.benWC;
+  const wcNonSub = profile.wcSt === 'nonsubscriber';
+  const hasRetirement = profile.benR;
+  const hasSeverance = profile.benSev;
+  const hasEquity = profile.benEq;
+  const hasRemote = profile.noSite || (profile.rStates && profile.rStates.length > 0);
+  const payFreq = profile.payFreq || '';
+  const unionRisk = profile.unionSt === 'risk' || profile.unionSt === 'partial' || profile.unionSt === 'full';
+  const hasDisability = profile.benDis;
+  const startup = profile.isStartup;
+  const icPay = profile.icPay;
+
+  return [
+    // ── REQUIRED ──
+    {key:'at-will',name:'At-Will Employment',tier:'required',
+     reason:'Required in all Texas employee handbooks. Establishes the at-will employment relationship and must appear clearly in writing.',
+     counsel:false,
+     cite:'Texas common law · Required in all handbooks',
+     template:`[ORG NAME] is an at-will employer. This means that employment with [ORG NAME] is not for a fixed term and may be terminated by the employee or by [ORG NAME] at any time, with or without cause, and with or without notice, subject to applicable law.\n\nNo statement in this handbook, in any other policy document, or made verbally by any supervisor or manager shall be construed as a contract or guarantee of employment for any specific period. Only a written employment agreement signed by the Executive Director or Chief Executive Officer of [ORG NAME] can modify this at-will relationship.\n\nThis handbook does not constitute a contract of employment.`},
+
+    {key:'eeo',name:'Equal Employment Opportunity',tier: tw2>=15?'required':'recommended',
+     reason: tw2>=15?`Required — ${tw2} employees meets the Title VII 15-employee threshold.`:'Strongly recommended regardless of size. Required at 15+ employees.',
+     counsel:false,
+     cite:'Title VII · ADA · ADEA · Executive Order 11246',
+     template:`[ORG NAME] is an equal opportunity employer. We do not discriminate in hiring or employment on the basis of race, color, national origin, sex, gender identity or expression, sexual orientation, religion, age, disability, genetic information, veteran status, or any other characteristic protected by federal, state, or local law.\n\nThis policy applies to all employment decisions including recruitment, hiring, placement, promotion, compensation, benefits, training, leaves of absence, layoffs, recall, discipline, and termination.\n\n[ORG NAME] is committed to providing a workplace free from discrimination and harassment. Employees who believe they have experienced or witnessed discrimination should report it immediately using the complaint procedure outlined in this handbook.`},
+
+    {key:'harassment',name:'Anti-Harassment Policy',tier:'required',
+     reason:'Required for all employers. Texas employers face significant liability without a written anti-harassment policy and complaint procedure.',
+     counsel:true,
+     cite:'Title VII · Texas Labor Code',
+     template:`[ORG NAME] prohibits harassment of any kind in the workplace, including but not limited to harassment based on race, color, national origin, sex, gender identity or expression, sexual orientation, religion, age, disability, or any other protected characteristic.\n\nSexual harassment includes unwelcome sexual advances, requests for sexual favors, and other verbal, visual, or physical conduct of a sexual nature when such conduct affects terms or conditions of employment, creates an intimidating or hostile work environment, or is used as the basis for employment decisions.\n\nAll employees, including managers and supervisors, are expected to maintain a work environment free from harassment. Violations of this policy may result in disciplinary action up to and including termination.\n\nComplaint Procedure: Any employee who believes they have experienced or witnessed harassment should report it immediately to their supervisor, the [HR/People] function, or the Executive Director. Reports may also be made anonymously. [ORG NAME] will investigate all complaints promptly and impartially.\n\n[ORG NAME] prohibits retaliation against any employee who reports harassment in good faith or participates in an investigation.`},
+
+    {key:'paypractices',name:'Pay Practices & Payroll',tier:'required',
+     reason:'Required in Texas — employees must be informed of pay dates, method, and deduction authorization in writing.',
+     counsel:false,
+     cite:'Texas Payday Law · Texas Labor Code Chapter 61',
+     template:`Pay Schedule: [ORG NAME] pays employees ${payFreq==='semimonthly'?'semi-monthly on the 1st and 15th of each month':payFreq==='biweekly'?'bi-weekly (every two weeks)':payFreq==='weekly'?'weekly':'on a regular schedule communicated at hire'}. When a scheduled payday falls on a weekend or holiday, employees will be paid on the preceding business day.\n\nFinal Pay: In the event of involuntary termination, employees will receive their final paycheck within six (6) calendar days. In the event of voluntary resignation, employees will receive their final paycheck on the next regularly scheduled payday.\n\nDeductions: [ORG NAME] will not make deductions from an employee's paycheck except as required by law (such as taxes and garnishments) or as authorized in writing by the employee. Employees must provide written authorization for any voluntary deduction.\n\nPay Disputes: Employees who believe their pay is incorrect should notify [HR/People/Finance] immediately. [ORG NAME] will investigate and correct any errors promptly.`},
+
+    {key:'timekeeping',name:'Timekeeping & Hours of Work',tier:'required',
+     reason:'Required — nonexempt employees must record all time worked. Failure to maintain accurate records creates FLSA liability.',
+     counsel:false,
+     cite:'FLSA § 211(c) · Texas Payday Law',
+     template:`Nonexempt Employees: All nonexempt employees are required to accurately record all hours worked using [ORG NAME]'s designated timekeeping system. Time must be recorded at the beginning and end of each workday and for all meal periods.\n\nOvertime: Nonexempt employees who work more than 40 hours in a workweek will receive overtime pay at one and one-half times their regular rate of pay. Overtime must be approved in advance by a supervisor. Working unauthorized overtime is a policy violation and may result in disciplinary action — however, unauthorized overtime hours will still be compensated.\n\nExempt Employees: Exempt employees are expected to work the hours necessary to fulfill their job responsibilities. Exempt employees do not receive overtime pay.\n\nMeal and Rest Periods: [ORG NAME] provides a [30/60]-minute unpaid meal period for employees working shifts of [6+ hours]. Additional rest periods may be provided at supervisor discretion.\n\nAccuracy: Falsifying time records is a serious violation of policy and may result in termination.`},
+
+    {key:'finalsepar',name:'Separation & Offboarding',tier:'required',
+     reason:'Required — Texas final pay rules apply to all employers. Separation procedures must be documented in writing.',
+     counsel:true,
+     cite:'Texas Payday Law · Texas Labor Code § 61.014',
+     template:`Voluntary Resignation: Employees who choose to resign are requested to provide at least two (2) weeks written notice. [ORG NAME] appreciates advance notice but is not required to retain the employee through the notice period.\n\nInvoluntary Termination: [ORG NAME] reserves the right to terminate employment at any time consistent with its at-will employment policy.\n\nFinal Pay:\n• Involuntary termination: Final paycheck will be provided within six (6) calendar days of the last day of work.\n• Voluntary resignation: Final paycheck will be provided on the next regularly scheduled payday.\n\nReturn of Property: Upon separation, employees must return all [ORG NAME] property including keys, access cards, equipment, devices, and documents. Failure to return property may result in deductions from the final paycheck to the extent permitted by law and with prior written authorization.\n\nBenefits: Information regarding continuation of benefits, COBRA rights (if applicable), and retirement account options will be provided at separation.`},
+
+    ...(tw2>=50?[{key:'fmla',name:'Family & Medical Leave (FMLA)',tier:'required',
+     reason:`Required — ${tw2} employees meets the 50-employee FMLA threshold.`,
+     counsel:true,
+     cite:'Family and Medical Leave Act of 1993 (29 CFR Part 825)',
+     template:`Eligibility: Employees who have worked for [ORG NAME] for at least 12 months and have worked at least 1,250 hours in the preceding 12-month period are eligible for up to 12 weeks of unpaid, job-protected leave per year for qualifying reasons.\n\nQualifying Reasons:\n• Birth, adoption, or foster placement of a child\n• Serious health condition of the employee\n• Serious health condition of a spouse, child, or parent\n• Qualifying military exigency\n\nMilitary Caregiver Leave: Eligible employees may take up to 26 weeks in a single 12-month period to care for a covered servicemember with a serious illness or injury.\n\nNotice: Employees must provide 30 days advance notice when leave is foreseeable. For unforeseeable leave, employees must notify [ORG NAME] as soon as practicable.\n\nMedical Certification: [ORG NAME] may require certification from a healthcare provider to support a request for FMLA leave.\n\nContinuation of Benefits: Health insurance coverage will be maintained during FMLA leave on the same terms as if the employee had continued working.\n\nJob Restoration: Upon return from FMLA leave, employees will be restored to the same or equivalent position with equivalent pay, benefits, and other terms of employment.\n\nThis policy is subject to applicable federal regulations. Contact [HR/People] for a copy of the Department of Labor's Notice of Eligibility and Rights.`}]:[]),
+
+    ...(tw2>=15?[{key:'ada',name:'ADA & Reasonable Accommodation',tier:'required',
+     reason:`Required — ${tw2} employees meets the ADA Title I threshold.`,
+     counsel:true,
+     cite:'Americans with Disabilities Act (42 U.S.C. § 12101 et seq.)',
+     template:`[ORG NAME] is committed to providing equal employment opportunities to qualified individuals with disabilities in accordance with the Americans with Disabilities Act (ADA) and applicable state law.\n\nReasonable Accommodation: [ORG NAME] will provide reasonable accommodations to qualified employees and applicants with disabilities unless doing so would cause an undue hardship. Employees who require an accommodation should notify [HR/People/their supervisor] in writing.\n\nInteractive Process: Upon receipt of an accommodation request, [ORG NAME] will engage in an interactive process with the employee to identify effective accommodations. [ORG NAME] may request medical documentation to support the accommodation request.\n\nConfidentiality: Medical information obtained through the accommodation process will be kept confidential and maintained in a separate medical file.\n\nNon-Retaliation: [ORG NAME] prohibits retaliation against any employee who requests an accommodation or participates in the interactive process.\n\nEmployees with questions about this policy should contact [HR/People].`}]:[]),
+
+    {key:'newhire',name:'New Hire Reporting & I-9 Compliance',tier:'required',
+     reason:'Required — all Texas employers must report new hires within 20 calendar days. I-9 completion is federally required for all new hires.',
+     counsel:false,
+     cite:'Immigration Reform and Control Act · Texas Family Code § 234.101',
+     template:`Employment Eligibility Verification: Federal law requires [ORG NAME] to verify the identity and employment authorization of all employees. All new hires must complete Form I-9 on or before their first day of work and present acceptable documentation within three (3) business days of hire.\n\nNew Hire Reporting: [ORG NAME] is required by Texas law to report all new hires and rehires to the Texas Office of the Attorney General within 20 calendar days of the date of hire.\n\nE-Verify: [ORG NAME] [participates in / does not participate in] the federal E-Verify program.\n\nRe-Verification: When employment authorization expires, employees must provide updated documentation. [ORG NAME] will provide advance notice of upcoming expiration dates.`},
+
+    ...(hasWC&&wcNonSub?[{key:'wcnotice',name:'Workers\' Compensation Non-Subscriber Notice',tier:'required',
+     reason:'Required — Texas non-subscriber employers must include a written notice in the employee handbook and post notice at each worksite.',
+     counsel:true,
+     cite:'Texas Labor Code § 406.005 · DWC Form-005',
+     template:`Notice to Employees Regarding Workers' Compensation:\n\n[ORG NAME] has chosen not to obtain workers' compensation insurance coverage. As a non-subscriber, [ORG NAME] is not covered by the Texas Workers' Compensation Act.\n\nYou may be able to recover damages in a civil lawsuit if you are injured on the job. However, your right to sue and the amounts you may recover may be limited.\n\nYou should be aware of your rights and options in the event of a work-related injury. Contact the Texas Department of Insurance, Division of Workers' Compensation, or consult with an attorney if you have questions about your rights.\n\nThis notice is provided in accordance with Texas Labor Code § 406.005.`}]:[]),
+
+    // ── RECOMMENDED ──
+    {key:'complaint',name:'Complaint Reporting & Investigations',tier:'recommended',
+     reason:'Strongly recommended — establishes a formal complaint intake process and reduces employer liability in harassment and discrimination claims.',
+     counsel:true,
+     cite:'Best practice · Reduces Title VII / TCHRA liability',
+     template:`[ORG NAME] encourages employees to report workplace concerns, policy violations, or potential illegal conduct without fear of retaliation.\n\nReporting: Employees may report concerns to their direct supervisor, [HR/People], the Executive Director, or an anonymous reporting channel if available. Complaints may be submitted verbally or in writing.\n\nInvestigation: [ORG NAME] will promptly and impartially investigate all complaints. The investigation may include interviews, document review, and other appropriate steps. Investigations will be completed as expeditiously as possible.\n\nConfidentiality: [ORG NAME] will maintain the confidentiality of complaints and investigations to the extent practicable. Complete confidentiality cannot be guaranteed in all circumstances.\n\nNon-Retaliation: [ORG NAME] strictly prohibits retaliation against any employee who reports a concern in good faith or participates in an investigation. Retaliation is itself a serious policy violation subject to disciplinary action.\n\nOutcome: Employees who file complaints will be informed of the outcome to the extent appropriate and consistent with privacy considerations.`},
+
+    {key:'corrective',name:'Corrective Action & Progressive Discipline',tier:'recommended',
+     reason:'Strongly recommended — provides structure for performance and conduct issues and supports documentation in the event of separation.',
+     counsel:true,
+     cite:'Best practice · Reduces wrongful termination exposure',
+     template:`[ORG NAME] uses a progressive discipline process to address performance and conduct issues. The goals of this process are to provide employees with notice of concerns and an opportunity to improve, and to ensure consistent and fair treatment.\n\nSteps of Progressive Discipline:\n1. Verbal counseling — for minor or first-time issues\n2. Written warning — for recurring or more serious issues\n3. Final written warning — for continued or serious violations\n4. Termination — when prior steps have not resulted in improvement or for serious misconduct\n\n[ORG NAME] reserves the right to skip steps or proceed directly to termination depending on the severity of the conduct. This policy does not alter the at-will employment relationship.\n\nDocumentation: All disciplinary actions will be documented and placed in the employee's personnel file. Employees will have the opportunity to review and respond to written disciplinary documentation.\n\nPerformance Improvement Plans: In cases of performance concerns, [ORG NAME] may utilize a formal Performance Improvement Plan (PIP) with specific goals, timelines, and support resources.`},
+
+    {key:'pto',name:'Paid Time Off (PTO) & Leave',tier:'recommended',
+     reason:'Strongly recommended — employees expect PTO policies in writing. Texas does not mandate paid leave but written policies create binding obligations once established.',
+     counsel:false,
+     cite:'Texas Payday Law — written policies bind the employer',
+     template:`[ORG NAME] provides paid time off (PTO) to eligible employees for vacation, personal time, and illness.\n\nAccrual: Full-time employees accrue PTO at a rate of [X] hours per pay period, up to a maximum of [X] hours per year. Part-time employees accrue PTO on a prorated basis.\n\nEligibility: PTO accrual begins on the first day of employment. Employees may use accrued PTO after [30/60/90] days of employment.\n\nScheduling: PTO requests should be submitted to supervisors with as much advance notice as possible. Requests are subject to operational needs and manager approval.\n\nCarryover: Employees may carry over up to [X] hours of unused PTO at the end of each calendar year. Hours exceeding this maximum will [be forfeited / converted per policy].\n\nPTO at Separation: Accrued, unused PTO [will / will not] be paid out upon separation. [NOTE TO ATTORNEY: Texas requires payout if the employer's written policy promises it. Confirm payout language before finalizing.]\n\nHolidays: [ORG NAME] observes the following paid holidays: [list holidays].`},
+
+    {key:'remote',name:'Remote & Hybrid Work Policy',tier: hasRemote?'recommended':'optional',
+     reason: hasRemote?'Recommended — organization has remote employees or operates without a physical worksite.':'Optional — include if remote or hybrid arrangements are offered.',
+     counsel:false,
+     cite:'Best practice · FLSA timekeeping applies to remote nonexempt employees',
+     template:`[ORG NAME] [supports / may support] remote and hybrid work arrangements where operationally feasible and with supervisor approval.\n\nEligibility: Remote or hybrid arrangements are available at the discretion of [ORG NAME] based on role requirements, performance, and operational needs. Not all positions are eligible for remote work.\n\nApproval: Remote work arrangements must be approved in writing by the employee's supervisor and [HR/People]. Approved arrangements may be modified or discontinued by [ORG NAME] at any time.\n\nExpectations: Remote employees are expected to maintain regular working hours, be accessible during core business hours, attend required virtual meetings, and meet the same performance standards as in-office employees.\n\nEquipment & Security: Employees are responsible for maintaining a safe, productive, and private workspace. [ORG NAME] [will / will not] provide equipment for remote work. Employees must follow all data security protocols.\n\nTimekeeping: Nonexempt employees working remotely must accurately record all hours worked using the designated timekeeping system. All overtime must be pre-approved.\n\nExpenses: [ORG NAME] [will / will not] reimburse employees for home office expenses. [If reimbursing, specify: internet, phone, equipment, etc.]`},
+
+    {key:'confidentiality',name:'Confidentiality & Data Privacy',tier:'recommended',
+     reason:'Strongly recommended — protects organizational data, donor information, and client/beneficiary privacy.',
+     counsel:true,
+     cite:'Best practice · NLRA considerations apply — do not restrict protected concerted activity',
+     template:`Employees of [ORG NAME] may have access to confidential information in the course of their work. This policy establishes expectations for the protection and appropriate use of that information.\n\nConfidential Information includes: donor and funder information, financial data, personnel records, strategic plans, program evaluation data, beneficiary and client information, proprietary systems and processes, and any information designated as confidential by leadership.\n\nEmployee Obligations: Employees must protect confidential information from unauthorized disclosure during and after employment. Employees may not use confidential information for personal gain or disclose it to unauthorized parties.\n\nPersonnel Records: Employee personnel files are confidential. Access is limited to the employee, their supervisor, and HR. Employees may request to review their own file.\n\nData Security: Employees must follow [ORG NAME]'s data security protocols including password protection, secure disposal of sensitive documents, and prompt reporting of potential data breaches.\n\nNLRA Notice: Nothing in this policy prohibits employees from discussing wages, hours, or working conditions with coworkers or exercising rights protected under the National Labor Relations Act.\n\nPost-Employment: Confidentiality obligations survive the end of employment.`},
+
+    {key:'technology',name:'Technology & Acceptable Use',tier:'recommended',
+     reason:'Recommended — covers use of organizational systems, devices, and accounts.',
+     counsel:false,
+     cite:'Best practice · Establishes employer right to monitor organizational systems',
+     template:`[ORG NAME] provides technology resources including computers, software, email, and internet access to support employees in performing their job duties. This policy governs the use of these resources.\n\nAcceptable Use: Technology resources are to be used primarily for business purposes. Limited personal use is permitted as long as it does not interfere with work performance, does not violate any law or policy, and does not create liability for [ORG NAME].\n\nNo Privacy Expectation: Employees have no reasonable expectation of privacy when using [ORG NAME]'s technology systems. [ORG NAME] reserves the right to monitor, access, and review all communications and data on its systems.\n\nProhibited Activities: Employees may not use [ORG NAME]'s systems to access, store, or distribute illegal content, harassing communications, unauthorized software, or proprietary information belonging to other organizations.\n\nPasswords & Security: Employees are responsible for protecting their account credentials. Passwords must not be shared. Suspected security breaches must be reported immediately.\n\nEquipment: Employees must care for [ORG NAME] equipment and return it upon separation. Damage caused by misuse may result in reimbursement obligations.`},
+
+    {key:'socialmedia',name:'Social Media Policy',tier:'recommended',
+     reason:'Recommended — protects organizational reputation while preserving NLRA-protected employee speech rights.',
+     counsel:true,
+     cite:'NLRA § 7 — policy must not chill protected concerted activity',
+     template:`[ORG NAME] recognizes that employees may use social media personally and professionally. This policy provides guidance on appropriate social media use as it relates to [ORG NAME].\n\nPersonal Social Media: Employees are free to use personal social media accounts. When identifying yourself as an [ORG NAME] employee, employees should make clear that views expressed are their own and not those of [ORG NAME].\n\nOrganizational Accounts: Only authorized employees may post on behalf of [ORG NAME]'s official accounts. Content must be reviewed and approved per established protocols.\n\nConfidential Information: Employees may not post confidential information about [ORG NAME], its clients, donors, or staff.\n\nHarassment: Social media activity that constitutes harassment of coworkers, clients, or other protected individuals violates [ORG NAME]'s anti-harassment policy.\n\nNLRA Notice: Nothing in this policy is intended to prohibit employees from engaging in protected concerted activity, including discussing wages, hours, benefits, or working conditions.\n\nViolations: Violations of this policy may result in disciplinary action up to and including termination.`},
+
+    {key:'expense',name:'Expense Reimbursement',tier:'recommended',
+     reason:'Recommended — establishes authorization and documentation requirements for business expense reimbursement.',
+     counsel:false,
+     cite:'IRS accountable plan rules · Best practice',
+     template:`[ORG NAME] will reimburse employees for reasonable and necessary business expenses incurred on behalf of [ORG NAME] when properly documented and approved.\n\nPre-Approval: Expenses above $[X] require pre-approval from a supervisor or budget authority. Travel expenses should be pre-approved regardless of amount.\n\nDocumentation: Employees must submit expense reports with original receipts within [30] days of incurring the expense. Reports must include the date, amount, business purpose, and attendees (if applicable).\n\nTravel: Travel expenses including transportation, lodging, and meals will be reimbursed at [per diem rates / actual cost with receipts]. Employees are expected to exercise prudent judgment and seek cost-effective options.\n\nPersonal Expenses: Personal expenses incurred during business travel are the responsibility of the employee and will not be reimbursed.\n\nNon-Reimbursable Items: [Include items specific to org — alcohol, luxury upgrades, etc.]\n\nReimbursement Timeline: Approved expense reports will be reimbursed within [15/30] days.`},
+
+    ...(ic>0?[{key:'icpolicy',name:'Independent Contractor Policy',tier:'recommended',
+     reason:`Recommended — ${ic} independent contractor(s) identified. Written IC policy reduces misclassification risk and establishes clear boundaries.`,
+     counsel:true,
+     cite:'IRS 20-factor test · DOL economic realities test · NLRA',
+     template:`[ORG NAME] engages independent contractors for specific projects and services. This policy establishes the standards that govern those relationships.\n\nClassification: Independent contractors are not employees of [ORG NAME]. They are engaged for specific projects and maintain control over the manner and means of performing their work.\n\nRequirements: All independent contractor engagements must be supported by a written contract or statement of work executed prior to the start of work. Contracts must be reviewed and approved by [appropriate authority].\n\nPayment: Independent contractors will be compensated as specified in their contract. [ORG NAME] will issue Form 1099-NEC to contractors paid $600 or more in a calendar year.\n\nNo Benefits: Independent contractors are not eligible for [ORG NAME] employee benefits, including health insurance, retirement plans, PTO, or workers' compensation.\n\nConfidentiality: Independent contractors with access to confidential information must execute a confidentiality agreement.\n\nMisclassification: [ORG NAME] takes worker classification seriously. Questions about contractor status should be directed to [HR/People/Finance].`}]:[]),
+
+    // ── OPTIONAL ──
+    {key:'safety',name:'Workplace Safety',tier:(parseInt(profile.wft)||0)>=10?'recommended':'optional',
+     reason:(parseInt(profile.wft)||0)>=10?'Recommended — OSHA recordkeeping likely required at this headcount. Written safety policy supports compliance.':'Optional — include if operations involve physical safety considerations.',
+     counsel:false,
+     cite:'OSHA General Duty Clause · 29 U.S.C. § 654',
+     template:`[ORG NAME] is committed to providing a safe and healthy work environment for all employees in compliance with applicable federal and state safety regulations.\n\nEmployee Responsibilities: All employees are expected to follow safety rules and procedures, use required protective equipment, report unsafe conditions or practices immediately, and participate in required safety training.\n\nAccident Reporting: Employees must report all work-related injuries, illnesses, and near-miss incidents to their supervisor immediately. Prompt reporting is required regardless of the severity of the injury.\n\nHazard Communication: Employees who work with hazardous materials will receive appropriate training and access to Safety Data Sheets (SDS) as required.\n\nEmergency Procedures: [ORG NAME] maintains emergency evacuation and response procedures. Employees should familiarize themselves with emergency exits and meeting points.\n\nOSHA Posting: [ORG NAME] posts required OSHA notices in visible locations at each worksite.`},
+
+    ...(hasSeverance?[{key:'severance',name:'Severance Policy',tier:'optional',
+     reason:'Included because severance was elected in the org profile. NOTE: In Texas, written severance policies create binding obligations — language requires attorney review before publication.',
+     counsel:true,
+     cite:'Texas Payday Law — written policies are binding · ADEA considerations at 40+',
+     template:`[ORG NAME] may offer severance benefits to eligible employees upon separation, at its sole discretion, in accordance with this policy.\n\nEligibility: Employees who are involuntarily separated due to [position elimination / restructuring / reduction in force] may be eligible for severance benefits. Employees terminated for cause are not eligible for severance.\n\nSeverance Amount: Eligible employees will receive [X weeks] of base pay for each [year / two years] of continuous service, up to a maximum of [X weeks].\n\nConditions: Severance benefits are contingent upon the employee's execution of a separation and release agreement in a form acceptable to [ORG NAME]. Employees over age 40 will receive the ADEA-required review period before signing.\n\nBenefits Continuation: [Describe COBRA rights, if applicable, during severance period.]\n\n[ORG NAME] reserves the right to modify or discontinue this policy at any time. This policy does not alter the at-will employment relationship and does not guarantee severance in any particular case.\n\n[NOTE: This policy must be reviewed by employment counsel before distribution to employees.]`}]:[]),
+
+    {key:'performance',name:'Performance Reviews & Goal Setting',tier:'optional',
+     reason:'Optional — establishes formal review cycles and performance expectations.',
+     counsel:false,
+     cite:'Best practice',
+     template:`[ORG NAME] conducts formal performance reviews to provide employees with feedback, recognize contributions, and identify areas for development.\n\nReview Cycle: Performance reviews are conducted [annually / semi-annually] in [month(s)]. New employees receive a 90-day check-in review.\n\nProcess: Performance reviews assess achievement of established goals, demonstration of [ORG NAME]'s core competencies, and overall contribution to organizational mission.\n\nGoal Setting: At the beginning of each review cycle, employees and supervisors will establish written performance goals aligned with organizational priorities. Goals should be specific, measurable, and achievable within the review period.\n\nDocumentation: Performance reviews are documented and retained in the employee's personnel file. Employees will have the opportunity to review and respond to their evaluation.\n\nCompensation Decisions: Performance reviews may inform compensation adjustments, though satisfactory performance does not guarantee a pay increase.`},
+
+    {key:'conduct',name:'Standards of Conduct',tier:'optional',
+     reason:'Optional — establishes behavioral expectations across the organization.',
+     counsel:false,
+     cite:'Best practice',
+     template:`[ORG NAME] expects all employees to conduct themselves in a professional manner consistent with our mission and values.\n\nGeneral Standards: Employees are expected to treat all colleagues, clients, partners, and community members with respect and professionalism; maintain attendance and punctuality; perform assigned duties competently and diligently; maintain appropriate confidentiality; and represent [ORG NAME] appropriately in all public and professional settings.\n\nConflicts of Interest: Employees must avoid situations where personal interests conflict or appear to conflict with [ORG NAME]'s interests. Employees must disclose potential conflicts of interest to their supervisor or the Executive Director.\n\nGifts & Gratuities: Employees may not accept gifts, gratuities, or other benefits from vendors, contractors, or others doing business with [ORG NAME] that could create an appearance of impropriety.\n\nViolations: Violations of these standards may result in disciplinary action up to and including termination.`},
+  ];
+}
+
+// ── RENDER POLICIES ───────────────────────────────────────────────────────────
+function renderPolicies(){
+  const defs = buildPolicyDefs();
+  const required = defs.filter(p=>p.tier==='required');
+  const recommended = defs.filter(p=>p.tier==='recommended');
+  const optional = defs.filter(p=>p.tier==='optional');
+
+  document.getElementById('sum-req').textContent = required.length;
+  document.getElementById('sum-rec').textContent = recommended.length;
+  document.getElementById('sum-opt').textContent = optional.length;
+  document.getElementById('badge-required').textContent = required.length;
+  document.getElementById('badge-recommended').textContent = recommended.length;
+
+  renderPolicyList('requiredPolicies', required);
+  renderPolicyList('recommendedPolicies', recommended);
+  renderPolicyList('optionalPolicies', optional);
+  updateGeneratedCount();
+  renderAssemblyList();
+}
+
+function renderPolicyList(containerId, policies_arr){
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+  if(policies_arr.length === 0){
+    container.innerHTML = '<div style="padding:24px;text-align:center;color:var(--text-light);font-size:12px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md)">No policies in this category for the current org profile.</div>';
+    return;
+  }
+  policies_arr.forEach((p, i) => {
+    const saved = policies[p.key] || {};
+    const isGenerated = !!saved.text;
+    const isIncluded = saved.included !== false && isGenerated;
+    const el = document.createElement('div');
+    el.className = 'panel fu';
+    el.style.animationDelay = (i * 0.05) + 's';
+    el.id = 'policy-panel-' + p.key;
+    const tierDot = {required:'sd-req',recommended:'sd-rec',optional:'sd-opt'}[p.tier]||'sd-opt';
+    const tierPill = {required:'sp-req',recommended:'sp-rec',optional:'sp-opt'}[p.tier]||'sp-opt';
+    const tierLabel = {required:'Required',recommended:'Recommended',optional:'Optional'}[p.tier]||'Optional';
+    el.innerHTML = `
+      <div class="panel-hdr" onclick="togglePanel('${p.key}')">
+        <div class="panel-hdr-left">
+          <div class="status-dot ${tierDot}"></div>
+          <div>
+            <div class="panel-title">${p.name}</div>
+            <div class="panel-reason">${p.reason}</div>
+          </div>
+        </div>
+        <div class="panel-hdr-right">
+          ${p.counsel?'<span class="counsel-flag">⚖ Counsel Review</span>':''}
+          ${isGenerated?'<span style="font-size:10px;color:var(--pale);letter-spacing:0.06em">Generated</span>':''}
+          <span class="status-pill ${tierPill}">${tierLabel}</span>
+          <span class="chevron" id="chev-${p.key}">&#9660;</span>
+        </div>
+      </div>
+      <div class="panel-body" id="body-${p.key}">
+        ${p.counsel?`<div class="al al-c"><span class="al-ic">⚖</span><span>This policy requires attorney review before distribution to employees. Language has been drafted for review purposes — not for direct use without counsel sign-off.</span></div>`:''}
+        <div class="policy-meta">
+          <div class="pmeta-item"><strong>Authority:</strong> ${p.cite}</div>
+        </div>
+        <textarea class="policy-textarea ${isGenerated?'':'placeholder-mode'}" 
+          id="textarea-${p.key}" 
+          rows="12"
+          oninput="policies['${p.key}'] = policies['${p.key}'] || {}; policies['${p.key}'].text = this.value; this.classList.remove('placeholder-mode'); updateGeneratedCount(); renderAssemblyList();"
+        >${isGenerated ? saved.text : 'Click "Generate Draft" to produce policy language based on the organization profile, or type directly in this field.'}</textarea>
+        <div class="policy-actions">
+          <button class="pact-btn pact-btn-primary" onclick="generatePolicy('${p.key}')" id="genbtn-${p.key}">
+            &#9881; Generate Draft
+          </button>
+          <button class="pact-btn" onclick="copyPolicy('${p.key}')">&#8645; Copy</button>
+          <button class="pact-btn" onclick="clearPolicy('${p.key}')">&#10005; Clear</button>
+        </div>
+        <div class="include-row">
+          <span class="include-lbl">Include in handbook</span>
+          <label class="tog">
+            <input type="checkbox" id="include-${p.key}" ${isIncluded?'checked':''} 
+              onchange="toggleInclude('${p.key}', this.checked)">
+            <span class="tog-t"></span>
+          </label>
+        </div>
+      </div>`;
+    container.appendChild(el);
+    setTimeout(()=>el.classList.add('vis'), 50 + i*40);
+  });
+}
+
+function togglePanel(key){
+  const body = document.getElementById('body-' + key);
+  const chev = document.getElementById('chev-' + key);
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chev.classList.toggle('open', !isOpen);
+}
+
+// ── GENERATE POLICY ───────────────────────────────────────────────────────────
+// ── GENERATE ALL ─────────────────────────────────────────────────────────────
+function generateAll(){
+  const defs = buildPolicyDefs();
+  const toGenerate = defs.filter(p => p.tier === 'required' || p.tier === 'recommended');
+  if(toGenerate.length === 0){ alert('No policies to generate.'); return; }
+  const confirmed = confirm(`Generate draft language for all ${toGenerate.length} required and recommended policies? This will replace any existing drafts for policies that haven't been edited.`);
+  if(!confirmed) return;
+  const orgName = profile.legalName || profile.dbaName || '[Organization Name]';
+  toGenerate.forEach(p => {
+    // Only auto-generate if not already manually edited
+    const saved = policies[p.key];
+    const alreadyEdited = saved?.text && saved.text !== p.template.replace(/\[ORG NAME\]/g, orgName);
+    if(!alreadyEdited){
+      policies[p.key] = policies[p.key] || {};
+      policies[p.key].text = p.template.replace(/\[ORG NAME\]/g, orgName);
+      policies[p.key].included = true;
+      const textarea = document.getElementById('textarea-' + p.key);
+      if(textarea){ textarea.value = policies[p.key].text; textarea.classList.remove('placeholder-mode'); }
+      const includeToggle = document.getElementById('include-' + p.key);
+      if(includeToggle) includeToggle.checked = true;
+      const btn = document.getElementById('genbtn-' + p.key);
+      if(btn) btn.innerHTML = '&#9881; Re-generate';
+    }
+  });
+  updateGeneratedCount();
+  renderAssemblyList();
+  saveHandbook();
+  // Show brief confirmation
+  const nav = document.querySelector('.nav-right');
+  const flash = document.createElement('span');
+  flash.textContent = `${toGenerate.length} policies generated`;
+  flash.style.cssText = 'font-size:11px;color:var(--pale);margin-right:8px;';
+  nav.prepend(flash);
+  setTimeout(()=>flash.remove(), 2500);
+}
+
+function generatePolicy(key){
+  const defs = buildPolicyDefs();
+  const def = defs.find(p=>p.key===key);
+  if(!def) return;
+  const btn = document.getElementById('genbtn-' + key);
+  const textarea = document.getElementById('textarea-' + key);
+  const orgName = profile.legalName || profile.dbaName || '[Organization Name]';
+  if(btn){ btn.disabled = true; btn.innerHTML = '<div class="spin"></div> Generating...'; }
+  // Slight delay for UX polish
+  setTimeout(()=>{
+    let text = def.template.replace(/\[ORG NAME\]/g, orgName);
+    textarea.value = text;
+    textarea.classList.remove('placeholder-mode');
+    policies[key] = policies[key] || {};
+    policies[key].text = text;
+    policies[key].included = true;
+    const includeToggle = document.getElementById('include-' + key);
+    if(includeToggle) includeToggle.checked = true;
+    if(btn){ btn.disabled = false; btn.innerHTML = '&#9881; Re-generate'; }
+    updateGeneratedCount();
+    renderAssemblyList();
+    saveHandbook();
+  }, 400);
+}
+
+function clearPolicy(key){
+  if(!confirm('Clear the generated text for this policy?')) return;
+  const textarea = document.getElementById('textarea-' + key);
+  if(textarea){ textarea.value = 'Click "Generate Draft" to produce policy language based on the organization profile, or type directly in this field.'; textarea.classList.add('placeholder-mode'); }
+  if(policies[key]) { policies[key].text = ''; policies[key].included = false; }
+  const includeToggle = document.getElementById('include-' + key);
+  if(includeToggle) includeToggle.checked = false;
+  updateGeneratedCount();
+  renderAssemblyList();
+}
+
+function copyPolicy(key){
+  const textarea = document.getElementById('textarea-' + key);
+  if(textarea) navigator.clipboard.writeText(textarea.value);
+}
+
+function toggleInclude(key, val){
+  policies[key] = policies[key] || {};
+  policies[key].included = val;
+  renderAssemblyList();
+  updateGeneratedCount();
+  saveHandbook();
+}
+
+function updateGeneratedCount(){
+  const gen = Object.values(policies).filter(p=>p.text&&p.text.length>10).length;
+  const inHb = Object.values(policies).filter(p=>p.included&&p.text&&p.text.length>10).length;
+  document.getElementById('sum-gen').textContent = gen;
+  document.getElementById('sum-hb').textContent = inHb;
+}
+
+// ── ASSEMBLY ──────────────────────────────────────────────────────────────────
+function renderAssemblyList(){
+  const defs = buildPolicyDefs();
+  const included = defs.filter(p => policies[p.key]?.included && policies[p.key]?.text);
+  const list = document.getElementById('policyOrderList');
+  if(included.length === 0){
+    list.innerHTML = '<div style="padding:24px;text-align:center;color:var(--text-light);font-size:12px;">No policies included yet. Generate and include policies from the Required and Recommended tabs.</div>';
+    return;
+  }
+  // Maintain order if policyOrder exists, else default
+  const orderedKeys = policyOrder.filter(k=>included.find(p=>p.key===k));
+  included.forEach(p=>{ if(!orderedKeys.includes(p.key)) orderedKeys.push(p.key); });
+  policyOrder = orderedKeys;
+  list.innerHTML = '';
+  orderedKeys.forEach((k, i) => {
+    const def = defs.find(p=>p.key===k);
+    if(!def) return;
+    const item = document.createElement('div');
+    item.className = 'pol-order-item';
+    item.draggable = true;
+    item.dataset.key = k;
+    item.innerHTML = `<span class="pol-drag-handle">⠿</span><span class="pol-order-num">${String(i+1).padStart(2,'0')}</span><span class="pol-order-name">${def.name}</span><span class="pol-order-status">${def.tier}</span><button class="pol-order-remove" onclick="removeFromHandbook('${k}')" title="Remove from handbook">×</button>`;
+    item.addEventListener('dragstart', e=>{ e.dataTransfer.setData('text/plain',k); item.classList.add('dragging'); });
+    item.addEventListener('dragend', ()=>item.classList.remove('dragging'));
+    item.addEventListener('dragover', e=>{ e.preventDefault(); });
+    item.addEventListener('drop', e=>{ e.preventDefault(); const fromKey=e.dataTransfer.getData('text/plain'); reorderPolicy(fromKey,k); });
+    list.appendChild(item);
+  });
+}
+
+function reorderPolicy(fromKey, toKey){
+  const fi = policyOrder.indexOf(fromKey);
+  const ti = policyOrder.indexOf(toKey);
+  if(fi===-1||ti===-1) return;
+  policyOrder.splice(fi,1);
+  policyOrder.splice(ti,0,fromKey);
+  renderAssemblyList();
+}
+
+function removeFromHandbook(key){
+  if(policies[key]) policies[key].included = false;
+  const tog = document.getElementById('include-'+key);
+  if(tog) tog.checked = false;
+  renderAssemblyList();
+  updateGeneratedCount();
+  saveHandbook();
+}
+
+// ── PROFILE SNAPSHOT ─────────────────────────────────────────────────────────
+function renderProfileSnapshot(){
+  const tw2 = (parseInt(profile.wft)||0)+(parseInt(profile.wpt6)||0)+(parseInt(profile.wpt)||0);
+  const snap = document.getElementById('profileSnapshot');
+  if(!profile.legalName){
+    snap.innerHTML = '<div class="profile-missing">No profile loaded. Complete Tool 01 to resolve policy applicability.</div>';
+    document.getElementById('noProfileAlert').style.display = 'flex';
+    return;
+  }
+  document.getElementById('noProfileAlert').style.display = 'none';
+  snap.innerHTML = `
+    <div class="summary-row"><span class="summary-lbl">Org</span><span style="font-size:11px;color:var(--text-mid);text-align:right;max-width:160px">${profile.legalName}</span></div>
+    <div class="summary-row"><span class="summary-lbl">State</span><span style="font-size:12px;color:var(--text-mid)">${profile.primaryState||'—'}</span></div>
+    <div class="summary-row"><span class="summary-lbl">W-2 Employees</span><span class="summary-val">${tw2}</span></div>
+    <div class="summary-row"><span class="summary-lbl">ICs</span><span style="font-size:12px;color:var(--text-mid)">${profile.wic||0}</span></div>
+    <div class="summary-row"><span class="summary-lbl">Health Plan</span><span style="font-size:12px;color:var(--text-mid)">${profile.benH?'Yes':'No'}</span></div>
+    <div class="summary-row"><span class="summary-lbl">FMLA</span><span style="font-size:12px;color:${tw2>=50?'var(--crimson)':'var(--text-light)'}">${tw2>=50?'Applies':'Not triggered'}</span></div>
+    <div class="summary-row"><span class="summary-lbl">ADA</span><span style="font-size:12px;color:${tw2>=15?'var(--crimson)':'var(--text-light)'}">${tw2>=15?'Applies':'Not triggered'}</span></div>
+    <div class="summary-row"><span class="summary-lbl">Workers\' Comp</span><span style="font-size:12px;color:var(--text-mid)">${profile.benWC?(profile.wcSt==='subscriber'?'Subscriber':'Non-subscriber'):'Not set'}</span></div>`;
+
+  // Hero client
+  document.getElementById('heroClientName').textContent = profile.legalName || 'No client loaded';
+  document.getElementById('heroClientMeta').textContent = `${profile.entityType||'Organization'} · ${profile.primaryState||''} · ${tw2} employees`;
+}
+
+// ── TABS ─────────────────────────────────────────────────────────────────────
+function showTab(tab){
+  ['required','recommended','optional','assembly'].forEach(t=>{
+    document.getElementById('view-'+t).style.display = t===tab?(t==='assembly'?'block':'grid'):'none';
+    document.getElementById('tab-'+t).classList.toggle('active', t===tab);
+  });
+  if(tab==='assembly') renderAssemblyList();
+}
+
+// ── EXPORT ────────────────────────────────────────────────────────────────────
+function exportHandbook(){
+  const defs = buildPolicyDefs();
+  const orgName = document.getElementById('hbOrgName').value || profile.legalName || '[Organization Name]';
+  const effDate = document.getElementById('hbEffDate').value || new Date().getFullYear();
+  const version = document.getElementById('hbVersion').value || '1.0';
+  const subtitle = document.getElementById('hbSubtitle').value || 'Employee Handbook & Policies';
+  const attorney = document.getElementById('hbAttorney').value || 'Draft for Attorney Review — Not for Distribution';
+  const prepBy = document.getElementById('hbPrepBy').value || 'The Coherence Collective, LLC';
+  const orderedKeys = policyOrder.filter(k=>policies[k]?.included&&policies[k]?.text);
+  if(orderedKeys.length===0){ alert('No policies included in the handbook yet. Generate and include at least one policy before exporting.'); return; }
+  let policySections = orderedKeys.map((k,i)=>{
+    const def = defs.find(p=>p.key===k);
+    const text = policies[k].text.replace(/\n/g,'</p><p style="margin:0 0 10px 0">');
+    return `<div style="page-break-before:${i===0?'avoid':'always'};padding:0 0 40px 0">
+      <h2 style="font-family:Georgia,serif;font-size:16px;font-weight:600;color:#1a1a1a;border-bottom:2px solid #1a1a1a;padding-bottom:8px;margin:0 0 16px 0">${def?def.name:k}</h2>
+      <p style="margin:0 0 10px 0">${text}</p>
+    </div>`;
+  }).join('');
+
+  const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>${orgName} — ${subtitle}</title>
+  <style>
+    body{font-family:Georgia,serif;font-size:11pt;color:#1a1a1a;max-width:720px;margin:0 auto;padding:48px 40px;line-height:1.75;}
+    h1{font-size:28pt;font-weight:400;margin:0 0 8px 0;}
+    h2{font-size:14pt;font-weight:600;margin:32px 0 12px 0;}
+    p{margin:0 0 10px 0;}
+    .cover{min-height:100vh;display:flex;flex-direction:column;justify-content:center;border-bottom:3px solid #1a1a1a;margin-bottom:48px;padding-bottom:48px;}
+    .cover-meta{font-size:9pt;color:#777;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:24px;}
+    .cover-org{font-size:32pt;font-weight:400;line-height:1.1;margin-bottom:8px;}
+    .cover-title{font-size:16pt;color:#555;margin-bottom:32px;}
+    .cover-details{font-size:9pt;color:#777;line-height:1.8;}
+    .attorney-note{font-size:9pt;color:#A42F30;border:1px solid #A42F30;padding:8px 14px;display:inline-block;margin-top:20px;letter-spacing:0.04em;}
+    @media print{@page{size:letter;margin:1in;}.cover{page-break-after:always;}}
+  </style></head><body>
+  <div class="cover">
+    <div class="cover-meta">${orgName}</div>
+    <div class="cover-org">${orgName}</div>
+    <div class="cover-title">${subtitle}</div>
+    <div class="cover-details">
+      Effective Date: ${effDate}<br>
+      Version: ${version}<br>
+      Prepared with support from: ${prepBy}
+    </div>
+    <div class="attorney-note">${attorney}</div>
+  </div>
+  ${policySections}
+  <div style="margin-top:48px;padding-top:16px;border-top:1px solid #ccc;font-size:8pt;color:#999;text-align:center">
+    ${orgName} · ${subtitle} · Version ${version} · Effective ${effDate} · Prepared with support from ${prepBy}
+  </div>
+  </body></html>`;
+
+  const blob = new Blob([html],{type:'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${orgName.replace(/\s+/g,'-')}_Handbook_v${version}.html`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function previewHandbook(){
+  const defs = buildPolicyDefs();
+  const orgName = document.getElementById('hbOrgName').value || profile.legalName || '[Organization Name]';
+  const effDate = document.getElementById('hbEffDate').value || new Date().getFullYear();
+  const version = document.getElementById('hbVersion').value || '1.0';
+  const subtitle = document.getElementById('hbSubtitle').value || 'Employee Handbook & Policies';
+  const attorney = document.getElementById('hbAttorney').value || 'Draft for Attorney Review — Not for Distribution';
+  const prepBy = document.getElementById('hbPrepBy').value || 'The Coherence Collective, LLC';
+  const orderedKeys = policyOrder.filter(k=>policies[k]?.included&&policies[k]?.text);
+  if(orderedKeys.length===0){ alert('No policies included yet. Generate and include at least one policy before previewing.'); return; }
+  let policySections = orderedKeys.map((k,i)=>{
+    const def = defs.find(p=>p.key===k);
+    const text = policies[k].text.replace(/\n/g,'</p><p style="margin:0 0 10px 0">');
+    return `<div style="page-break-before:${i===0?'avoid':'always'};padding:0 0 40px 0">
+      <h2 style="font-family:Georgia,serif;font-size:16px;font-weight:600;color:#1a1a1a;border-bottom:2px solid #1a1a1a;padding-bottom:8px;margin:0 0 16px 0">${def?def.name:k}</h2>
+      <p style="margin:0 0 10px 0">${text}</p>
+    </div>`;
+  }).join('');
+  const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>PREVIEW — ${orgName} ${subtitle}</title>
+  <style>
+    body{font-family:Georgia,serif;font-size:11pt;color:#1a1a1a;max-width:720px;margin:0 auto;padding:48px 40px;line-height:1.75;}
+    .preview-banner{background:#fff3cd;border:1px solid #d99e32;color:#5a4000;padding:10px 16px;font-size:9pt;border-radius:4px;margin-bottom:28px;font-family:Arial,sans-serif;}
+    .cover{min-height:90vh;display:flex;flex-direction:column;justify-content:center;border-bottom:3px solid #1a1a1a;margin-bottom:48px;padding-bottom:48px;}
+    .cover-meta{font-size:9pt;color:#777;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:24px;}
+    .cover-org{font-size:32pt;font-weight:400;line-height:1.1;margin-bottom:8px;}
+    .cover-title{font-size:16pt;color:#555;margin-bottom:32px;}
+    .cover-details{font-size:9pt;color:#777;line-height:1.8;}
+    .attorney-note{font-size:9pt;color:#A42F30;border:1px solid #A42F30;padding:8px 14px;display:inline-block;margin-top:20px;letter-spacing:0.04em;}
+  </style></head><body>
+  <div class="preview-banner">&#9654; PREVIEW MODE — This document has not been exported or saved. Use "Export Full Handbook" to download the final file.</div>
+  <div class="cover">
+    <div class="cover-meta">${orgName}</div>
+    <div class="cover-org">${orgName}</div>
+    <div class="cover-title">${subtitle}</div>
+    <div class="cover-details">Effective Date: ${effDate}<br>Version: ${version}<br>Prepared with support from: ${prepBy}</div>
+    <div class="attorney-note">${attorney}</div>
+  </div>
+  ${policySections}
+  <div style="margin-top:48px;padding-top:16px;border-top:1px solid #ccc;font-size:8pt;color:#999;text-align:center">${orgName} · ${subtitle} · Version ${version} · Effective ${effDate} · Prepared with support from ${prepBy}</div>
+  </body></html>`;
+  const win = window.open('','_blank');
+  win.document.write(html);
+  win.document.close();
+}
+
+function exportPolicyList(){
+  const defs = buildPolicyDefs();
+  const lines = ['POLICY & HANDBOOK SUMMARY','='.repeat(40),''];
+  ['required','recommended','optional'].forEach(tier=>{
+    const group = defs.filter(p=>p.tier===tier);
+    if(group.length===0) return;
+    lines.push(tier.toUpperCase() + ' POLICIES');
+    lines.push('-'.repeat(30));
+    group.forEach(p=>{
+      const status = policies[p.key]?.included?'[INCLUDED]':policies[p.key]?.text?'[Generated — not included]':'[Not generated]';
+      lines.push(`${p.name} ${status}`);
+      lines.push(`  ${p.reason}`);
+      lines.push('');
+    });
+    lines.push('');
+  });
+  const blob = new Blob([lines.join('\n')],{type:'text/plain'});
+  const a = document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`Plinth_PolicyList_${new Date().toISOString().slice(0,10)}.txt`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// ── EXPORT DOCX ───────────────────────────────────────────────────────────────
+async function exportDOCX(){
+  if(typeof docx === 'undefined'){ alert('Word export library not loaded. Check your internet connection and try again.'); return; }
+  const defs = buildPolicyDefs();
+  const orgName = document.getElementById('hbOrgName').value || profile.legalName || '[Organization Name]';
+  const effDate = document.getElementById('hbEffDate').value || String(new Date().getFullYear());
+  const version = document.getElementById('hbVersion').value || '1.0';
+  const subtitle = document.getElementById('hbSubtitle').value || 'Employee Handbook & Policies';
+  const attorney = document.getElementById('hbAttorney').value || 'Draft for Attorney Review — Not for Distribution';
+  const prepBy = document.getElementById('hbPrepBy').value || 'The Coherence Collective, LLC';
+  const orderedKeys = policyOrder.filter(k=>policies[k]?.included&&policies[k]?.text);
+  if(orderedKeys.length===0){ alert('No policies included yet. Generate and include at least one policy before exporting.'); return; }
+
+  const { Document, Paragraph, TextRun, HeadingLevel, PageBreak, AlignmentType, BorderStyle, UnderlineType } = docx;
+
+  const children = [];
+
+  // ── COVER PAGE ──
+  children.push(
+    new Paragraph({ children:[new TextRun({ text: orgName.toUpperCase(), size: 48, bold: true, color: '1b4436', font: 'Georgia' })], spacing:{ before: 2880 }, alignment: AlignmentType.LEFT }),
+    new Paragraph({ children:[new TextRun({ text: subtitle, size: 28, color: '555555', font: 'Georgia' })], spacing:{ before: 120 }, alignment: AlignmentType.LEFT }),
+    new Paragraph({ children:[new TextRun({ text: ' ', size: 24 })], spacing:{ before: 480 } }),
+    new Paragraph({ children:[new TextRun({ text: `Effective Date: ${effDate}`, size: 20, color: '777777', font: 'Arial' })], alignment: AlignmentType.LEFT }),
+    new Paragraph({ children:[new TextRun({ text: `Version: ${version}`, size: 20, color: '777777', font: 'Arial' })], alignment: AlignmentType.LEFT }),
+    new Paragraph({ children:[new TextRun({ text: `Prepared with support from: ${prepBy}`, size: 20, color: '777777', font: 'Arial' })], alignment: AlignmentType.LEFT }),
+    new Paragraph({ children:[new TextRun({ text: ' ', size: 20 })], spacing:{ before: 360 } }),
+    new Paragraph({ children:[new TextRun({ text: attorney, size: 18, color: 'A42F30', font: 'Arial', italics: true })], alignment: AlignmentType.LEFT }),
+    new Paragraph({ children:[new PageBreak()] })
+  );
+
+  // ── POLICIES ──
+  orderedKeys.forEach((k, i) => {
+    const def = defs.find(p=>p.key===k);
+    const policyName = def ? def.name : k;
+    const text = policies[k].text || '';
+
+    // Section heading
+    children.push(
+      new Paragraph({
+        children: [new TextRun({ text: policyName, size: 28, bold: true, color: '1b4436', font: 'Georgia' })],
+        spacing: { before: i === 0 ? 0 : 480, after: 160 },
+        border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: '1b4436', space: 4 } }
+      })
+    );
+
+    // Counsel note if applicable
+    if(def?.counsel){
+      children.push(
+        new Paragraph({
+          children: [new TextRun({ text: '⚖ Counsel Review Required — This policy requires attorney review before distribution to employees.', size: 18, italics: true, color: '916179', font: 'Arial' })],
+          spacing: { before: 80, after: 120 }
+        })
+      );
+    }
+
+    // Policy text — split by newlines into paragraphs
+    const paragraphs = text.split('\n').filter(line => line.trim().length > 0);
+    paragraphs.forEach(line => {
+      const isBullet = line.trim().startsWith('•') || line.trim().match(/^\d+\.\s/);
+      children.push(
+        new Paragraph({
+          children: [new TextRun({ text: line.trim(), size: 22, font: 'Georgia' })],
+          spacing: { before: 80, after: 80 },
+          indent: isBullet ? { left: 360 } : undefined
+        })
+      );
+    });
+
+    // Page break between policies (not after last)
+    if(i < orderedKeys.length - 1){
+      children.push(new Paragraph({ children:[new PageBreak()] }));
+    }
+  });
+
+  // ── FOOTER NOTE ──
+  children.push(
+    new Paragraph({ children:[new TextRun({ text: ' ' })], spacing:{ before: 720 } }),
+    new Paragraph({
+      children:[new TextRun({ text: `${orgName} · ${subtitle} · Version ${version} · Effective ${effDate} · Prepared with support from ${prepBy}`, size: 16, color: '999999', font: 'Arial' })],
+      alignment: AlignmentType.CENTER,
+      border: { top: { style: BorderStyle.SINGLE, size: 4, color: 'cccccc', space: 8 } }
+    })
+  );
+
+  const doc = new Document({
+    creator: 'The Coherence Collective — Plinth',
+    title: `${orgName} — ${subtitle}`,
+    description: `Employee Handbook v${version} · ${effDate}`,
+    sections: [{
+      properties: {
+        page: { margin: { top: 1080, bottom: 1080, left: 1260, right: 1260 } }
+      },
+      children
+    }]
+  });
+
+  try {
+    const blob = await docx.Packer.toBlob(doc);
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${orgName.replace(/\s+/g,'-')}_Handbook_v${version}.docx`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  } catch(e){
+    console.error('DOCX export error:', e);
+    alert('Export failed. Please try the HTML export instead.');
+  }
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded',()=>{
+  loadProfile();
+  renderProfileSnapshot();
+  renderPolicies();
+  // Auto-populate handbook org name from profile
+  const hbOrgEl = document.getElementById('hbOrgName');
+  if(hbOrgEl && !hbOrgEl.value && profile.legalName) hbOrgEl.value = profile.legalName;
+});
+</script>
+</body>
+</html>
