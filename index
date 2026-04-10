@@ -350,7 +350,7 @@ footer{background:var(--green-deep);padding:14px 32px;display:flex;align-items:c
 </div>
 
 <!-- ── APP ── -->
-<div id="app">
+<div id="app" style="display:none">
 
 <nav>
   <div class="nav-left">
