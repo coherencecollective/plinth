@@ -383,7 +383,7 @@ footer{background:var(--green-deep);padding:14px 32px;display:flex;align-items:c
         <div class="hero-stat-l">Active</div>
       </div>
       <div class="hero-stat">
-        <div class="hero-stat-n">3</div>
+        <div class="hero-stat-n">15</div>
         <div class="hero-stat-l">Tools Live</div>
       </div>
     </div>
@@ -407,7 +407,7 @@ footer{background:var(--green-deep);padding:14px 32px;display:flex;align-items:c
   <div>
     <div class="sec-hdr">
       <div class="sec-title">Tool Directory</div>
-      <span style="font-size:11px;color:var(--text-light);letter-spacing:0.04em">3 of 15 live</span>
+      <span style="font-size:11px;color:var(--text-light);letter-spacing:0.04em">15 of 15 live</span>
     </div>
     <div class="tool-dir">
       <div class="tool-card available" onclick="openTool('org-profile')">
@@ -428,77 +428,77 @@ footer{background:var(--green-deep);padding:14px 32px;display:flex;align-items:c
         <div class="tool-desc">Five-track role framework, FLSA engine, level naming, import and clean-up of existing titles, and full JD export.</div>
         <div class="tool-status live dot-live">Live</div>
       </div>
-      <div class="tool-card coming">
+      <div class="tool-card available" onclick="openTool('compensation')">
         <div class="tool-num">Tool 04</div>
         <div class="tool-name">Compensation Design &amp; Market Pricing</div>
-        <div class="tool-desc">Pay bands, salary benchmarking, equity strategy, and executive compensation track.</div>
-        <div class="tool-status soon dot-soon">In queue</div>
+        <div class="tool-desc">Pay bands, market benchmarking, COLA, compa-ratio, internal equity, budget modeling, and executive compensation memos.</div>
+        <div class="tool-status live dot-live">Live</div>
       </div>
-      <div class="tool-card coming">
+      <div class="tool-card available" onclick="openTool('offer-hiring')">
         <div class="tool-num">Tool 05</div>
-        <div class="tool-name">Offer, Hiring &amp; Recruiting Workflow</div>
-        <div class="tool-desc">Offer letter generation, background check tracking, and candidate pipeline management.</div>
-        <div class="tool-status soon dot-soon">In queue</div>
+        <div class="tool-name">Offer, Hiring &amp; Recruiting</div>
+        <div class="tool-desc">Requisition tracking, candidate pipeline, offer letter generation, interview scorecards, and new hire compliance checklist.</div>
+        <div class="tool-status live dot-live">Live</div>
       </div>
-      <div class="tool-card coming">
+            <div class="tool-card available" onclick="openTool('onboarding')">
         <div class="tool-num">Tool 06</div>
-        <div class="tool-name">New Hire Paperwork &amp; Onboarding</div>
-        <div class="tool-desc">I-9, W-4, state withholding, handbook acknowledgment, and onboarding task engine.</div>
-        <div class="tool-status soon dot-soon">In queue</div>
+        <div class="tool-name">Onboarding</div>
+        <div class="tool-desc">New hire paperwork, system access, orientation schedule, and 30/60/90-day goal framework.</div>
+        <div class="tool-status live dot-live">Live</div>
       </div>
-      <div class="tool-card coming">
+            <div class="tool-card available" onclick="openTool('pay-practices')">
         <div class="tool-num">Tool 07</div>
-        <div class="tool-name">Pay Practices &amp; Wage Compliance</div>
-        <div class="tool-desc">Texas final pay, overtime, deduction authorization, and pay frequency compliance tracking.</div>
-        <div class="tool-status soon dot-soon">In queue</div>
+        <div class="tool-name">Pay Practices</div>
+        <div class="tool-desc">Payroll configuration, Texas wage compliance, garnishment protocols, final pay requirements, and recordkeeping.</div>
+        <div class="tool-status live dot-live">Live</div>
       </div>
-      <div class="tool-card coming">
+            <div class="tool-card available" onclick="openTool('benefits')">
         <div class="tool-num">Tool 08</div>
-        <div class="tool-name">Benefits &amp; Total Rewards Design</div>
-        <div class="tool-desc">COBRA, ACA, plan document requirements, and open enrollment workflow support.</div>
-        <div class="tool-status soon dot-soon">In queue</div>
+        <div class="tool-name">Benefits Administration</div>
+        <div class="tool-desc">Benefit plan documentation, enrollment windows, ACA compliance, and COBRA administration.</div>
+        <div class="tool-status live dot-live">Live</div>
       </div>
-      <div class="tool-card coming">
+            <div class="tool-card available" onclick="openTool('leave')">
         <div class="tool-num">Tool 09</div>
-        <div class="tool-name">Leave, Accommodations &amp; Employee Support</div>
-        <div class="tool-desc">FMLA tracking, ADA interactive process, and leave administration workflows.</div>
-        <div class="tool-status soon dot-soon">In queue</div>
+        <div class="tool-name">Leave Management</div>
+        <div class="tool-desc">FMLA reference, ADA leave, PTO policy configuration, and leave request documentation.</div>
+        <div class="tool-status live dot-live">Live</div>
       </div>
-      <div class="tool-card coming">
+            <div class="tool-card available" onclick="openTool('performance')">
         <div class="tool-num">Tool 10</div>
-        <div class="tool-name">Performance Management &amp; Talent Development</div>
-        <div class="tool-desc">Review cycles, goal tracking, PIP documentation, and succession planning support.</div>
-        <div class="tool-status soon dot-soon">In queue</div>
+        <div class="tool-name">Performance Management</div>
+        <div class="tool-desc">Review cycles, goal frameworks, PIPs, documentation standards, and conversation templates.</div>
+        <div class="tool-status live dot-live">Live</div>
       </div>
-      <div class="tool-card coming">
+            <div class="tool-card available" onclick="openTool('er-investigation')">
         <div class="tool-num">Tool 11</div>
-        <div class="tool-name">Employee Relations &amp; Investigation</div>
-        <div class="tool-desc">Complaint intake, investigation workflow, and case documentation with counsel escalation flags.</div>
-        <div class="tool-status soon dot-soon">In queue</div>
+        <div class="tool-name">ER &amp; Investigation</div>
+        <div class="tool-desc">Employee relations framework, investigation protocols, incident log, and escalation guidance.</div>
+        <div class="tool-status live dot-live">Live</div>
       </div>
-      <div class="tool-card coming">
+            <div class="tool-card available" onclick="openTool('separation')">
         <div class="tool-num">Tool 12</div>
-        <div class="tool-name">Corrective Action &amp; Separation Protocol</div>
-        <div class="tool-desc">Progressive discipline, termination documentation, and final pay calculation workflows.</div>
-        <div class="tool-status soon dot-soon">In queue</div>
+        <div class="tool-name">Separation</div>
+        <div class="tool-desc">Voluntary and involuntary separation workflows, final pay, COBRA notice, and offboarding checklist.</div>
+        <div class="tool-status live dot-live">Live</div>
       </div>
-      <div class="tool-card coming">
+            <div class="tool-card available" onclick="openTool('compliance-calendar')">
         <div class="tool-num">Tool 13</div>
-        <div class="tool-name">Compliance Calendar &amp; Notice Dashboard</div>
-        <div class="tool-desc">Deadline tracking, required posting reminders, and annual filing calendar by org profile.</div>
-        <div class="tool-status soon dot-soon">In queue</div>
+        <div class="tool-name">Compliance Calendar</div>
+        <div class="tool-desc">Federal and Texas HR compliance deadlines, required posters, government reporting, and custom deadlines.</div>
+        <div class="tool-status live dot-live">Live</div>
       </div>
-      <div class="tool-card coming">
+            <div class="tool-card available" onclick="openTool('manager-toolkit')">
         <div class="tool-num">Tool 14</div>
-        <div class="tool-name">Manager Operating Toolkit</div>
-        <div class="tool-desc">Manager guides, decision frameworks, and escalation protocols by scenario type.</div>
-        <div class="tool-status soon dot-soon">In queue</div>
+        <div class="tool-name">Manager Toolkit</div>
+        <div class="tool-desc">Reference guides, conversation scripts, decision frameworks, and annual manager checklist.</div>
+        <div class="tool-status live dot-live">Live</div>
       </div>
-      <div class="tool-card coming">
+            <div class="tool-card available" onclick="openTool('analytics')">
         <div class="tool-num">Tool 15</div>
-        <div class="tool-name">Analytics, Dashboards &amp; Formula Library</div>
-        <div class="tool-desc">Cross-client reporting, workforce metrics, and reusable formula and template library.</div>
-        <div class="tool-status soon dot-soon">In queue</div>
+        <div class="tool-name">Analytics</div>
+        <div class="tool-desc">Workforce metrics, turnover analysis, pay equity indicators, and sector benchmarks.</div>
+        <div class="tool-status live dot-live">Live</div>
       </div>
     </div>
   </div>
@@ -577,7 +577,7 @@ footer{background:var(--green-deep);padding:14px 32px;display:flex;align-items:c
 
 <script>
 // ── PASSWORD ──────────────────────────────────────────────────────────────────
-const PW = 'AmplifyingImpact2026!'; // ← replace this with your password before uploading
+const PW = 'YOUR_PASSWORD_HERE'; // ← replace this with your password before uploading
 
 function checkPW(){
   const v = document.getElementById('pwInput').value;
@@ -779,7 +779,19 @@ function openTool(tool){
   const toolMap = {
     'org-profile': 'org-profile.html',
     'handbook': 'handbook.html',
-    'job-architecture': 'job-architecture.html'
+    'job-architecture': 'job-architecture.html',
+    'compensation': 'compensation.html',
+    'offer-hiring': 'offer-hiring.html',
+    'onboarding': 'onboarding.html',
+    'pay-practices': 'pay-practices.html',
+    'benefits': 'benefits.html',
+    'leave': 'leave.html',
+    'performance': 'performance.html',
+    'er-investigation': 'er-investigation.html',
+    'separation': 'separation.html',
+    'compliance-calendar': 'compliance-calendar.html',
+    'manager-toolkit': 'manager-toolkit.html',
+    'analytics': 'analytics.html'
   };
   const url = toolMap[tool];
   if(!url) return;
