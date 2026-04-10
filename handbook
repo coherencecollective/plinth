@@ -189,6 +189,23 @@ footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:c
 .fb{font-family:'Cormorant Garamond',serif;font-size:13px;color:rgba(245,237,228,0.4);letter-spacing:0.05em;}
 .fb span{color:var(--sand);}
 
+
+.tool-jump{background:var(--white);border-bottom:1px solid var(--border);padding:7px 28px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;align-items:center;}
+.tool-jump::-webkit-scrollbar{display:none;}
+.tj-lbl{font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-right:4px;white-space:nowrap;flex-shrink:0;}
+.tj-btn{font-size:10.5px;padding:4px 12px;border-radius:12px;border:1px solid var(--border);background:var(--white);color:var(--text-light);cursor:pointer;white-space:nowrap;font-family:'Jost',sans-serif;transition:all 0.15s;flex-shrink:0;}
+.tj-btn:hover{border-color:var(--sand);color:var(--green);}
+.tj-btn.current{background:rgba(27,68,54,0.07);border-color:var(--green);color:var(--green);}
+.tj-btn.live{color:var(--text-mid);}
+.tj-btn.locked{opacity:0.4;cursor:default;}
+
+
+.jump-wrap{display:flex;align-items:center;gap:6px;margin-right:6px;}
+.jump-lbl{font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.45);white-space:nowrap;}
+.jump-sel{font-family:'Jost',sans-serif;font-weight:300;font-size:11px;background:rgba(255,255,255,0.08);color:var(--beige);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius);padding:5px 26px 5px 10px;cursor:pointer;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(245,237,228,0.5)' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;transition:all 0.2s;}
+.jump-sel:hover{background-color:rgba(255,255,255,0.12);}
+.jump-sel option{background:#1b4436;color:var(--beige);}
+
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 .fu{animation:fadeUp 0.4s ease both;}
 </style>
@@ -209,6 +226,7 @@ footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:c
     <button class="nbtn nbtn-gold" onclick="showTab('assembly')">Assemble Handbook &rarr;</button>
   </div>
 </nav>
+
 
 <div class="tabs">
   <div class="tab active" onclick="showTab('required')" id="tab-required">Required by Law <span class="tab-badge" id="badge-required">0</span></div>
@@ -323,7 +341,12 @@ footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:c
   </div>
 </div>
 
-<footer><div class="fb">The Coherence Collective &nbsp;·&nbsp; <span>Plinth</span></div><div style="display:flex;gap:16px;align-items:center"><a href="org-profile.html" style="font-size:11px;color:rgba(245,237,228,0.4);letter-spacing:0.06em;text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">&larr; Tool 01: Org Profile</a><span style="color:rgba(245,237,228,0.2)">|</span><a href="job-architecture.html" style="font-size:11px;color:rgba(245,237,228,0.4);letter-spacing:0.06em;text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">Tool 03: Job Architecture &rarr;</a></div></footer>
+<footer><div class="fb">The Coherence Collective &nbsp;·&nbsp; <span>Plinth</span></div><div style="display:flex;gap:16px;align-items:center">
+    <div style="display:flex;align-items:center;gap:8px">
+    <span style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.35)">Jump to</span>
+    <select onchange="if(this.value)window.location.href=this.value" style="font-family:'Jost',sans-serif;font-weight:300;font-size:11px;background:rgba(255,255,255,0.06);color:rgba(245,237,228,0.6);border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:4px 24px 4px 8px;cursor:pointer;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(245,237,228,0.4)' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center"><option value="org-profile.html"  >01 · Org Profile</option><option value="handbook.html" selected >02 · Handbook</option><option value="job-architecture.html"  >03 · Job Architecture</option><option value="compensation.html"  >04 · Compensation</option><option value=""  disabled>05 · Offer & Hiring — coming soon</option><option value=""  disabled>06 · Onboarding — coming soon</option><option value=""  disabled>07 · Pay Practices — coming soon</option><option value=""  disabled>08 · Benefits — coming soon</option><option value=""  disabled>09 · Leave — coming soon</option><option value=""  disabled>10 · Performance — coming soon</option><option value=""  disabled>11 · ER & Investigation — coming soon</option><option value=""  disabled>12 · Separation — coming soon</option><option value=""  disabled>13 · Compliance Calendar — coming soon</option><option value=""  disabled>14 · Manager Toolkit — coming soon</option><option value=""  disabled>15 · Analytics — coming soon</option></select>
+  </div>
+    <span style="color:rgba(245,237,228,0.15)">|</span><a href="org-profile.html" style="font-size:11px;color:rgba(245,237,228,0.4);letter-spacing:0.06em;text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">&larr; Tool 01: Org Profile</a><span style="color:rgba(245,237,228,0.2)">|</span><a href="job-architecture.html" style="font-size:11px;color:rgba(245,237,228,0.4);letter-spacing:0.06em;text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">Tool 03: Job Architecture &rarr;</a></div></footer>
 
 <script>
 // ── PROFILE DATA ──────────────────────────────────────────────────────────────
