@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Plinth · The Coherence Collective</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#1b4436;--green-light:#235a47;--green-deep:#122e24;--green-mid:#1e4d3d;
+  --mauve:#916179;--sand:#D2BB9F;--gold:#D99E32;--pale:#cccf8e;
+  --crimson:#A42F30;--beige:#F5EDE4;--white:#ffffff;--off-white:#faf8f5;
+  --text-dark:#1a1a1a;--text-mid:#444;--text-light:#777;--border:#e0d8cf;
+  --shadow:0 2px 16px rgba(27,68,54,0.08);--shadow-md:0 6px 32px rgba(27,68,54,0.14);
+  --radius:4px;--radius-md:8px;--radius-lg:12px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Jost',sans-serif;font-weight:300;font-size:14px;color:var(--text-dark);background:var(--off-white);min-height:100vh;}
+
+/* ── PASSWORD GATE ── */
+#gate{
+  position:fixed;inset:0;z-index:1000;
+  background:linear-gradient(160deg,var(--green-deep) 0%,var(--green) 50%,var(--green-mid) 100%);
+  display:flex;align-items:center;justify-content:center;
+  padding:24px;
+}
+#gate::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 30% 20%,rgba(204,207,142,0.07) 0%,transparent 60%),
+             radial-gradient(ellipse at 80% 80%,rgba(217,158,50,0.05) 0%,transparent 50%);
+  pointer-events:none;
+}
+.gate-card{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:var(--radius-lg);
+  padding:52px 48px;
+  max-width:420px;width:100%;
+  backdrop-filter:blur(12px);
+  text-align:center;
+  animation:gateIn 0.6s ease forwards;
+}
+@keyframes gateIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.gate-mark{
+  font-family:'Cormorant Garamond',serif;
+  font-size:13px;font-weight:400;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--pale);margin-bottom:28px;display:block;
+}
+.gate-wordmark{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:500;font-size:52px;color:var(--white);
+  line-height:1;margin-bottom:6px;letter-spacing:-0.01em;
+}
+.gate-wordmark span{color:var(--gold);}
+.gate-sub{
+  font-size:12px;font-weight:300;color:rgba(245,237,228,0.5);
+  letter-spacing:0.08em;margin-bottom:40px;
+}
+.gate-input-wrap{position:relative;margin-bottom:14px;}
+.gate-input{
+  width:100%;font-family:'Jost',sans-serif;font-weight:300;font-size:14px;
+  background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);
+  border-radius:var(--radius);padding:13px 44px 13px 16px;color:var(--white);
+  outline:none;transition:border-color 0.2s,background 0.2s;
+  letter-spacing:0.08em;
+}
+.gate-input::placeholder{color:rgba(245,237,228,0.3);}
+.gate-input:focus{border-color:rgba(217,158,50,0.5);background:rgba(255,255,255,0.1);}
+.gate-eye{
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  cursor:pointer;color:rgba(245,237,228,0.4);font-size:16px;
+  transition:color 0.2s;background:none;border:none;padding:0;
+}
+.gate-eye:hover{color:rgba(245,237,228,0.7);}
+.gate-btn{
+  width:100%;padding:13px;
+  background:linear-gradient(135deg,var(--gold),#c4891e);
+  color:var(--green-deep);font-family:'Jost',sans-serif;
+  font-weight:500;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;
+  border:none;border-radius:var(--radius);cursor:pointer;
+  transition:all 0.2s;margin-top:4px;
+}
+.gate-btn:hover{background:linear-gradient(135deg,#e8aa38,var(--gold));transform:translateY(-1px);box-shadow:0 4px 16px rgba(217,158,50,0.3);}
+.gate-error{
+  font-size:11.5px;color:rgba(164,47,48,0.9);margin-top:10px;
+  opacity:0;transition:opacity 0.2s;letter-spacing:0.04em;
+}
+.gate-error.show{opacity:1;}
+.gate-footer{font-size:10px;color:rgba(245,237,228,0.2);margin-top:36px;letter-spacing:0.08em;}
+
+/* ── APP (hidden until auth) ── */
+#app{display:none;}
+
+/* ── TOP NAV ── */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:var(--green);
+  padding:0 32px;height:54px;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 2px 12px rgba(0,0,0,0.2);
+}
+.nav-left{display:flex;align-items:center;gap:16px;}
+.nav-wordmark{
+  font-family:'Cormorant Garamond',serif;font-weight:500;font-size:20px;
+  color:var(--beige);letter-spacing:0.02em;
+}
+.nav-wordmark span{color:var(--gold);}
+.nav-tagline{font-size:11px;font-weight:300;color:rgba(245,237,228,0.4);letter-spacing:0.06em;}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.nav-client-badge{
+  display:flex;align-items:center;gap:7px;
+  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);
+  border-radius:20px;padding:4px 12px 4px 8px;
+  font-size:11px;color:rgba(245,237,228,0.7);cursor:pointer;
+  transition:all 0.2s;
+}
+.nav-client-badge:hover{background:rgba(255,255,255,0.12);}
+.nav-client-dot{width:6px;height:6px;border-radius:50%;background:var(--pale);}
+.nav-btn{
+  font-family:'Jost',sans-serif;font-weight:300;font-size:11px;
+  letter-spacing:0.08em;text-transform:uppercase;padding:5px 13px;
+  border-radius:var(--radius);cursor:pointer;border:none;transition:all 0.2s;
+}
+.nbtn-ghost{background:transparent;color:var(--sand);border:1px solid rgba(210,187,159,0.3);}
+.nbtn-ghost:hover{background:rgba(210,187,159,0.1);color:var(--beige);}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(150deg,var(--green-deep) 0%,var(--green) 55%,var(--green-light) 100%);
+  padding:52px 32px 48px;position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;top:-80px;right:-40px;
+  width:340px;height:340px;border-radius:50%;
+  background:radial-gradient(circle,rgba(204,207,142,0.07) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero::after{
+  content:'';position:absolute;bottom:-60px;left:15%;
+  width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,rgba(217,158,50,0.05) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-inner{max-width:1060px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:32px;flex-wrap:wrap;}
+.hero-left{}
+.hero-eye{font-size:11px;font-weight:400;letter-spacing:0.2em;text-transform:uppercase;color:var(--pale);margin-bottom:12px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:42px;color:var(--white);line-height:1.05;margin-bottom:10px;}
+.hero-title span{color:var(--sand);font-style:italic;}
+.hero-desc{font-size:12.5px;font-weight:300;color:rgba(245,237,228,0.65);max-width:520px;line-height:1.75;}
+.hero-stats{display:flex;gap:28px;flex-shrink:0;}
+.hero-stat{text-align:center;}
+.hero-stat-n{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600;color:var(--gold);line-height:1;}
+.hero-stat-l{font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.45);margin-top:3px;}
+
+/* ── MAIN ── */
+.main{max-width:1060px;margin:0 auto;padding:36px 32px 72px;}
+
+/* ── SECTION HEADERS ── */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--green);}
+.sec-action{
+  font-size:11px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--green);cursor:pointer;display:flex;align-items:center;gap:5px;
+  background:none;border:none;font-family:'Jost',sans-serif;transition:color 0.2s;padding:0;
+}
+.sec-action:hover{color:var(--gold);}
+
+/* ── CLIENT CARDS ── */
+.clients-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:36px;}
+.client-card{
+  background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);
+  overflow:hidden;box-shadow:var(--shadow);cursor:pointer;
+  transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;
+  animation:cardIn 0.4s ease both;
+}
+.client-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--sand);}
+@keyframes cardIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.card-accent{height:4px;background:linear-gradient(90deg,var(--green),var(--pale));}
+.card-accent.mauve{background:linear-gradient(90deg,var(--mauve),var(--sand));}
+.card-accent.gold{background:linear-gradient(90deg,var(--gold),var(--pale));}
+.card-accent.crimson{background:linear-gradient(90deg,var(--crimson),var(--mauve));}
+.card-accent.pale{background:linear-gradient(90deg,var(--pale),var(--sand));}
+.card-body{padding:18px 20px 14px;}
+.card-org{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--green);margin-bottom:3px;line-height:1.3;}
+.card-type{font-size:11px;color:var(--text-light);letter-spacing:0.04em;margin-bottom:14px;}
+.card-meta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
+.card-pill{
+  font-size:10px;font-weight:400;letter-spacing:0.06em;
+  padding:3px 9px;border-radius:12px;
+  background:rgba(27,68,54,0.06);color:var(--green);
+}
+.card-pill.warn{background:rgba(217,158,50,0.1);color:#a07820;}
+.card-pill.inactive{background:rgba(0,0,0,0.04);color:var(--text-light);}
+.card-progress{margin-bottom:14px;}
+.card-prog-lbl{display:flex;justify-content:space-between;font-size:10px;color:var(--text-light);margin-bottom:4px;letter-spacing:0.04em;}
+.card-prog-track{height:3px;background:var(--border);border-radius:2px;}
+.card-prog-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--pale),var(--green));transition:width 0.6s ease;}
+.card-tools{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:16px;}
+.tool-dot{
+  width:22px;height:22px;border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:400;letter-spacing:0.04em;
+  cursor:default;
+  transition:transform 0.15s;
+}
+.tool-dot:hover{transform:scale(1.1);}
+.tool-dot.complete{background:rgba(27,68,54,0.1);color:var(--green);}
+.tool-dot.active{background:linear-gradient(135deg,var(--green),var(--green-light));color:var(--white);box-shadow:0 2px 6px rgba(27,68,54,0.25);}
+.tool-dot.empty{background:rgba(0,0,0,0.04);color:var(--border);}
+.card-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 20px;background:rgba(27,68,54,0.02);
+  border-top:1px solid rgba(224,216,207,0.5);
+}
+.card-date{font-size:10px;color:var(--text-light);letter-spacing:0.03em;}
+.card-open{
+  font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--green);background:none;border:none;cursor:pointer;
+  font-family:'Jost',sans-serif;transition:color 0.2s;display:flex;align-items:center;gap:4px;
+}
+.card-open:hover{color:var(--gold);}
+
+/* ── NEW CLIENT CARD ── */
+.new-client-card{
+  background:var(--white);border:2px dashed var(--border);border-radius:var(--radius-md);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;padding:32px 20px;cursor:pointer;min-height:200px;
+  transition:all 0.2s;color:var(--text-light);
+}
+.new-client-card:hover{border-color:var(--sand);background:rgba(210,187,159,0.04);color:var(--green);}
+.new-client-icon{font-size:28px;opacity:0.4;}
+.new-client-lbl{font-size:12px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;}
+
+/* ── TOOL DIRECTORY ── */
+.tool-dir{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
+.tool-card{
+  background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);
+  padding:16px 18px;box-shadow:var(--shadow);
+  transition:all 0.2s;
+  animation:cardIn 0.4s ease both;
+}
+.tool-card:hover{transform:translateY(-1px);box-shadow:var(--shadow-md);border-color:var(--sand);}
+.tool-card.available{cursor:pointer;}
+.tool-card.coming{opacity:0.55;cursor:default;}
+.tool-num{font-size:10px;font-weight:400;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);margin-bottom:6px;}
+.tool-name{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--green);margin-bottom:4px;line-height:1.3;}
+.tool-desc{font-size:11px;color:var(--text-light);line-height:1.55;}
+.tool-status{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:10px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;
+  margin-top:10px;padding:3px 8px;border-radius:10px;
+}
+.tool-status.live{background:rgba(204,207,142,0.2);color:#5a6020;}
+.tool-status.soon{background:rgba(210,187,159,0.15);color:#8a7040;}
+.tool-status.dot-live::before,.tool-status.dot-soon::before{
+  content:'';width:5px;height:5px;border-radius:50%;flex-shrink:0;
+}
+.tool-status.live::before{background:var(--pale);}
+.tool-status.soon::before{background:var(--sand);}
+
+/* ── NEW CLIENT MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(18,46,36,0.7);backdrop-filter:blur(4px);
+  display:flex;align-items:center;justify-content:center;padding:24px;
+  opacity:0;pointer-events:none;transition:opacity 0.2s;
+}
+.modal-overlay.open{opacity:1;pointer-events:auto;}
+.modal{
+  background:var(--white);border-radius:var(--radius-lg);
+  padding:36px 32px;max-width:480px;width:100%;
+  box-shadow:0 16px 64px rgba(0,0,0,0.25);
+  transform:translateY(16px);transition:transform 0.25s ease;
+}
+.modal-overlay.open .modal{transform:translateY(0);}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--green);margin-bottom:4px;}
+.modal-sub{font-size:12px;color:var(--text-light);margin-bottom:24px;line-height:1.5;}
+.modal-field{margin-bottom:16px;}
+.modal-field label{display:block;font-size:11px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-mid);margin-bottom:5px;}
+.modal-field input,.modal-field select{
+  width:100%;font-family:'Jost',sans-serif;font-weight:300;font-size:13px;
+  color:var(--text-dark);background:var(--white);border:1px solid var(--border);
+  border-radius:var(--radius);padding:9px 12px;outline:none;
+  transition:border-color 0.2s;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23777' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;
+}
+.modal-field input{background-image:none;padding-right:12px;}
+.modal-field input:focus,.modal-field select:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(27,68,54,0.08);}
+.modal-btns{display:flex;gap:10px;margin-top:24px;}
+.modal-btn{
+  flex:1;padding:10px;border-radius:var(--radius);font-family:'Jost',sans-serif;
+  font-size:12px;font-weight:300;letter-spacing:0.06em;cursor:pointer;border:none;transition:all 0.2s;
+}
+.modal-btn-cancel{background:transparent;border:1px solid var(--border);color:var(--text-mid);}
+.modal-btn-cancel:hover{background:rgba(0,0,0,0.03);}
+.modal-btn-create{background:linear-gradient(135deg,var(--green),var(--green-light));color:var(--white);font-weight:400;}
+.modal-btn-create:hover{background:linear-gradient(135deg,var(--green-light),var(--green));}
+
+/* ── DELETE CONFIRM ── */
+.del-zone{display:flex;align-items:center;gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);}
+.del-btn{font-size:11px;color:var(--crimson);background:none;border:none;cursor:pointer;font-family:'Jost',sans-serif;letter-spacing:0.04em;padding:0;transition:opacity 0.2s;}
+.del-btn:hover{opacity:0.7;}
+
+/* ── FOOTER ── */
+footer{background:var(--green-deep);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;}
+.fb{font-family:'Cormorant Garamond',serif;font-size:13px;color:rgba(245,237,228,0.4);letter-spacing:0.05em;}
+.fb span{color:var(--sand);}
+
+/* ── EMPTY STATE ── */
+.empty-state{
+  text-align:center;padding:64px 32px;
+  border:1px dashed var(--border);border-radius:var(--radius-md);
+  background:var(--white);
+}
+.empty-icon{font-size:36px;opacity:0.25;margin-bottom:14px;}
+.empty-title{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--text-mid);margin-bottom:6px;}
+.empty-desc{font-size:12px;color:var(--text-light);line-height:1.7;max-width:340px;margin:0 auto 20px;}
+.empty-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 20px;background:var(--green);color:var(--white);
+  border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;
+  font-size:12px;font-weight:400;letter-spacing:0.06em;cursor:pointer;
+  transition:background 0.2s;
+}
+.empty-btn:hover{background:var(--green-light);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.fade-up{animation:fadeUp 0.4s ease both;}
+</style>
+</head>
+<body>
+
+<!-- ── PASSWORD GATE ── -->
+<div id="gate">
+  <div class="gate-card">
+    <span class="gate-mark">The Coherence Collective</span>
+    <div class="gate-wordmark">Pl<span>in</span>th</div>
+    <div class="gate-sub">Advisory Operations Platform</div>
+    <div class="gate-input-wrap">
+      <input class="gate-input" type="password" id="pwInput" placeholder="Enter access password" onkeydown="if(event.key==='Enter')checkPW()">
+      <button class="gate-eye" onclick="togglePW()" id="eyeBtn">&#9737;</button>
+    </div>
+    <button class="gate-btn" onclick="checkPW()">Access Plinth</button>
+    <div class="gate-error" id="gateErr">Incorrect password. Try again.</div>
+    <div class="gate-footer">The Coherence Collective · Proprietary · Advisor Access Only</div>
+  </div>
+</div>
+
+<!-- ── APP ── -->
+<div id="app">
+
+<nav>
+  <div class="nav-left">
+    <div class="nav-wordmark">Pl<span>in</span>th</div>
+    <div class="nav-tagline">Advisory Operations Platform</div>
+  </div>
+  <div class="nav-right">
+    <div class="nav-client-badge" id="activeClientBadge" style="display:none">
+      <div class="nav-client-dot"></div>
+      <span id="activeClientName">No client selected</span>
+    </div>
+    <button class="nav-btn nbtn-ghost" onclick="logout()">Lock</button>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-eye">The Coherence Collective</div>
+      <div class="hero-title">Your advisory<br><span>operations layer.</span></div>
+      <div class="hero-desc">Plinth holds the HR infrastructure for every organization you advise. Build compliance profiles, generate policies, architect compensation, manage engagements — all in one place, one client at a time.</div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-n" id="statClients">0</div>
+        <div class="hero-stat-l">Clients</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-n" id="statActive">0</div>
+        <div class="hero-stat-l">Active</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-n">1</div>
+        <div class="hero-stat-l">Tools Live</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- CLIENT PROFILES -->
+  <div style="margin-bottom:48px">
+    <div class="sec-hdr">
+      <div class="sec-title">Client Profiles</div>
+      <button class="sec-action" onclick="openModal()">+ New Client</button>
+    </div>
+    <div class="clients-grid" id="clientsGrid">
+      <!-- populated by JS -->
+    </div>
+  </div>
+
+  <!-- TOOL DIRECTORY -->
+  <div>
+    <div class="sec-hdr">
+      <div class="sec-title">Tool Directory</div>
+      <span style="font-size:11px;color:var(--text-light);letter-spacing:0.04em">1 of 15 live</span>
+    </div>
+    <div class="tool-dir">
+      <div class="tool-card available" onclick="openTool('org-profile')">
+        <div class="tool-num">Tool 01</div>
+        <div class="tool-name">Organization &amp; Compliance Profile</div>
+        <div class="tool-desc">Entity setup, workforce composition, pay practices, benefits, and full law applicability resolution.</div>
+        <div class="tool-status live dot-live">Live</div>
+      </div>
+      <div class="tool-card coming">
+        <div class="tool-num">Tool 02</div>
+        <div class="tool-name">Policy &amp; Handbook Generator</div>
+        <div class="tool-desc">Applicability-driven policy library with editable draft language and full handbook assembly.</div>
+        <div class="tool-status soon dot-soon">Coming next</div>
+      </div>
+      <div class="tool-card coming">
+        <div class="tool-num">Tool 03</div>
+        <div class="tool-name">Job Architecture &amp; Library</div>
+        <div class="tool-desc">Role design, leveling framework, job descriptions, and FLSA classification tracking.</div>
+        <div class="tool-status soon dot-soon">In queue</div>
+      </div>
+      <div class="tool-card coming">
+        <div class="tool-num">Tool 04</div>
+        <div class="tool-name">Compensation Design &amp; Market Pricing</div>
+        <div class="tool-desc">Pay bands, salary benchmarking, equity strategy, and executive compensation track.</div>
+        <div class="tool-status soon dot-soon">In queue</div>
+      </div>
+      <div class="tool-card coming">
+        <div class="tool-num">Tool 05</div>
+        <div class="tool-name">Offer, Hiring &amp; Recruiting Workflow</div>
+        <div class="tool-desc">Offer letter generation, background check tracking, and candidate pipeline management.</div>
+        <div class="tool-status soon dot-soon">In queue</div>
+      </div>
+      <div class="tool-card coming">
+        <div class="tool-num">Tool 06</div>
+        <div class="tool-name">New Hire Paperwork &amp; Onboarding</div>
+        <div class="tool-desc">I-9, W-4, state withholding, handbook acknowledgment, and onboarding task engine.</div>
+        <div class="tool-status soon dot-soon">In queue</div>
+      </div>
+      <div class="tool-card coming">
+        <div class="tool-num">Tool 07</div>
+        <div class="tool-name">Pay Practices &amp; Wage Compliance</div>
+        <div class="tool-desc">Texas final pay, overtime, deduction authorization, and pay frequency compliance tracking.</div>
+        <div class="tool-status soon dot-soon">In queue</div>
+      </div>
+      <div class="tool-card coming">
+        <div class="tool-num">Tool 08</div>
+        <div class="tool-name">Benefits &amp; Total Rewards Design</div>
+        <div class="tool-desc">COBRA, ACA, plan document requirements, and open enrollment workflow support.</div>
+        <div class="tool-status soon dot-soon">In queue</div>
+      </div>
+      <div class="tool-card coming">
+        <div class="tool-num">Tool 09</div>
+        <div class="tool-name">Leave, Accommodations &amp; Employee Support</div>
+        <div class="tool-desc">FMLA tracking, ADA interactive process, and leave administration workflows.</div>
+        <div class="tool-status soon dot-soon">In queue</div>
+      </div>
+      <div class="tool-card coming">
+        <div class="tool-num">Tool 10</div>
+        <div class="tool-name">Performance Management &amp; Talent Development</div>
+        <div class="tool-desc">Review cycles, goal tracking, PIP documentation, and succession planning support.</div>
+        <div class="tool-status soon dot-soon">In queue</div>
+      </div>
+      <div class="tool-card coming">
+        <div class="tool-num">Tool 11</div>
+        <div class="tool-name">Employee Relations &amp; Investigation</div>
+        <div class="tool-desc">Complaint intake, investigation workflow, and case documentation with counsel escalation flags.</div>
+        <div class="tool-status soon dot-soon">In queue</div>
+      </div>
+      <div class="tool-card coming">
+        <div class="tool-num">Tool 12</div>
+        <div class="tool-name">Corrective Action &amp; Separation Protocol</div>
+        <div class="tool-desc">Progressive discipline, termination documentation, and final pay calculation workflows.</div>
+        <div class="tool-status soon dot-soon">In queue</div>
+      </div>
+      <div class="tool-card coming">
+        <div class="tool-num">Tool 13</div>
+        <div class="tool-name">Compliance Calendar &amp; Notice Dashboard</div>
+        <div class="tool-desc">Deadline tracking, required posting reminders, and annual filing calendar by org profile.</div>
+        <div class="tool-status soon dot-soon">In queue</div>
+      </div>
+      <div class="tool-card coming">
+        <div class="tool-num">Tool 14</div>
+        <div class="tool-name">Manager Operating Toolkit</div>
+        <div class="tool-desc">Manager guides, decision frameworks, and escalation protocols by scenario type.</div>
+        <div class="tool-status soon dot-soon">In queue</div>
+      </div>
+      <div class="tool-card coming">
+        <div class="tool-num">Tool 15</div>
+        <div class="tool-name">Analytics, Dashboards &amp; Formula Library</div>
+        <div class="tool-desc">Cross-client reporting, workforce metrics, and reusable formula and template library.</div>
+        <div class="tool-status soon dot-soon">In queue</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<footer>
+  <div class="fb">The Coherence Collective &nbsp;·&nbsp; <span>Plinth</span></div>
+  <div style="font-size:11px;color:rgba(245,237,228,0.25);letter-spacing:0.05em">Advisory Operations Platform · Proprietary · Not for Distribution</div>
+</footer>
+
+</div><!-- /app -->
+
+<!-- NEW CLIENT MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-title">New Client Profile</div>
+    <div class="modal-sub">Create a profile for a new advisory client. You can complete the full Organization &amp; Compliance Profile from within the client workspace.</div>
+    <div class="modal-field">
+      <label>Organization Name <span style="color:var(--crimson)">*</span></label>
+      <input type="text" id="newOrgName" placeholder="Legal entity name or operating name">
+    </div>
+    <div class="modal-field">
+      <label>Organization Type</label>
+      <select id="newOrgType">
+        <option value="">Select type</option>
+        <option>Nonprofit 501(c)(3)</option>
+        <option>Nonprofit 501(c)(6)</option>
+        <option>Social Enterprise</option>
+        <option>Public Education</option>
+        <option>Foundation</option>
+        <option>LLC</option>
+        <option>Corporation</option>
+        <option>Government Entity</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label>Primary State</label>
+      <select id="newOrgState">
+        <option value="">Select state</option>
+        <option value="AR">Arkansas</option>
+        <option value="CA">California</option>
+        <option value="DC">District of Columbia</option>
+        <option value="DE">Delaware</option>
+        <option value="FL">Florida</option>
+        <option value="GA">Georgia</option>
+        <option value="IL">Illinois</option>
+        <option value="MD">Maryland</option>
+        <option value="NC">North Carolina</option>
+        <option value="NY">New York</option>
+        <option value="OH">Ohio</option>
+        <option value="TN">Tennessee</option>
+        <option value="TX">Texas</option>
+        <option value="VA">Virginia</option>
+        <option value="WA">Washington</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label>Engagement Status</label>
+      <select id="newOrgStatus">
+        <option value="">Select status</option>
+        <option value="active">Active</option>
+        <option value="onboarding">Onboarding</option>
+        <option value="prospect">Prospect</option>
+        <option value="paused">Paused</option>
+      </select>
+    </div>
+    <div class="modal-btns">
+      <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-btn modal-btn-create" onclick="createClient()">Create Profile</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── PASSWORD ──────────────────────────────────────────────────────────────────
+const PW = 'YOUR_PASSWORD_HERE'; // ← replace this with your password before uploading
+
+function checkPW(){
+  const v = document.getElementById('pwInput').value;
+  if(v === PW){
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    sessionStorage.setItem('plinth_auth','1');
+    initApp();
+  } else {
+    const err = document.getElementById('gateErr');
+    err.classList.add('show');
+    document.getElementById('pwInput').value = '';
+    document.getElementById('pwInput').focus();
+    setTimeout(()=>err.classList.remove('show'), 3000);
+  }
+}
+
+function togglePW(){
+  const inp = document.getElementById('pwInput');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+function logout(){
+  sessionStorage.removeItem('plinth_auth');
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('gate').style.display = 'flex';
+  document.getElementById('pwInput').value = '';
+}
+
+// Check session on load
+window.addEventListener('load', ()=>{
+  if(sessionStorage.getItem('plinth_auth') === '1'){
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    initApp();
+  }
+  document.getElementById('pwInput').focus();
+});
+
+// ── CLIENT DATA ───────────────────────────────────────────────────────────────
+const ACCENTS = ['','mauve','gold','crimson','pale','','mauve','gold'];
+
+function getClients(){
+  try{ return JSON.parse(localStorage.getItem('plinth_clients') || '[]'); }
+  catch(e){ return []; }
+}
+
+function saveClients(clients){
+  localStorage.setItem('plinth_clients', JSON.stringify(clients));
+}
+
+function getActiveClientId(){
+  return localStorage.getItem('plinth_active_client') || null;
+}
+
+function setActiveClient(id){
+  localStorage.setItem('plinth_active_client', id);
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+function initApp(){
+  renderClients();
+  updateStats();
+  updateActiveClientBadge();
+}
+
+// ── RENDER CLIENTS ────────────────────────────────────────────────────────────
+function renderClients(){
+  const clients = getClients();
+  const grid = document.getElementById('clientsGrid');
+  grid.innerHTML = '';
+
+  if(clients.length === 0){
+    grid.innerHTML = `
+      <div class="empty-state fade-up" style="grid-column:1/-1">
+        <div class="empty-icon">◫</div>
+        <div class="empty-title">No client profiles yet</div>
+        <div class="empty-desc">Create your first client profile to begin building their HR infrastructure inside Plinth.</div>
+        <button class="empty-btn" onclick="openModal()">+ Create First Client</button>
+      </div>`;
+    return;
+  }
+
+  clients.forEach((c, i) => {
+    const card = document.createElement('div');
+    card.className = 'client-card fade-up';
+    card.style.animationDelay = (i * 0.06) + 's';
+
+    const accentClass = ACCENTS[i % ACCENTS.length];
+    const progress = c.profileProgress || 0;
+    const isActive = getActiveClientId() === c.id;
+    const statusLabel = {active:'Active',onboarding:'Onboarding',prospect:'Prospect',paused:'Paused'}[c.status] || 'Active';
+    const statusClass = c.status === 'paused' ? 'inactive' : c.status === 'prospect' ? 'warn' : '';
+    const dateStr = c.updatedAt ? new Date(c.updatedAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : 'Not started';
+
+    card.innerHTML = `
+      <div class="card-accent ${accentClass}"></div>
+      <div class="card-body">
+        <div class="card-org">${c.orgName}</div>
+        <div class="card-type">${c.orgType || 'Organization'} · ${c.state || 'State not set'}</div>
+        <div class="card-meta">
+          <span class="card-pill ${statusClass}">${statusLabel}</span>
+          ${isActive ? '<span class="card-pill">Active Session</span>' : ''}
+        </div>
+        <div class="card-progress">
+          <div class="card-prog-lbl"><span>Profile</span><span>${progress}%</span></div>
+          <div class="card-prog-track"><div class="card-prog-fill" style="width:${progress}%"></div></div>
+        </div>
+        <div class="card-tools" title="Tool completion status">
+          ${buildToolDots(c)}
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="card-date">Updated ${dateStr}</div>
+        <button class="card-open" onclick="openClient('${c.id}')">Open &rarr;</button>
+      </div>`;
+
+    grid.appendChild(card);
+  });
+
+  // New client card always at end
+  const newCard = document.createElement('div');
+  newCard.className = 'new-client-card';
+  newCard.onclick = openModal;
+  newCard.innerHTML = `<div class="new-client-icon">+</div><div class="new-client-lbl">New Client</div>`;
+  grid.appendChild(newCard);
+}
+
+function buildToolDots(client){
+  const tools = ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15'];
+  const completedTools = client.completedTools || [];
+  const activeTools = client.activeTools || ['01'];
+  return tools.map(t => {
+    const cls = completedTools.includes(t) ? 'complete' : activeTools.includes(t) ? 'active' : 'empty';
+    return `<div class="tool-dot ${cls}" title="Tool ${t}">${t}</div>`;
+  }).join('');
+}
+
+// ── STATS ─────────────────────────────────────────────────────────────────────
+function updateStats(){
+  const clients = getClients();
+  document.getElementById('statClients').textContent = clients.length;
+  document.getElementById('statActive').textContent = clients.filter(c => c.status === 'active' || c.status === 'onboarding').length;
+}
+
+function updateActiveClientBadge(){
+  const id = getActiveClientId();
+  const badge = document.getElementById('activeClientBadge');
+  const nameEl = document.getElementById('activeClientName');
+  if(!id){ badge.style.display = 'none'; return; }
+  const clients = getClients();
+  const client = clients.find(c => c.id === id);
+  if(client){ badge.style.display = 'flex'; nameEl.textContent = client.orgName; }
+  else { badge.style.display = 'none'; }
+}
+
+// ── OPEN CLIENT ───────────────────────────────────────────────────────────────
+function openClient(id){
+  const clients = getClients();
+  const client = clients.find(c => c.id === id);
+  if(!client) return;
+
+  // Set active client and save that client's profile data as the active plinth_op
+  setActiveClient(id);
+  if(client.profileData){
+    localStorage.setItem('plinth_op', JSON.stringify(client.profileData));
+    localStorage.setItem('plinth_ts', client.updatedAt || new Date().toISOString());
+  } else {
+    localStorage.removeItem('plinth_op');
+  }
+
+  updateActiveClientBadge();
+  renderClients();
+
+  // Navigate to Tool 01
+  window.location.href = 'org-profile.html';
+}
+
+function openTool(tool){
+  if(tool === 'org-profile'){
+    const id = getActiveClientId();
+    if(!id){
+      // No active client — prompt to select or create one
+      const clients = getClients();
+      if(clients.length === 0){
+        openModal();
+        return;
+      }
+      // Auto-select most recently updated client
+      const sorted = [...clients].sort((a,b) => new Date(b.updatedAt||0) - new Date(a.updatedAt||0));
+      openClient(sorted[0].id);
+      return;
+    }
+    window.location.href = 'org-profile.html';
+  }
+}
+
+// ── SYNC BACK FROM TOOL ───────────────────────────────────────────────────────
+// Called when returning to dashboard — syncs Tool 01 data back to active client
+function syncActiveClient(){
+  const id = getActiveClientId();
+  if(!id) return;
+  const profileData = localStorage.getItem('plinth_op');
+  if(!profileData) return;
+  try{
+    const data = JSON.parse(profileData);
+    const clients = getClients();
+    const idx = clients.findIndex(c => c.id === id);
+    if(idx === -1) return;
+    clients[idx].profileData = data;
+    clients[idx].updatedAt = new Date().toISOString();
+    // Estimate profile progress from data
+    const checks = [data.legalName, data.fein, data.entityType, data.primaryState, data.industry, data.payFreq, data.govSt];
+    const done = checks.filter(v => v && v.toString().trim().length > 0).length;
+    clients[idx].profileProgress = Math.round((done / checks.length) * 100);
+    saveClients(clients);
+  } catch(e){ console.warn(e); }
+}
+
+// ── CREATE CLIENT ─────────────────────────────────────────────────────────────
+function createClient(){
+  const name = document.getElementById('newOrgName').value.trim();
+  if(!name){ document.getElementById('newOrgName').focus(); return; }
+  const clients = getClients();
+  const newClient = {
+    id: 'client_' + Date.now(),
+    orgName: name,
+    orgType: document.getElementById('newOrgType').value,
+    state: document.getElementById('newOrgState').value,
+    status: document.getElementById('newOrgStatus').value || 'active',
+    profileProgress: 0,
+    completedTools: [],
+    activeTools: ['01'],
+    profileData: null,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+  clients.push(newClient);
+  saveClients(clients);
+  closeModal();
+  setActiveClient(newClient.id);
+  localStorage.removeItem('plinth_op');
+  updateActiveClientBadge();
+  renderClients();
+  updateStats();
+  // Go straight to Tool 01
+  window.location.href = 'org-profile.html';
+}
+
+// ── MODAL ─────────────────────────────────────────────────────────────────────
+function openModal(){
+  document.getElementById('newOrgName').value = '';
+  document.getElementById('newOrgType').value = '';
+  document.getElementById('newOrgState').value = '';
+  document.getElementById('newOrgStatus').value = '';
+  document.getElementById('modalOverlay').classList.add('open');
+  setTimeout(()=>document.getElementById('newOrgName').focus(), 200);
+}
+
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') closeModal();
+  if(e.key === 'Enter' && document.getElementById('modalOverlay').classList.contains('open')){
+    createClient();
+  }
+});
+
+// Sync on page load in case returning from a tool
+window.addEventListener('load', ()=>{
+  if(sessionStorage.getItem('plinth_auth') === '1'){
+    syncActiveClient();
+  }
+});
+</script>
+</body>
+</html>
