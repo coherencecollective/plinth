@@ -344,7 +344,7 @@ footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:c
 <footer><div class="fb">The Coherence Collective &nbsp;·&nbsp; <span>Plinth</span></div><div style="display:flex;gap:16px;align-items:center">
     <div style="display:flex;align-items:center;gap:8px">
     <span style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.35)">Jump to</span>
-    <select onchange="if(this.value)window.location.href=this.value" style="font-family:'Jost',sans-serif;font-weight:300;font-size:11px;background:rgba(255,255,255,0.06);color:rgba(245,237,228,0.6);border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:4px 24px 4px 8px;cursor:pointer;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(245,237,228,0.4)' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center"><option value="org-profile.html"  >01 · Org Profile</option><option value="handbook.html" selected >02 · Handbook</option><option value="job-architecture.html"  >03 · Job Architecture</option><option value="compensation.html"  >04 · Compensation</option><option value=""  disabled>05 · Offer & Hiring — coming soon</option><option value=""  disabled>06 · Onboarding — coming soon</option><option value=""  disabled>07 · Pay Practices — coming soon</option><option value=""  disabled>08 · Benefits — coming soon</option><option value=""  disabled>09 · Leave — coming soon</option><option value=""  disabled>10 · Performance — coming soon</option><option value=""  disabled>11 · ER & Investigation — coming soon</option><option value=""  disabled>12 · Separation — coming soon</option><option value=""  disabled>13 · Compliance Calendar — coming soon</option><option value=""  disabled>14 · Manager Toolkit — coming soon</option><option value=""  disabled>15 · Analytics — coming soon</option></select>
+    <select onchange="if(this.value)window.location.href=this.value" style="font-family:'Jost',sans-serif;font-weight:300;font-size:11px;background:rgba(255,255,255,0.06);color:rgba(245,237,228,0.6);border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:4px 24px 4px 8px;cursor:pointer;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(245,237,228,0.4)' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center"><option value="org-profile.html" >01 &middot; Org Profile</option><option value="handbook.html" selected>02 &middot; Handbook</option><option value="job-architecture.html" >03 &middot; Job Architecture</option><option value="compensation.html" >04 &middot; Compensation</option><option value="offer-hiring.html" >05 &middot; Offer &amp; Hiring</option><option value="onboarding.html">06 &middot; Onboarding</option><option value="pay-practices.html">07 &middot; Pay Practices</option><option value="benefits.html">08 &middot; Benefits Administration</option><option value="leave.html">09 &middot; Leave Management</option><option value="performance.html">10 &middot; Performance Management</option><option value="er-investigation.html">11 &middot; ER &amp; Investigation</option><option value="separation.html">12 &middot; Separation</option><option value="compliance-calendar.html">13 &middot; Compliance Calendar</option><option value="manager-toolkit.html">14 &middot; Manager Toolkit</option><option value="analytics.html">15 &middot; Analytics</option></select>
   </div>
     <span style="color:rgba(245,237,228,0.15)">|</span><a href="org-profile.html" style="font-size:11px;color:rgba(245,237,228,0.4);letter-spacing:0.06em;text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">&larr; Tool 01: Org Profile</a><span style="color:rgba(245,237,228,0.2)">|</span><a href="job-architecture.html" style="font-size:11px;color:rgba(245,237,228,0.4);letter-spacing:0.06em;text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">Tool 03: Job Architecture &rarr;</a></div></footer>
 
@@ -552,7 +552,70 @@ function buildPolicyDefs(){
      reason:'Optional — establishes behavioral expectations across the organization.',
      counsel:false,
      cite:'Best practice',
-     template:`[ORG NAME] expects all employees to conduct themselves in a professional manner consistent with our mission and values.\n\nGeneral Standards: Employees are expected to treat all colleagues, clients, partners, and community members with respect and professionalism; maintain attendance and punctuality; perform assigned duties competently and diligently; maintain appropriate confidentiality; and represent [ORG NAME] appropriately in all public and professional settings.\n\nConflicts of Interest: Employees must avoid situations where personal interests conflict or appear to conflict with [ORG NAME]'s interests. Employees must disclose potential conflicts of interest to their supervisor or the Executive Director.\n\nGifts & Gratuities: Employees may not accept gifts, gratuities, or other benefits from vendors, contractors, or others doing business with [ORG NAME] that could create an appearance of impropriety.\n\nViolations: Violations of these standards may result in disciplinary action up to and including termination.`},
+     template:`[ORG NAME] expects all employees to conduct themselves in a professional manner consistent with our mission and values.\n\nGeneral Standards: Employees are expected to treat all colleagues, clients, partners, and community members with respect and professionalism; maintain attendance and punctuality; perform assigned duties competently and diligently; maintain appropriate confidentiality; and represent [ORG NAME] appropriately in all public and professional settings.\n\nGifts & Gratuities: Employees may not accept gifts, gratuities, or other benefits from vendors, contractors, or others doing business with [ORG NAME] that could create an appearance of impropriety. Any gift valued above $[25] must be declined or disclosed to [HR/the Executive Director].\n\nViolations: Violations of these standards may result in disciplinary action up to and including termination.`},
+
+    // ── PUMP ACT / NURSING MOTHERS — NO SIZE THRESHOLD ──────────────────────
+    {key:'nursing',name:'Nursing Mothers & Lactation Accommodation',tier:'required',
+     reason:'Required — the PUMP for Nursing Mothers Act (2023) applies to ALL employers with no minimum employee threshold. Supersedes prior FLSA § 207(r) protections.',
+     counsel:false,
+     cite:'PUMP for Nursing Mothers Act of 2022 · FLSA § 207(r) as amended',
+     template:`[ORG NAME] supports nursing employees and complies with the PUMP for Nursing Mothers Act and applicable federal and state law.\n\nBreak Time: [ORG NAME] will provide reasonable break time for an employee to express breast milk for their nursing child for one year after the child's birth, each time the employee has need to express milk. This applies to both exempt and nonexempt employees.\n\nPrivate Space: [ORG NAME] will provide a place, other than a bathroom, that is shielded from view, free from intrusion from coworkers and the public, and that may be used by an employee to express breast milk. This space will be functional as a lactation space with a place to sit and a surface for equipment.\n\nCompensation: Nonexempt employees taking lactation breaks that are not otherwise compensated under [ORG NAME]'s break policy will not be penalized, but unpaid break time for lactation will be treated consistently with [ORG NAME]'s other non-compensable break time.\n\nConfidentiality: Employees requesting lactation accommodations may keep the nature of the accommodation confidential. Supervisors may be informed only to the extent necessary to arrange the accommodation.\n\nNon-Retaliation: [ORG NAME] prohibits retaliation against any employee for requesting or using lactation accommodations.\n\nRequests: Employees who need lactation accommodations should notify [HR/People/their supervisor] as early as possible to allow [ORG NAME] to prepare an appropriate space and schedule.`},
+
+    // ── PWFA (2023) — 15+ EMPLOYEES ──────────────────────────────────────────
+    ...(tw2>=15?[{key:'pwfa',name:'Pregnant Workers Fairness Act (PWFA)',tier:'required',
+     reason:`Required — ${tw2} employees meets the 15-employee PWFA threshold. Effective June 27, 2023. EEOC active enforcement priority.`,
+     counsel:true,
+     cite:'Pregnant Workers Fairness Act · 42 U.S.C. § 2000gg et seq. (effective June 27, 2023)',
+     template:`[ORG NAME] complies with the Pregnant Workers Fairness Act (PWFA) and is committed to providing reasonable accommodations to qualified employees and applicants affected by pregnancy, childbirth, and related medical conditions.\n\nCovered Conditions: The PWFA covers known limitations related to, affected by, or arising out of pregnancy, childbirth, or related medical conditions — including but not limited to lactation, postpartum depression, miscarriage, stillbirth, or termination of pregnancy.\n\nReasonable Accommodation: [ORG NAME] will provide reasonable accommodations for known limitations unless doing so would cause an undue hardship to [ORG NAME]'s operations. Unlike the ADA, the limitation does not need to rise to the level of a "disability." Accommodations may include more frequent breaks, schedule adjustments, remote work, temporary transfer, leave, closer parking, ability to sit, access to water, or modification of uniform requirements.\n\nInteractive Process: Employees seeking accommodation should notify [HR/People/their supervisor] of their known limitation. [ORG NAME] will engage in a good-faith interactive process to identify an effective accommodation. [ORG NAME] may not require medical documentation for minor, obvious, or temporary adjustments.\n\nNon-Retaliation: [ORG NAME] prohibits retaliation against any employee for requesting or using PWFA accommodations, opposing discriminatory practices, or participating in PWFA proceedings.\n\nRelationship to Other Laws: The PWFA supplements, and does not replace, protections under Title VII, the ADA, and FMLA. [ORG NAME] will analyze accommodation requests under all applicable laws.`}]:[]),
+
+    // ── CONFLICT OF INTEREST — NONPROFIT CRITICAL ────────────────────────────
+    {key:'coi',name:'Conflict of Interest',tier:'recommended',
+     reason:'Strongly recommended for all organizations. Required for nonprofits with public accountability obligations, IRS Form 990 reporting, and most funder compliance requirements. Should be a standalone policy, not a subsection of Standards of Conduct.',
+     counsel:true,
+     cite:'IRS Form 990 (Part VI, Section B) · Nonprofit governance best practice · Most foundation grant requirements',
+     template:`[ORG NAME] is committed to maintaining the highest standards of integrity and objectivity in all business decisions. This policy establishes standards for identifying and managing conflicts of interest.\n\nDefinition: A conflict of interest arises when an employee's personal interests, outside relationships, or financial interests could improperly influence — or appear to influence — their judgment in carrying out their responsibilities to [ORG NAME]. This includes conflicts involving immediate family members.\n\nExamples of potential conflicts include: employment, consulting arrangements, or financial interests with vendors, contractors, funders, or competitors; personal relationships that may influence hiring, contracting, or compensation decisions; receipt of gifts, compensation, or personal benefits from parties doing business with [ORG NAME]; and serving on the board of an organization with interests that compete with or conflict with [ORG NAME]'s mission.\n\nDisclosure: Employees must promptly disclose any actual or potential conflict of interest to their supervisor and to [HR/the Executive Director]. Disclosures must be made in writing. [ORG NAME] maintains a conflict of interest disclosure log.\n\nRecusal: An employee with a disclosed conflict must recuse themselves from any decision, recommendation, or other action related to the conflict. Recusal must be documented.\n\nAnnual Acknowledgment: Employees in positions of trust — including all supervisors, program leads, finance staff, and anyone with procurement or contracting authority — must complete an annual conflict of interest disclosure form.\n\nViolations: Failure to disclose a conflict of interest or failure to recuse oneself from a conflicted decision is a serious violation of policy and may result in disciplinary action up to and including termination.\n\n[NOTE: This policy should be reviewed by legal counsel and should be consistent with the organization's board-level conflict of interest policy if one exists.]`},
+
+    // ── REMOTE WORK ──────────────────────────────────────────────────────────
+    ...(hasRemote?[{key:'remote',name:'Remote Work & Telecommuting Policy',tier:'recommended',
+     reason:'Recommended — remote workers identified in org profile. A written remote work policy establishes expectations, protects the organization, and clarifies employment relationships in multi-state situations.',
+     counsel:true,
+     cite:'FLSA (tracking hours for nonexempt remote workers) · Multi-state tax / employment law considerations',
+     template:`[ORG NAME] supports flexible work arrangements where consistent with operational needs. This policy governs remote and telecommuting work arrangements.\n\nEligibility: Remote work arrangements are available to employees whose job responsibilities can be effectively performed outside of [ORG NAME]'s primary worksite. Approval is at [ORG NAME]'s discretion and is not guaranteed for any position.\n\nArrangement Types:\n• Fully remote: Employee performs all work from a location other than [ORG NAME]'s primary office.\n• Hybrid: Employee divides work time between the primary worksite and a remote location per a defined schedule.\n• Ad hoc remote: Occasional remote work on an as-needed, supervisor-approved basis.\n\nWork Location: Employees must work from an approved location. Changes to work location — including relocating to another state — require advance written approval. Working from another state may have tax, insurance, and employment law implications that require advance assessment.\n\nAvailability & Communication: Remote employees must maintain the same availability and responsiveness as in-office employees during scheduled work hours. Core collaboration hours are [define hours]. Remote employees must participate in all required meetings.\n\nTimekeeping: Nonexempt remote employees must accurately record all hours worked. [ORG NAME] retains the right to verify time records.\n\nEquipment & Expenses: [ORG NAME] will provide [describe equipment policy]. Employees are responsible for maintaining a workspace that meets basic safety and security standards.\n\nData Security: Remote employees must comply with [ORG NAME]'s data security policies. Work-related data must be stored on [ORG NAME]-approved systems. The use of public networks for sensitive communications is prohibited without approved VPN access.\n\nTermination of Arrangement: Remote work arrangements may be modified or terminated by [ORG NAME] with reasonable notice. An employee's at-will employment status is not affected by this policy.`}]:[]),
+
+    // ── DATA PRIVACY & CONFIDENTIALITY ───────────────────────────────────────
+    {key:'dataprivacy',name:'Data Privacy & Confidentiality',tier:'recommended',
+     reason:'Strongly recommended — nonprofits handle donor data, client data, grantee data, and often protected health information. A written confidentiality policy is required by most funders and is baseline practice for any organization in a public trust relationship.',
+     counsel:true,
+     cite:'Texas Data Privacy and Security Act (effective July 1, 2024) · HIPAA (if applicable) · Funder requirements',
+     template:`[ORG NAME] collects, uses, and maintains confidential information in connection with its operations. This policy establishes employees' obligations to protect the privacy and confidentiality of that information.\n\nConfidential Information: Confidential information includes, but is not limited to: client, participant, and donor records; health and personal information about clients or participants; personnel and compensation information; financial records; strategic plans; donor and funder relationships; and proprietary program models and methodologies.\n\nEmployee Obligations: Employees must: access confidential information only as required to perform their job duties; not disclose confidential information to any person without authorization; use confidential information only for authorized purposes; and protect confidential information from unauthorized access, loss, or disclosure.\n\nTexas Data Privacy: [ORG NAME] complies with the Texas Data Privacy and Security Act (TDPSA), effective July 1, 2024, which governs the collection and use of personal data of Texas residents.\n\nHealth Information (if applicable): Employees with access to protected health information (PHI) are subject to additional obligations under HIPAA and must complete [ORG NAME]'s required HIPAA training.\n\nIncident Reporting: Employees must immediately report any actual or suspected breach of confidentiality or data security to [HR/the Executive Director/IT]. Prompt reporting may limit liability and enable [ORG NAME] to meet applicable breach notification requirements.\n\nPost-Separation Obligations: Employees' confidentiality obligations survive separation. Upon separation, employees must return or destroy all confidential information and may not retain copies.\n\nViolations: Breaches of this policy may result in disciplinary action, termination, and potential civil or criminal liability.`},
+
+    // ── DRUG & ALCOHOL ───────────────────────────────────────────────────────
+    {key:'drugalcohol',name:'Drug-Free Workplace & Alcohol Policy',tier:'recommended',
+     reason:'Recommended — any organization receiving federal grants may be required to have a Drug-Free Workplace Act policy. Even without federal funding, a written policy establishes a baseline for addressing impairment-related safety and conduct issues.',
+     counsel:false,
+     cite:'Drug-Free Workplace Act of 1988 (federal grantees) · Texas Labor Code',
+     template:`[ORG NAME] is committed to maintaining a safe, healthy, and productive workplace. The unlawful manufacture, distribution, dispensation, possession, or use of controlled substances, and being impaired by alcohol or other substances while at work or on [ORG NAME] business, are prohibited.\n\nProhibitions: Employees may not:\n• Report to work, work, or be present on [ORG NAME] premises or at work-related events while impaired by alcohol, illegal drugs, or any controlled substance, including lawfully prescribed medications that impair safe and effective performance.\n• Possess, use, distribute, or sell illegal drugs or controlled substances at any time while on [ORG NAME] premises, using [ORG NAME] vehicles, or conducting [ORG NAME] business.\n• Consume alcohol during work hours, on [ORG NAME] premises, or at [ORG NAME]-sponsored events except where explicitly authorized by [ORG NAME] leadership.\n\nPrescription Medications: Employees taking prescribed medications that may affect their ability to safely perform their duties must notify their supervisor prior to working in situations where impaired performance could create a safety risk.\n\nFederal Grantees (if applicable): As a condition of receiving federal funds, employees engaged in performance of the covered grant must notify [ORG NAME] of any criminal drug statute conviction for a violation occurring in the workplace within five days of the conviction. [ORG NAME] is required to notify the federal granting agency within ten days of receiving such notice.\n\nConsequences: Violations of this policy may result in immediate suspension, required participation in a substance abuse program, and/or termination of employment.`},
+
+    // ── VIOLENCE-FREE WORKPLACE ──────────────────────────────────────────────
+    {key:'violence',name:'Violence-Free Workplace',tier:'recommended',
+     reason:'Strongly recommended — workplace violence policies reduce liability and provide a clear response framework. Texas law includes specific provisions regarding concealed carry and employer rights to prohibit weapons in the workplace.',
+     counsel:true,
+     cite:'Texas Penal Code § 30.06 & 30.07 (weapons posting requirements) · OSHA General Duty Clause',
+     template:`[ORG NAME] is committed to providing a workplace free from violence, threats, and intimidation. This policy applies to all employees, contractors, clients, and visitors.\n\nProhibited Conduct: The following are prohibited at [ORG NAME] facilities, at [ORG NAME]-sponsored events, and while on [ORG NAME] business:\n• Acts or threats of physical violence, including intimidation, harassment, or coercion intended to threaten or harm individuals\n• Possession of weapons, including firearms, regardless of whether the individual holds a license to carry, except as specifically permitted below\n• Conduct that intentionally creates a threatening, hostile, or intimidating environment\n\nWeapons (Texas Law): Under Texas law, [ORG NAME] prohibits the carrying of handguns — including licensed handguns — on [ORG NAME] premises. [ORG NAME] posts required notices pursuant to Texas Penal Code § 30.06 and § 30.07. [Note: Employees may store lawfully possessed firearms in a locked, privately owned vehicle in [ORG NAME]'s parking area as permitted by Texas law.]\n\nReporting: Employees must immediately report any act or threat of violence, any individual who exhibits threatening behavior, or any weapon observed on [ORG NAME] premises to their supervisor or HR. Imminent threats should be reported to law enforcement (911) first.\n\nInvestigation: [ORG NAME] will investigate all reports of workplace violence promptly. Employees who report threats in good faith will not be subject to retaliation.\n\nNo Retaliation: [ORG NAME] prohibits retaliation against any employee who reports a workplace violence concern in good faith.\n\n[NOTE: This policy should be reviewed by employment counsel, particularly the weapons provisions, to ensure compliance with current Texas law and applicable local ordinances.]`},
+
+    // ── BEREAVEMENT LEAVE ────────────────────────────────────────────────────
+    {key:'bereavement',name:'Bereavement Leave',tier:'recommended',
+     reason:'Strongly recommended — bereavement leave is universally expected by employees and its absence creates significant culture and retention risk. Texas does not require bereavement leave, but providing it is standard nonprofit practice. The PUMP Act and most EAP programs assume a bereavement policy exists.',
+     counsel:false,
+     cite:'Texas Labor Code (no requirement — employer discretion) · Best practice',
+     template:`[ORG NAME] recognizes that the death of a family member or close loved one is a significant life event that requires time away from work. [ORG NAME] provides bereavement leave to allow employees to grieve, attend services, and manage related matters.\n\nPaid Bereavement Leave:\n• Death of a spouse, domestic partner, child (including stepchildren and adopted children): Up to [5] paid business days\n• Death of a parent, parent-in-law, sibling, or grandparent: Up to [3] paid business days\n• Death of an extended family member (aunt, uncle, cousin, in-law): Up to [1] paid business day\n\nAdditional Leave: Employees who need additional time beyond the above may use accrued PTO, with supervisor approval.\n\nNotice: Employees should notify their supervisor as soon as reasonably possible when bereavement leave is needed.\n\nDocumentation: [ORG NAME] may request documentation such as an obituary or death certificate for bereavement leave, particularly for extended leave requests.\n\nFlex Use: [ORG NAME] recognizes that grief does not follow a schedule. Supervisors are encouraged to work with employees to accommodate flexible use of bereavement leave when circumstances require it.\n\nNon-Family Members: In cases of the death of a close friend or colleague who is not a family member, supervisors may grant reasonable discretionary bereavement time in consultation with HR.`},
+
+    // ── WHISTLEBLOWER PROTECTION ─────────────────────────────────────────────
+    {key:'whistleblower',name:'Whistleblower Protection',tier:'recommended',
+     reason:'Strongly recommended — many federal funders (HHS, DOL, federal grants) require whistleblower protection policies. Nonprofit governance standards (GuideStar, Charity Navigator, IRS Form 990) specifically ask about this policy. Absence creates credibility risk with major funders.',
+     counsel:true,
+     cite:'Sarbanes-Oxley Act § 1107 (non-profit provisions) · IRS Form 990 Part VI · Federal grant conditions (2 CFR Part 200)',
+     template:`[ORG NAME] is committed to the highest standards of ethical conduct and transparency. This policy protects employees who in good faith report suspected violations of law, financial misconduct, or policy violations.\n\nProtected Disclosures: An employee engages in protected activity when they report, in good faith, a reasonable belief that [ORG NAME] has engaged in or is about to engage in:\n• Violations of federal, state, or local law or regulation\n• Financial fraud, misuse of funds, or misrepresentation to funders or donors\n• Embezzlement, theft, or misappropriation of assets\n• Violations of [ORG NAME]'s own policies that create significant risk\n• Retaliation against another employee for protected activity\n\nReporting Channels: Employees may report concerns to: their supervisor; the Executive Director; the Board Chair (for concerns about the Executive Director or senior leadership); [HR/People]; or an anonymous reporting mechanism if one is available. Reports may be made verbally or in writing.\n\nNon-Retaliation: [ORG NAME] strictly prohibits any form of retaliation against an employee who makes a good-faith report, participates in an investigation, or refuses to participate in a practice they reasonably believe is unlawful. Retaliation includes termination, demotion, reduction in pay or hours, harassment, or any other adverse employment action.\n\nGood Faith Required: Protection under this policy requires that the employee have a reasonable, good-faith belief that the reported conduct constitutes a violation. Employees who make knowingly false reports are not protected.\n\nInvestigation: [ORG NAME] will promptly and confidentially investigate all protected disclosures. The employee making the report will be informed of the outcome to the extent appropriate.\n\nExternal Reporting: Nothing in this policy limits an employee's right to report concerns to applicable federal, state, or local regulatory agencies, including but not limited to the IRS, DOL, or state Attorney General.\n\n[NOTE: This policy should be reviewed by legal counsel and aligned with the organization's board-level whistleblower policy if one exists.]`},
   ];
 }
 
@@ -835,14 +898,53 @@ function exportHandbook(){
   const prepBy = document.getElementById('hbPrepBy').value || 'The Coherence Collective, LLC';
   const orderedKeys = policyOrder.filter(k=>policies[k]?.included&&policies[k]?.text);
   if(orderedKeys.length===0){ alert('No policies included in the handbook yet. Generate and include at least one policy before exporting.'); return; }
+
+  // Table of contents
+  const tocLines = orderedKeys.map((k,i)=>{
+    const def = defs.find(p=>p.key===k);
+    return `<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dotted #ccc;font-size:10pt"><span>${i+1}. ${def?def.name:k}</span><span style="color:#777">${def?.tier==='required'?'Required':def?.tier==='recommended'?'Recommended':'Optional'}</span></div>`;
+  }).join('');
+
   let policySections = orderedKeys.map((k,i)=>{
     const def = defs.find(p=>p.key===k);
     const text = policies[k].text.replace(/\n/g,'</p><p style="margin:0 0 10px 0">');
-    return `<div style="page-break-before:${i===0?'avoid':'always'};padding:0 0 40px 0">
+    return `<div style="page-break-before:always;padding:0 0 40px 0">
+      <div style="font-size:9pt;color:#777;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">Policy ${i+1} of ${orderedKeys.length} &nbsp;·&nbsp; ${def?.tier==='required'?'Required':def?.tier==='recommended'?'Recommended':'Optional'}</div>
       <h2 style="font-family:Georgia,serif;font-size:16px;font-weight:600;color:#1a1a1a;border-bottom:2px solid #1a1a1a;padding-bottom:8px;margin:0 0 16px 0">${def?def.name:k}</h2>
+      ${def?.cite?`<div style="font-size:8.5pt;color:#777;margin-bottom:14px;letter-spacing:0.03em">Legal basis: ${def.cite}</div>`:''}
       <p style="margin:0 0 10px 0">${text}</p>
     </div>`;
   }).join('');
+
+  // Acknowledgment receipt
+  const ackSection = `<div style="page-break-before:always;padding:0">
+    <div style="text-align:center;margin-bottom:32px">
+      <h2 style="font-family:Georgia,serif;font-size:18pt;font-weight:400;color:#1a1a1a;margin-bottom:4px">${orgName}</h2>
+      <div style="font-size:11pt;color:#555;margin-bottom:4px">Employee Handbook Acknowledgment</div>
+      <div style="font-size:9pt;color:#777">Version ${version} &nbsp;·&nbsp; Effective ${effDate}</div>
+    </div>
+    <p style="font-size:10.5pt;line-height:1.8;margin-bottom:20px">I acknowledge that I have received, read, and understand the ${orgName} Employee Handbook (Version ${version}, effective ${effDate}).</p>
+    <p style="font-size:10.5pt;line-height:1.8;margin-bottom:20px">I understand that:</p>
+    <ul style="font-size:10.5pt;line-height:2;margin-bottom:20px;padding-left:24px">
+      <li>This handbook establishes ${orgName}'s policies and guidelines. It does not constitute a contract of employment and does not alter the at-will employment relationship.</li>
+      <li>I am responsible for reading and complying with the policies contained in this handbook and any future amendments.</li>
+      <li>${orgName} reserves the right to modify, revoke, or add to these policies at any time, with or without advance notice.</li>
+      <li>The at-will employment statement in this handbook means that either ${orgName} or I may terminate the employment relationship at any time, with or without cause, and with or without notice.</li>
+      <li>If I have any questions about the content of this handbook, I will direct them to [HR/People/my supervisor].</li>
+    </ul>
+    <div style="margin-top:48px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div>
+        <div style="border-top:1px solid #1a1a1a;padding-top:8px;font-size:9pt;color:#555">Employee Signature</div>
+        <div style="margin-top:28px;border-top:1px solid #1a1a1a;padding-top:8px;font-size:9pt;color:#555">Printed Name</div>
+        <div style="margin-top:28px;border-top:1px solid #1a1a1a;padding-top:8px;font-size:9pt;color:#555">Date</div>
+        <div style="margin-top:28px;border-top:1px solid #1a1a1a;padding-top:8px;font-size:9pt;color:#555">Position / Department</div>
+      </div>
+      <div>
+        <p style="font-size:9.5pt;color:#555;line-height:1.75;margin-top:0">This signed acknowledgment should be retained in the employee's personnel file. The employee receives a copy of the signed acknowledgment and is encouraged to retain it for their own records.</p>
+        <p style="font-size:9.5pt;color:#555;line-height:1.75">If the employee refuses to sign, note the refusal on this form with a witness signature and retain the form in the personnel file. Refusal to sign does not exempt the employee from compliance with handbook policies.</p>
+      </div>
+    </div>
+  </div>`;
 
   const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>${orgName} — ${subtitle}</title>
   <style>
@@ -850,28 +952,36 @@ function exportHandbook(){
     h1{font-size:28pt;font-weight:400;margin:0 0 8px 0;}
     h2{font-size:14pt;font-weight:600;margin:32px 0 12px 0;}
     p{margin:0 0 10px 0;}
-    .cover{min-height:100vh;display:flex;flex-direction:column;justify-content:center;border-bottom:3px solid #1a1a1a;margin-bottom:48px;padding-bottom:48px;}
-    .cover-meta{font-size:9pt;color:#777;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:24px;}
+    .cover{min-height:100vh;display:flex;flex-direction:column;justify-content:center;border-bottom:3px solid #1a1a1a;margin-bottom:48px;padding-bottom:48px;page-break-after:always;}
     .cover-org{font-size:32pt;font-weight:400;line-height:1.1;margin-bottom:8px;}
     .cover-title{font-size:16pt;color:#555;margin-bottom:32px;}
     .cover-details{font-size:9pt;color:#777;line-height:1.8;}
     .attorney-note{font-size:9pt;color:#A42F30;border:1px solid #A42F30;padding:8px 14px;display:inline-block;margin-top:20px;letter-spacing:0.04em;}
-    @media print{@page{size:letter;margin:1in;}.cover{page-break-after:always;}}
+    .toc-page{page-break-after:always;padding-bottom:48px;}
+    .toc-title{font-family:Georgia,serif;font-size:16pt;font-weight:600;color:#1a1a1a;border-bottom:2px solid #1a1a1a;padding-bottom:8px;margin-bottom:20px;}
+    @media print{@page{size:letter;margin:1in;}}
   </style></head><body>
   <div class="cover">
-    <div class="cover-meta">${orgName}</div>
     <div class="cover-org">${orgName}</div>
     <div class="cover-title">${subtitle}</div>
     <div class="cover-details">
       Effective Date: ${effDate}<br>
       Version: ${version}<br>
+      Total Policies: ${orderedKeys.length}<br>
       Prepared with support from: ${prepBy}
     </div>
     <div class="attorney-note">${attorney}</div>
   </div>
+  <div class="toc-page">
+    <div class="toc-title">Contents</div>
+    ${tocLines}
+    <div style="padding:5px 0;border-bottom:1px dotted #ccc;font-size:10pt;margin-top:4px"><span>${orderedKeys.length+1}. Employee Acknowledgment of Receipt</span></div>
+  </div>
   ${policySections}
-  <div style="margin-top:48px;padding-top:16px;border-top:1px solid #ccc;font-size:8pt;color:#999;text-align:center">
-    ${orgName} · ${subtitle} · Version ${version} · Effective ${effDate} · Prepared with support from ${prepBy}
+  ${ackSection}
+  <div style="page-break-before:always;margin-top:48px;padding-top:16px;border-top:1px solid #ccc;font-size:8pt;color:#999;text-align:center">
+    ${orgName} &nbsp;·&nbsp; ${subtitle} &nbsp;·&nbsp; Version ${version} &nbsp;·&nbsp; Effective ${effDate}<br>
+    Prepared with support from ${prepBy} &nbsp;·&nbsp; This document may require attorney review before distribution.
   </div>
   </body></html>`;
 
