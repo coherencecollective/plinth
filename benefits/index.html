@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Plinth · Benefits Administration</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--green:#1b4436;--green-light:#235a47;--green-deep:#122e24;--mauve:#916179;--sand:#D2BB9F;--gold:#D99E32;--pale:#cccf8e;--crimson:#A42F30;--beige:#F5EDE4;--white:#fff;--off-white:#faf8f5;--text-dark:#1a1a1a;--text-mid:#444;--text-light:#777;--border:#e0d8cf;--shadow:0 2px 16px rgba(27,68,54,0.08);--radius:4px;--radius-md:8px;--radius-lg:12px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Jost',sans-serif;font-weight:300;font-size:14px;color:var(--text-dark);background:var(--off-white);min-height:100vh;}
+nav{position:sticky;top:0;z-index:100;background:var(--green);padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,0.2);}
+.nav-left{display:flex;align-items:center;gap:14px;}
+.back-btn{display:inline-flex;align-items:center;gap:5px;font-family:'Jost',sans-serif;font-size:11px;font-weight:300;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.5);padding:5px 10px;border:1px solid rgba(245,237,228,0.15);border-radius:var(--radius);background:none;cursor:pointer;transition:all 0.2s;}
+.back-btn:hover{color:var(--beige);}
+.nav-sep{width:1px;height:18px;background:rgba(255,255,255,0.15);}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:17px;color:var(--beige);}
+.nav-brand span{color:var(--gold);}
+.nav-sub{font-size:12px;font-weight:300;color:rgba(245,237,228,0.45);}
+.nav-right{display:flex;gap:7px;align-items:center;}
+.nbtn{font-family:'Jost',sans-serif;font-weight:300;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:5px 13px;border-radius:var(--radius);cursor:pointer;border:none;transition:all 0.2s;}
+.nbtn-ghost{background:transparent;color:var(--sand);border:1px solid rgba(210,187,159,0.3);}
+.nbtn-ghost:hover{background:rgba(210,187,159,0.1);color:var(--beige);}
+.nbtn-gold{background:var(--gold);color:var(--green-deep);font-weight:400;}
+.sflash{font-size:11px;color:var(--pale);margin-right:4px;opacity:0;transition:opacity 0.3s;}
+.sflash.on{opacity:1;}
+.tabs{background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;display:flex;overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{font-size:11px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:13px 18px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.2s;}
+.tab:hover{color:var(--green);}
+.tab.active{color:var(--green);border-bottom-color:var(--green);}
+.hero{background:linear-gradient(150deg,var(--green-deep) 0%,var(--green) 55%,var(--green-light) 100%);padding:44px 28px 38px;position:relative;overflow:hidden;}
+.hero-inner{max-width:1060px;margin:0 auto;}
+.hero-eye{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--pale);margin-bottom:10px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:36px;color:var(--white);line-height:1.05;margin-bottom:8px;}
+.hero-title em{font-style:italic;color:var(--sand);}
+.hero-desc{font-size:12.5px;font-weight:300;color:rgba(245,237,228,0.65);max-width:600px;line-height:1.75;}
+.main{max-width:1060px;margin:0 auto;padding:32px 28px 80px;}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;opacity:0;transform:translateY(10px);transition:opacity 0.35s,transform 0.35s;}
+.card.vis{opacity:1;transform:translateY(0);}
+.card-hdr{padding:16px 22px 13px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.05));display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:16px;color:var(--green);}
+.card-desc{font-size:11px;color:var(--text-light);margin-top:2px;line-height:1.5;}
+.card-body{padding:20px 22px;}
+.fg{display:grid;gap:14px;}
+.g2{grid-template-columns:1fr 1fr;}
+.g3{grid-template-columns:1fr 1fr 1fr;}
+.c2{grid-column:span 2;}
+.c3{grid-column:span 3;}
+.f label{display:block;font-size:11px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-mid);margin-bottom:5px;}
+input[type="text"],input[type="number"],input[type="date"],select,textarea{width:100%;font-family:'Jost',sans-serif;font-weight:300;font-size:13px;color:var(--text-dark);background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:8px 11px;outline:none;transition:border-color 0.2s;appearance:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(27,68,54,0.07);}
+textarea{resize:vertical;min-height:72px;line-height:1.7;}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23777' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer;}
+.fhint{font-size:10.5px;color:var(--text-light);margin-top:4px;line-height:1.5;}
+.div{height:1px;background:var(--border);margin:16px 0;}
+.div-lbl{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);margin:-14px 0 12px;display:flex;align-items:center;gap:8px;}
+.div-lbl::before,.div-lbl::after{content:'';flex:1;height:1px;background:var(--border);}
+.al{border-radius:var(--radius);padding:9px 12px;font-size:12px;line-height:1.6;margin-bottom:10px;display:flex;gap:8px;align-items:flex-start;}
+.al-ic{font-size:13px;flex-shrink:0;margin-top:1px;}
+.al-i{background:rgba(27,68,54,0.05);border-left:3px solid var(--pale);color:var(--text-mid);}
+.al-w{background:rgba(217,158,50,0.07);border-left:3px solid var(--gold);color:var(--text-mid);}
+.al-c{background:rgba(145,97,121,0.07);border-left:3px solid var(--mauve);color:var(--text-mid);}
+.al-d{background:rgba(164,47,48,0.06);border-left:3px solid var(--crimson);color:var(--text-mid);}
+.ref-table{width:100%;border-collapse:collapse;}
+.ref-table th{font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:8px 12px;text-align:left;border-bottom:2px solid var(--border);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.04));}
+.ref-table td{padding:9px 12px;border-bottom:1px solid rgba(224,216,207,0.5);font-size:12px;font-weight:300;vertical-align:top;}
+.ref-table tr:last-child td{border-bottom:none;}
+.ref-table tr:hover td{background:rgba(27,68,54,0.015);}
+.ref-table td:first-child{font-weight:400;}
+.form-section{margin-bottom:24px;}
+.form-section-title{font-size:10px;font-weight:400;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.main-plans{max-width:1060px;margin:0 auto;padding:32px 28px 80px;display:grid;grid-template-columns:1fr 280px;gap:24px;align-items:start;}
+.sidebar{position:sticky;top:76px;}
+.sb-panel{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow);margin-bottom:14px;}
+.sbph{background:linear-gradient(135deg,var(--green-deep),var(--green));padding:13px 16px;}
+.sbpt{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:15px;color:var(--white);margin-bottom:2px;}
+.sbps{font-size:10.5px;color:rgba(245,237,228,0.55);}
+.sbpb{padding:14px 16px;}
+footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:center;justify-content:space-between;}
+.fb{font-family:'Cormorant Garamond',serif;font-size:13px;color:rgba(245,237,228,0.4);}
+.fb span{color:var(--sand);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.fu{animation:fadeUp 0.4s ease both;}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-left">
+    <button class="back-btn" onclick="window.location.href='/'">&#8592; All Tools</button>
+    <div class="nav-sep"></div>
+    <div class="nav-brand">Pl<span>in</span>th</div>
+    <div class="nav-sub">&nbsp;·&nbsp; Benefits Administration</div>
+  </div>
+  <div class="nav-right">
+    <span class="sflash" id="sflash">Saved</span>
+    <button class="nbtn nbtn-ghost" onclick="saveData()">Save</button>
+  </div>
+</nav>
+<div class="tabs">
+  <div class="tab active" onclick="showTab('plans')" id="tab-plans">Benefit Plans</div>
+  <div class="tab" onclick="showTab('enrollment')" id="tab-enrollment">Enrollment</div>
+  <div class="tab" onclick="showTab('aca')" id="tab-aca">ACA</div>
+  <div class="tab" onclick="showTab('cobra')" id="tab-cobra">COBRA</div>
+  <div class="tab" onclick="showTab('erisa')" id="tab-erisa">ERISA &amp; Obligations</div>
+  <div class="tab" onclick="showTab('strategy')" id="tab-strategy">Strategy &amp; Benchmarks</div>
+</div>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eye">Plinth · Tool 08</div>
+    <div class="hero-title">Benefits <em>Administration</em></div>
+    <div class="hero-desc">Document benefit plans, manage enrollment compliance, meet ERISA and ACA obligations, and benchmark the org's benefit investment against the sector. Every benefit decision this tool supports can be explained to an employee, a funder, or a regulator.</div>
+  </div>
+</div>
+
+<!-- PLANS TAB -->
+<div id="view-plans" class="main-plans">
+  <div>
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Benefit Plans Documentation</div><div class="card-desc">Record every benefit line offered. This drives the total compensation statement, the enrollment communication, and the SPD obligation checklist.</div></div>
+      <div style="display:flex;gap:8px">
+        <button onclick="exportTotalComp()" style="padding:6px 14px;background:var(--gold);color:var(--green-deep);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;font-weight:400;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Total Comp Statement</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="al al-i" style="margin-bottom:16px"><span class="al-ic">ℹ</span><span>This section is the advisor's reference record — not a substitute for plan documents, Summary Plan Descriptions, or carrier agreements. Employees must be referred to official plan documents for coverage details. Under ERISA, participants have a legal right to receive an SPD within 90 days of becoming a participant.</span></div>
+      <div class="div"></div>
+      <div class="div-lbl">Health &amp; Welfare Benefits</div>
+      <div class="fg g2">
+        <div class="f"><label>Health Insurance Carrier</label><input type="text" id="healthCarrier" placeholder="Carrier name" oninput="saveData()"></div>
+        <div class="f"><label>Plan Type</label>
+          <select id="healthPlanType" onchange="saveData()"><option value="">Select</option><option value="hmo">HMO</option><option value="ppo">PPO</option><option value="hdhp">HDHP with HSA</option><option value="epo">EPO</option><option value="pos">POS</option></select>
+        </div>
+        <div class="f"><label>Employee Monthly Premium</label><input type="text" id="healthEmpPrem" placeholder="e.g., $125/month" oninput="saveData()"></div>
+        <div class="f"><label>Employer Contribution (monthly)</label><input type="text" id="healthEmprPrem" placeholder="e.g., $520/month (80% of total)" oninput="saveData()"></div>
+        <div class="f"><label>Dependent Coverage Offered</label>
+          <select id="depCoverage" onchange="saveData()"><option value="">Select</option><option value="yes">Yes — employee + dependents eligible</option><option value="employee-only">Employee only</option><option value="employee-spouse">Employee + spouse/domestic partner</option></select>
+        </div>
+        <div class="f"><label>Employer Contribution to Dependent Coverage</label><input type="text" id="depContrib" placeholder="e.g., Employee only covered; dependent premium 100% employee-paid" oninput="saveData()"></div>
+        <div class="f"><label>Dental Carrier &amp; Coverage</label><input type="text" id="dental" placeholder="Carrier, plan type, and annual max benefit" oninput="saveData()"></div>
+        <div class="f"><label>Vision Carrier &amp; Coverage</label><input type="text" id="vision" placeholder="Carrier, exam frequency, and frame/lens allowance" oninput="saveData()"></div>
+      </div>
+      <div class="div"></div>
+      <div class="div-lbl">Retirement &amp; Financial Benefits</div>
+      <div class="fg g2">
+        <div class="f"><label>Retirement Plan Type</label>
+          <select id="retirementType" onchange="saveData()"><option value="">Select</option><option value="403b">403(b) — most nonprofits</option><option value="401k">401(k)</option><option value="simple">SIMPLE IRA — under 100 employees</option><option value="sep">SEP-IRA</option><option value="none">No retirement plan currently</option></select>
+        </div>
+        <div class="f"><label>Employer Match / Contribution</label><input type="text" id="retirementMatch" placeholder="e.g., 3% match after 90 days of employment" oninput="saveData()"></div>
+        <div class="f"><label>Vesting Schedule</label>
+          <select id="vestingSchedule" onchange="saveData()"><option value="">Select</option><option value="immediate">Immediate vesting</option><option value="cliff3">3-year cliff</option><option value="graded6">6-year graded (20%/yr after yr 2)</option><option value="cliff2">2-year cliff</option><option value="na">Not applicable</option></select>
+        </div>
+        <div class="f"><label>Employee Contribution Limit (IRS, current year)</label><input type="text" id="retirementLimit" placeholder="e.g., $23,000 (under 50) / $30,500 (50+)" oninput="saveData()"></div>
+        <div class="f"><label>Life Insurance</label><input type="text" id="lifeIns" placeholder="e.g., 1x annual salary employer-paid basic term" oninput="saveData()"></div>
+        <div class="f"><label>Short/Long-Term Disability</label><input type="text" id="disability" placeholder="e.g., STD 60% salary after 14-day elimination period" oninput="saveData()"></div>
+      </div>
+      <div class="div"></div>
+      <div class="div-lbl">Additional Benefits</div>
+      <div class="fg g2">
+        <div class="f"><label>FSA / HSA</label>
+          <select id="fsaHsa" onchange="saveData()"><option value="">Select</option><option value="fsa">Healthcare FSA</option><option value="dca">Dependent Care FSA only</option><option value="both">Both Healthcare FSA and Dependent Care FSA</option><option value="hsa">HSA (requires HDHP)</option><option value="none">None</option></select>
+        </div>
+        <div class="f"><label>Employer FSA/HSA Contribution</label><input type="text" id="fsaContrib" placeholder="e.g., $500/year employer HSA seed contribution" oninput="saveData()"></div>
+        <div class="f"><label>Employee Assistance Program (EAP)</label>
+          <select id="eap" onchange="saveData()"><option value="">Select</option><option value="yes">Yes — offered</option><option value="no">No</option></select>
+        </div>
+        <div class="f"><label>EAP Provider</label><input type="text" id="eapProvider" placeholder="Provider and session limit (e.g., 6 free sessions/issue)" oninput="saveData()"></div>
+        <div class="f c2"><label>Other Benefits (PD stipend, remote allowance, wellness, transportation, etc.)</label>
+          <textarea id="additionalBenefits" placeholder="List each benefit, the annual value, and eligibility criteria. These are often overlooked in total compensation calculations." oninput="saveData()"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <div class="sidebar">
+    <div class="sb-panel">
+      <div class="sbph"><div class="sbpt">Benefits Completeness</div><div class="sbps">Advisor assessment</div></div>
+      <div class="sbpb">
+        <p style="font-size:11px;color:var(--text-mid);line-height:1.7;margin-bottom:10px">A competitive nonprofit benefits package at the 50th percentile should include: medical (employer covering 75–85% of employee premium), dental, vision, a retirement plan with some employer contribution, basic life insurance, and an EAP.</p>
+        <p style="font-size:11px;color:var(--text-mid);line-height:1.7;margin-bottom:10px">The hidden cost of a thin benefits package is always greater than the cost of improving it. Benefits are the primary tool for narrowing the total compensation gap between nonprofit and private sector.</p>
+        <p style="font-size:11px;color:var(--mauve);line-height:1.7;font-style:italic">Use the Total Comp Statement button to generate a personalized benefits value document for each employee.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ENROLLMENT TAB -->
+<div id="view-enrollment" class="main wide" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr"><div><div class="card-title">Enrollment Windows, Eligibility &amp; Communication</div><div class="card-desc">When employees can enroll, change, or waive. And what the organization must communicate at each window.</div></div></div>
+    <div class="card-body">
+      <table class="ref-table" style="margin-bottom:20px">
+        <thead><tr><th>Window Type</th><th>Trigger</th><th>Election Deadline</th><th>What Changes</th><th>Required Communication</th></tr></thead>
+        <tbody>
+          <tr><td>New Hire Enrollment</td><td>Date of hire or eligibility</td><td>Within 30 days of hire (verify carrier — some plans allow 60)</td><td>Initial elections for all benefit lines</td><td>Benefits summary, plan documents, SBC, and SPD — or notice of right to receive SPD</td></tr>
+          <tr><td>Annual Open Enrollment</td><td>Plan renewal date</td><td>Typically 2–4 weeks before plan year start</td><td>All benefit elections for following plan year</td><td>OE communication, updated SBC, any plan changes, premium changes, and updated SPD if material changes</td></tr>
+          <tr><td>Qualifying Life Event (QLE)</td><td>Marriage, divorce, birth/adoption, death, dependent loss of coverage, gain of other coverage</td><td>Within 30 days of event (60 days for birth/adoption; 60 days for Medicaid/CHIP loss)</td><td>Changes consistent with the nature of the event — not unlimited changes</td><td>Notify employee of QLE election rights; collect documentation of the event</td></tr>
+          <tr><td>HIPAA Special Enrollment</td><td>Loss of other coverage, new dependent, Medicaid/CHIP change</td><td>30 days (60 days for Medicaid/CHIP events)</td><td>Initial enrollment or change consistent with event</td><td>HIPAA Special Enrollment Notice required at initial enrollment</td></tr>
+          <tr><td>Waiver of Coverage</td><td>New hire window or open enrollment</td><td>Same as enrollment deadline</td><td>Employee declines coverage — must be documented in writing</td><td>Obtain signed waiver. Retain as proof of voluntary declination.</td></tr>
+        </tbody>
+      </table>
+      <div class="div"></div>
+      <div class="div-lbl">Open Enrollment Communication Checklist</div>
+      <div id="oeChecklist"></div>
+      <div class="div" style="margin-top:16px"></div>
+      <div class="fg g2">
+        <div class="f"><label>Plan Year Start Date</label><input type="date" id="planYearStart" onchange="saveData()"></div>
+        <div class="f"><label>Open Enrollment Dates</label><input type="text" id="oeWindow" placeholder="e.g., November 1–15 annually" oninput="saveData()"></div>
+        <div class="f"><label>New Hire Waiting Period</label>
+          <select id="waitPeriod" onchange="saveData()"><option value="">Select</option><option value="none">No waiting period — Day 1 eligible</option><option value="30">30 days from hire</option><option value="60">60 days from hire</option><option value="fom-after-30">First of month after 30 days</option><option value="90">90 days (first of month after)</option></select>
+          <div class="fhint">ACA prohibits waiting periods longer than 90 days for ALEs. Smaller employers should still document their waiting period in the plan document.</div>
+        </div>
+        <div class="f"><label>Part-Time Eligibility</label>
+          <select id="ptElig" onchange="saveData()"><option value="">Select</option><option value="yes">Part-time employees eligible (specify hours threshold)</option><option value="no">Full-time employees only</option><option value="threshold">Eligible above hour threshold — specify in notes</option></select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ACA TAB -->
+<div id="view-aca" class="main wide" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">ACA Compliance</div><div class="card-desc">Affordable Care Act obligations by employer size and plan type.</div></div>
+      <button onclick="window.print()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Print / PDF</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-i" style="margin-bottom:14px"><span class="al-ic">ℹ</span><span>The ACA employer mandate applies to Applicable Large Employers — organizations with 50 or more full-time equivalent employees (FTEs). Part-time hours are converted to FTEs for this calculation. An organization with 40 full-time and 20 part-time employees working 20 hours/week has 40 + (20×20/30) = 53.3 FTEs — above the ALE threshold.</span></div>
+      <table class="ref-table" style="margin-bottom:16px">
+        <thead><tr><th>Requirement</th><th>Who It Applies To</th><th>Deadline / Frequency</th><th>Penalty for Non-Compliance</th></tr></thead>
+        <tbody>
+          <tr><td>Offer of minimum essential coverage</td><td>ALEs (50+ FTEs) for full-time employees (30+ hrs/week)</td><td>Ongoing — must offer to 95% of full-time employees</td><td>$2,970 per full-time employee (2024) if any employee receives marketplace subsidy — the "pay or play" penalty (§4980H(a))</td></tr>
+          <tr><td>Minimum value and affordability</td><td>ALEs</td><td>Ongoing — affordability threshold is indexed annually (9.02% of household income in 2023)</td><td>$4,460 per employee receiving marketplace subsidy if coverage offered is not affordable or doesn't meet minimum value (§4980H(b))</td></tr>
+          <tr><td>Form 1095-C furnished to employees</td><td>ALEs</td><td>By March 1 following the tax year</td><td>$310 per form not furnished (2024)</td></tr>
+          <tr><td>Forms 1094-C / 1095-C filed with IRS</td><td>ALEs</td><td>February 28 (paper) or April 1 (electronic) following the tax year</td><td>Same penalty structure as W-2 filing failures</td></tr>
+          <tr><td>Summary of Benefits and Coverage (SBC)</td><td>All employers sponsoring group health plans</td><td>At enrollment, annual OE, upon request, and within 7 days of request</td><td>Up to $1,362 per failure (2024)</td></tr>
+          <tr><td>PCORI fee</td><td>Self-insured plans and HRAs</td><td>Annually by July 31 via Form 720</td><td>Tax penalties for late payment</td></tr>
+          <tr><td>Medicare Part D notice</td><td>All employers with group health plans that include prescription drug coverage</td><td>Annually before October 15</td><td>May affect employer's standing with CMS</td></tr>
+          <tr><td>CHIP notice</td><td>Employers with group health plans in states with CHIP programs</td><td>Annually (model notice from DOL)</td><td>ERISA civil penalties</td></tr>
+        </tbody>
+      </table>
+      <div class="al al-w"><span class="al-ic">△</span><span>ACA affordability is tested against an employee's household income — which employers cannot know. The IRS provides three safe harbors for affordability: the W-2 safe harbor, the rate of pay safe harbor, and the federal poverty line safe harbor. For most nonprofits, the rate of pay or FPL safe harbor is most practical. Confirm with a benefits advisor or counsel which safe harbor applies.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- COBRA TAB -->
+<div id="view-cobra" class="main wide" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">COBRA Administration</div><div class="card-desc">Continuation of coverage rights, notice obligations, and premium rules.</div></div>
+      <button onclick="window.print()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Print / PDF</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-w" style="margin-bottom:14px"><span class="al-ic">△</span><span>Federal COBRA applies to employers with 20 or more employees who sponsor group health plans. Texas has a state continuation law (Texas Insurance Code Chapter 1251) that applies to employers with 2–19 employees offering group health coverage, providing 9 months of continuation at the group rate. Know which law applies to your client before giving guidance.</span></div>
+      <table class="ref-table" style="margin-bottom:16px">
+        <thead><tr><th>Notice / Action</th><th>Who Must Act</th><th>Deadline</th><th>What Happens If Missed</th></tr></thead>
+        <tbody>
+          <tr><td>General COBRA Notice (Initial)</td><td>Plan administrator</td><td>Within 90 days of coverage start</td><td>ERISA civil penalties up to $110/day per qualified beneficiary</td></tr>
+          <tr><td>Employer notifies plan administrator of qualifying event</td><td>Employer</td><td>Within 30 days of qualifying event (termination, reduction in hours, divorce, death, Medicare entitlement)</td><td>Plan administrator cannot send timely notice; liability can shift to employer</td></tr>
+          <tr><td>Beneficiary notifies plan of qualifying event</td><td>Qualified beneficiary</td><td>Within 60 days (divorce, legal separation, child ceasing dependent status, disability determination)</td><td>May lose COBRA rights for that event</td></tr>
+          <tr><td>COBRA election notice sent to qualified beneficiaries</td><td>Plan administrator</td><td>Within 14 days of receiving notice from employer or beneficiary</td><td>ERISA penalties; potential litigation</td></tr>
+          <tr><td>COBRA election period</td><td>Qualified beneficiary elects or waives</td><td>60 days from notice date or coverage loss date (whichever is later)</td><td>Loss of COBRA rights if election not made</td></tr>
+          <tr><td>Initial premium payment</td><td>Qualified beneficiary</td><td>45 days from election date</td><td>Plan may terminate COBRA coverage</td></tr>
+          <tr><td>Subsequent premium payments</td><td>Qualified beneficiary</td><td>30-day grace period after due date</td><td>Plan may terminate coverage after grace period</td></tr>
+          <tr><td>Maximum COBRA duration</td><td>Plan must offer</td><td>18 months (termination/hours reduction) | 36 months (divorce, death, dependency, disability) | 29 months (disability determination)</td><td>Early termination triggers liability</td></tr>
+        </tbody>
+      </table>
+      <div class="al al-i"><span class="al-ic">ℹ</span><span>COBRA premium may not exceed 102% of the plan's full cost (employee + employer contributions) for the applicable coverage period. During the 11-month disability extension, it may reach 150%. COBRA administration is complex and penalty-dense. Clients with 20+ employees should use a third-party COBRA administrator unless HR has dedicated capacity and strong systems.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ERISA & OBLIGATIONS TAB -->
+<div id="view-erisa" class="main wide" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">ERISA Obligations</div><div class="card-desc">The Employee Retirement Income Security Act governs most employer-sponsored benefit plans. These obligations apply regardless of employer size.</div></div>
+      <button onclick="window.print()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Print / PDF</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-c" style="margin-bottom:16px"><span class="al-ic">⚖</span><span>ERISA does not cover government or church plans. It applies to virtually all private-sector employers — including nonprofits — that sponsor retirement, health, or welfare benefit plans. Noncompliance is not a gray area: ERISA carries civil penalties, excise taxes, and personal fiduciary liability for plan administrators.</span></div>
+      <table class="ref-table" style="margin-bottom:16px">
+        <thead><tr><th>Obligation</th><th>What It Requires</th><th>Deadline</th><th>Penalty for Non-Compliance</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--green)">Plan Document</td><td>Every ERISA-covered plan must have a written plan document describing the plan's terms, eligibility rules, benefits, and claims procedures.</td><td>Must exist before plan is established or at adoption</td><td>Personal liability of plan administrator; DOL investigation risk</td></tr>
+          <tr><td style="color:var(--green)">Summary Plan Description (SPD)</td><td>Plain-language description of the plan's benefits, eligibility, claims procedures, and participant rights. Must be provided to participants automatically.</td><td>Within 90 days of becoming a participant (new plan: within 120 days). Updated SPD every 5 years if changes made; every 10 years otherwise.</td><td>Up to $110/day per participant for failure to furnish</td></tr>
+          <tr><td>Summary of Material Modifications (SMM)</td><td>When the plan makes a material change, participants must be notified within 210 days after the end of the plan year in which the change was adopted.</td><td>210 days after plan year end in which change occurred; 60 days for material reduction in benefits</td><td>Up to $110/day per participant</td></tr>
+          <tr><td>Form 5500</td><td>Annual financial and compliance report for plans with 100+ participants. Small plan (under 100) may use simplified Form 5500-SF.</td><td>7 months after plan year end (with 2.5-month extension available via Form 5558)</td><td>Up to $250/day, max $150,000 per plan year</td></tr>
+          <tr><td>Fiduciary Duties</td><td>Plan fiduciaries (trustees, administrators, investment committee members) must act solely in the interest of participants and beneficiaries; act prudently; diversify plan investments; follow plan documents; pay reasonable expenses only.</td><td>Ongoing</td><td>Personal liability for breach; potential removal; excise taxes</td></tr>
+          <tr><td>Claims &amp; Appeals Procedures</td><td>Plans must have written claims and appeals procedures. Benefit claim denials must be in writing with specific reasons, reference to plan provisions, and description of appeal rights.</td><td>Initial claim decisions: 90 days (medical) / 90 days (disability) / 90 days (other). Appeals: 60 days.</td><td>Claim may be deemed approved if deadlines missed; ERISA litigation exposure</td></tr>
+          <tr><td>ERISA Notice to Terminated Participants</td><td>Pension plan participants must receive a notice of right to defer or distribution options at termination.</td><td>At time of termination</td><td>Excise taxes; plan disqualification risk</td></tr>
+        </tbody>
+      </table>
+      <div class="div"></div>
+      <div class="div-lbl">Mental Health Parity — MHPAEA</div>
+      <div class="al al-c" style="margin-bottom:12px"><span class="al-ic">⚖</span><span>The Mental Health Parity and Addiction Equity Act (MHPAEA) requires that group health plans covering mental health or substance use disorder (MH/SUD) benefits apply no more restrictive financial requirements or treatment limitations than those applied to medical/surgical benefits. This applies to employers with 50 or more employees. Enforcement has increased significantly since 2021 under the Consolidated Appropriations Act, which added a comparative analysis requirement.</span></div>
+      <table class="ref-table" style="margin-bottom:16px">
+        <thead><tr><th>Requirement</th><th>Who It Applies To</th><th>What It Means in Practice</th></tr></thead>
+        <tbody>
+          <tr><td>Parity in financial requirements</td><td>ALEs (50+ employees) offering group health plans covering MH/SUD</td><td>Copays, deductibles, and out-of-pocket maximums for mental health visits cannot be more restrictive than for comparable medical visits. Separate, higher mental health deductibles are a common violation.</td></tr>
+          <tr><td>Parity in treatment limitations</td><td>Same</td><td>Visit limits, prior authorization requirements, and fail-first protocols for MH/SUD cannot be more restrictive than for analogous medical/surgical benefits. Unlimited medical visits paired with a 30-visit mental health cap is a common violation.</td></tr>
+          <tr><td>Non-quantitative treatment limitation (NQTL) comparative analysis</td><td>Same — required since December 2021 (CAA)</td><td>Plans must perform and document a comparative analysis demonstrating that NQTLs (prior auth, step therapy, network standards) are applied no more stringently to MH/SUD than to medical/surgical benefits. This document must be produced to DOL or participants upon request.</td></tr>
+          <tr><td>Annual reporting (CAA 2023)</td><td>Same</td><td>Plans must submit an attestation of MHPAEA compliance with their Form 5500 (when applicable) and provide the comparative analysis to participants upon request within 30 days.</td></tr>
+        </tbody>
+      </table>
+      <div class="div"></div>
+      <div class="div-lbl">PUMP Act — Lactation Accommodations (2023)</div>
+      <div class="al al-i" style="margin-bottom:12px"><span class="al-ic">ℹ</span><span>The PUMP for Nursing Mothers Act (effective April 28, 2023) expanded FLSA lactation break requirements to all employers regardless of size — including nonprofits with fewer than 50 employees. Remote workers are also covered. The prior exemption for employers with fewer than 50 employees was eliminated.</span></div>
+      <table class="ref-table">
+        <thead><tr><th>Requirement</th><th>Who It Applies To</th><th>Duration</th><th>Key Details</th></tr></thead>
+        <tbody>
+          <tr><td>Reasonable break time to express breast milk</td><td>All employers — no size threshold</td><td>Each time the employee needs to express milk, for 1 year after the child's birth</td><td>Break time does not need to be paid if it is compensated breaks are not generally paid by the employer. If the employee is not completely relieved of duty, the break must be paid.</td></tr>
+          <tr><td>Private space (not a bathroom) to express milk</td><td>All employers</td><td>As long as break time is required</td><td>Space must be shielded from view, free from intrusion, and functional (outlet, chair, flat surface). A bathroom does not satisfy this requirement under any circumstance. For remote workers, the employer's obligation is met if the employee has a compliant space in their home.</td></tr>
+          <tr><td>Exemption for small employers</td><td>Fewer than 50 employees may claim undue hardship</td><td>N/A</td><td>The undue hardship exemption requires demonstrating significant difficulty or expense — it is not automatic. Employers should document the analysis before claiming it.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card fu" style="animation-delay:0.07s">
+    <div class="card-hdr"><div><div class="card-title">Section 125 Cafeteria Plan</div><div class="card-desc">Pre-tax premium elections reduce employee taxable income and employer FICA — one of the most accessible tools for small nonprofits.</div></div></div>
+    <div class="card-body">
+      <div class="al al-i" style="margin-bottom:12px"><span class="al-ic">ℹ</span><span>A Section 125 (Cafeteria) Plan allows employees to pay their share of benefit premiums with pre-tax dollars, reducing their taxable income and the employer's FICA obligation. It is one of the most valuable and underutilized tools available to small nonprofits. An employer with 30 employees paying $300/month in health premiums saves approximately $2,750/year in employer FICA alone by implementing a Section 125 plan — before counting the value to employees.</span></div>
+      <table class="ref-table">
+        <thead><tr><th>Section 125 Element</th><th>Requirement</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td>Written Plan Document</td><td>Required — must be adopted before the plan year begins. Cannot be retroactive.</td><td>Can use a third-party TPA's document or draft with counsel</td></tr>
+          <tr><td>Eligible Benefits</td><td>Pre-tax premiums for health, dental, vision, FSA contributions, dependent care FSA contributions</td><td>Cannot include taxable cash benefits unless nondiscrimination rules are met</td></tr>
+          <tr><td>Nondiscrimination Testing</td><td>Cafeteria plans must not discriminate in favor of highly compensated employees or key employees</td><td>Testing is done annually. Failure results in the favorable tax treatment being lost for HCEs.</td></tr>
+          <tr><td>FSA Use-It-or-Lose-It Rule</td><td>Unused FSA funds are generally forfeited at plan year end. Employers may allow a $640 rollover (2024) or a 2.5-month grace period — not both.</td><td>Communicate this clearly at open enrollment</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div id="view-strategy" class="main wide" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Benefits Strategy &amp; Sector Benchmarks</div><div class="card-desc">What organizations at this size and budget should be offering, what the competition for talent looks like, and how to make the case for benefit investment to a skeptical board.</div></div>
+      <button onclick="window.print()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Print / PDF</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-i" style="margin-bottom:16px"><span class="al-ic">ℹ</span><span>Benefits are not a compliance obligation — they are a talent strategy. An organization that pays at the 50th percentile of market salary but provides a strong benefits package can be more competitive in total compensation than one paying at the 65th percentile with thin benefits. The gap between what nonprofits offer and what employees can get elsewhere is rarely just about salary.</span></div>
+      <div class="div"></div>
+      <div class="div-lbl">Benchmark by Organization Size</div>
+      <table class="ref-table" style="margin-bottom:20px">
+        <thead><tr><th>Benefit</th><th>Under 25 Employees</th><th>25–99 Employees</th><th>100+ Employees</th><th>Sector Standard</th></tr></thead>
+        <tbody>
+          <tr><td>Health Insurance</td><td>Often offered; employer covering 60–75% of employee premium</td><td>75–85% employer contribution for employee; 0–50% for dependents</td><td>80–90% employee; 50–75% dependent; multiple plan options</td><td>75–85% employer contribution is the competitive baseline. Below 60% is a significant retention risk.</td></tr>
+          <tr><td>Dental &amp; Vision</td><td>Often bundled; fully employer-paid at this size</td><td>Offered in 78% of nonprofits at this size</td><td>Near-universal; often employer-paid employee coverage</td><td>Basic dental and vision is now table stakes. Absence signals budget distress.</td></tr>
+          <tr><td>Retirement Plan</td><td>Often absent at this stage; 403(b) with no match is common</td><td>403(b) with 1–3% employer contribution becoming standard</td><td>403(b) or 401(k) with 3–6% match; vesting schedules in use</td><td>Having a plan matters more than match size. No plan is a meaningful disadvantage for any hire over 35.</td></tr>
+          <tr><td>Paid Leave (PTO)</td><td>10–15 days; often informal at early stage</td><td>15–20 days; formal accrual policy in place</td><td>20–25 days; separate sick and vacation becoming more common</td><td>Less than 15 days PTO is below sector average and increasingly a reason candidates decline offers.</td></tr>
+          <tr><td>Life Insurance</td><td>Offered in ~55% of orgs at this size</td><td>Employer-paid basic term (1–2x salary) offered in ~70%</td><td>Near-universal basic employer-paid life; supplemental available</td><td>Basic employer-paid term life is inexpensive (~$10/month/employee) and expected at mid-size orgs.</td></tr>
+          <tr><td>EAP</td><td>Offered in ~40% of orgs at this size</td><td>Offered in ~65% of nonprofits; often bundled with health carrier</td><td>Near-universal; standalone or bundled</td><td>EAP has become a mental health benefit, not just a referral service. Orgs without one are behind the curve.</td></tr>
+          <tr><td>Professional Development</td><td>Informal; often manager-approved discretionary</td><td>Formal stipend ($500–$1,500) in ~45% of orgs</td><td>Formal policy; $1,000–$3,000 annual budget; conference attendance</td><td>For knowledge workers and professionals, PD investment signals organizational commitment to their growth.</td></tr>
+        </tbody>
+      </table>
+      <div class="div"></div>
+      <div class="div-lbl">Making the Case to the Board</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div style="padding:14px 16px;border:1px solid var(--border);border-radius:var(--radius-md);background:rgba(27,68,54,0.03)">
+          <div style="font-size:12px;font-weight:400;color:var(--green);margin-bottom:6px">The cost of turnover argument</div>
+          <div style="font-size:11.5px;color:var(--text-mid);line-height:1.7">Replacing a professional-level employee costs 1–2× their annual salary when recruiting, onboarding, and lost productivity are included. A single regrettable departure at a $60,000 salary costs the organization $60,000–$120,000. Improving the benefits package by $2,400/year per employee for all 20 employees costs $48,000 — less than one replacement. The math is not close.</div>
+        </div>
+        <div style="padding:14px 16px;border:1px solid var(--border);border-radius:var(--radius-md);background:rgba(27,68,54,0.03)">
+          <div style="font-size:12px;font-weight:400;color:var(--green);margin-bottom:6px">The compensation gap argument</div>
+          <div style="font-size:11.5px;color:var(--text-mid);line-height:1.7">The nonprofit salary gap relative to private sector is real. But total compensation — which includes benefits — can be more competitive than salary alone suggests. An organization that pays $65,000 with exceptional health coverage, a 5% retirement match, and 25 days PTO may be more competitive in total compensation than a private employer paying $72,000 with cost-sharing on benefits and 15 days PTO.</div>
+        </div>
+        <div style="padding:14px 16px;border:1px solid var(--border);border-radius:var(--radius-md);background:rgba(145,97,121,0.04);grid-column:span 2">
+          <div style="font-size:12px;font-weight:400;color:var(--mauve);margin-bottom:6px">The funder argument</div>
+          <div style="font-size:11.5px;color:var(--text-mid);line-height:1.7">Many funders have shifted away from the nonprofit starvation cycle narrative. Grantors including Ford, MacArthur, and most community foundations now recognize that underpaying staff is a program risk, not a fiscal virtue. Presenting a benefits investment to a funder as a talent retention and organizational sustainability strategy is increasingly well-received — particularly when framed around mission continuity and institutional knowledge.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="fb">The Coherence Collective &nbsp;·&nbsp; <span>Plinth</span></div>
+  <div style="display:flex;gap:16px;align-items:center">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.35)">Jump to</span>
+      <select onchange="if(this.value)window.location.href=this.value" style="font-family:'Jost',sans-serif;font-weight:300;font-size:11px;background:rgba(255,255,255,0.06);color:rgba(245,237,228,0.6);border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:4px 24px 4px 8px;cursor:pointer;outline:none;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(245,237,228,0.4)' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 7px center">
+        <option value="/org-profile/">01 &middot; Org Profile</option>
+        <option value="/handbook/">02 &middot; Handbook</option>
+        <option value="/job-architecture/">03 &middot; Job Architecture</option>
+        <option value="/compensation/">04 &middot; Compensation</option>
+        <option value="/offer-hiring/">05 &middot; Offer &amp; Hiring</option>
+        <option value="/onboarding/">06 &middot; Onboarding</option>
+        <option value="/pay-practices/">07 &middot; Pay Practices</option>
+        <option value="/benefits/" selected>08 &middot; Benefits Administration</option>
+        <option value="/leave/">09 &middot; Leave Management</option>
+        <option value="/performance/">10 &middot; Performance Management</option>
+        <option value="/er-investigation/">11 &middot; ER &amp; Investigation</option>
+        <option value="/separation/">12 &middot; Separation</option>
+        <option value="/compliance-calendar/">13 &middot; Compliance Calendar</option>
+        <option value="/manager-toolkit/">14 &middot; Manager Toolkit</option>
+        <option value="/analytics/">15 &middot; Analytics</option>
+      </select>
+    </div>
+    <span style="color:rgba(245,237,228,0.15)">|</span>
+    <a href="/pay-practices/" style="font-size:11px;color:rgba(245,237,228,0.4);text-decoration:none" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">&larr; Tool 07</a>
+    <span style="color:rgba(245,237,228,0.15)">|</span>
+    <a href="/leave/" style="font-size:11px;color:rgba(245,237,228,0.4);text-decoration:none" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">Tool 09 &rarr;</a>
+  </div>
+</footer>
+<script>
+const ALL_TABS_BEN = ['plans','enrollment','aca','cobra','erisa','strategy'];
+let profile = {};
+try{ profile = JSON.parse(localStorage.getItem('plinth_op')||'{}'); }catch(e){}
+
+const BEN_FIELDS = ['healthCarrier','healthPlanType','healthEmpPrem','healthEmprPrem','depCoverage','depContrib','dental','vision','retirementType','retirementMatch','vestingSchedule','retirementLimit','lifeIns','disability','fsaHsa','fsaContrib','eap','eapProvider','additionalBenefits','planYearStart','oeWindow','waitPeriod','ptElig'];
+
+function saveData(){
+  const d = {};
+  BEN_FIELDS.forEach(id=>{ const el=document.getElementById(id); if(el) d[id]=el.value; });
+  localStorage.setItem('plinth_benefits', JSON.stringify(d));
+  const fl=document.getElementById('sflash');
+  fl.classList.add('on');
+  setTimeout(()=>fl.classList.remove('on'), 1800);
+}
+
+function showTab(tab){
+  ALL_TABS_BEN.forEach(t=>{
+    const v=document.getElementById('view-'+t);
+    if(v) v.style.display = t===tab ? (t==='plans'?'grid':'block') : 'none';
+    const el=document.getElementById('tab-'+t); if(el) el.classList.toggle('active',t===tab);
+  });
+}
+
+function animateCards(){
+  const obs = new IntersectionObserver(es=>{ es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('vis'); }); },{threshold:0.04});
+  document.querySelectorAll('.card').forEach(c=>obs.observe(c));
+}
+
+function restoreData(){
+  try{
+    const d = JSON.parse(localStorage.getItem('plinth_benefits')||'{}');
+    BEN_FIELDS.forEach(id=>{ const el=document.getElementById(id); if(el && d[id]!==undefined) el.value=d[id]; });
+  }catch(e){}
+  renderOEChecklist();
+}
+
+const OE_ITEMS = [
+  'Confirm plan renewal date and any carrier or coverage changes for the coming year',
+  'Update employee census with all current employees and dependents on coverage',
+  'Request updated SBC (Summary of Benefits and Coverage) from carrier for each plan option',
+  'Prepare open enrollment communication: what is changing, what employees need to do, and deadline',
+  'Update benefit rates in payroll system to reflect new plan year premiums',
+  'Notify employees of any material changes — if changes are material, an updated SPD or SMM is required under ERISA',
+  'Prepare and distribute CHIP notice (model notice available from DOL) if applicable',
+  'Prepare and distribute Medicare Part D creditable coverage notice before October 15',
+  'Collect and process all enrollment elections before the deadline',
+  'Follow up with employees who have not completed elections — document attempts',
+  'Process all changes with carrier by the carrier deadline (typically 30 days before plan year start)',
+  'Confirm that all enrollment changes are reflected accurately in payroll for the first payroll of the new plan year',
+  'Retain all election forms (paper or electronic) — minimum 3 years',
+  'Update the plan document if any plan terms changed during the year',
+];
+
+function renderOEChecklist(){
+  const el = document.getElementById('oeChecklist');
+  if(!el) return;
+  let oeChecks = {};
+  try{ oeChecks=JSON.parse(localStorage.getItem('plinth_oe_checks')||'{}'); }catch(e){}
+  el.innerHTML = OE_ITEMS.map((item,i)=>{
+    const checked = oeChecks[i];
+    return '<div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid rgba(224,216,207,0.4)">'
+      +'<div style="width:16px;height:16px;border:2px solid '+(checked?'var(--green)':'var(--border)')
+      +';border-radius:3px;flex-shrink:0;cursor:pointer;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:9px;'
+      +(checked?'background:var(--green);color:white':'')
+      +'" onclick="toggleOE('+i+',this)">'+(checked?'&#10003;':'')+'</div>'
+      +'<div style="font-size:12px;color:var(--text-mid);line-height:1.6">'+item+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function toggleOE(i,el){
+  let oeChecks={};
+  try{oeChecks=JSON.parse(localStorage.getItem('plinth_oe_checks')||'{}');}catch(e){}
+  oeChecks[i]=!oeChecks[i];
+  el.style.background=oeChecks[i]?'var(--green)':'transparent';
+  el.style.borderColor=oeChecks[i]?'var(--green)':'var(--border)';
+  el.style.color=oeChecks[i]?'white':'';
+  el.innerHTML=oeChecks[i]?'&#10003;':'';
+  localStorage.setItem('plinth_oe_checks',JSON.stringify(oeChecks));
+}
+
+function exportTotalComp(){
+  const orgName=profile.legalName||'Organization';
+  const today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const carrier=document.getElementById('healthCarrier')?.value||'';
+  const planType=document.getElementById('healthPlanType')?.value||'';
+  const emprPrem=document.getElementById('healthEmprPrem')?.value||'';
+  const dental=document.getElementById('dental')?.value||'';
+  const vision=document.getElementById('vision')?.value||'';
+  const retType=document.getElementById('retirementType')?.value||'';
+  const retMatch=document.getElementById('retirementMatch')?.value||'';
+  const life=document.getElementById('lifeIns')?.value||'';
+  const disability=document.getElementById('disability')?.value||'';
+  const eap=document.getElementById('eap')?.value;
+  const eapProvider=document.getElementById('eapProvider')?.value||'';
+  const fsaHsa=document.getElementById('fsaHsa')?.value||'';
+  const other=document.getElementById('additionalBenefits')?.value||'';
+
+  const salaryInput = prompt('Enter this employee\'s annual base salary (numbers only, e.g. 62000):');
+  const salary = salaryInput ? parseInt(salaryInput.replace(/[^0-9]/g,'')) : null;
+  const salaryDisplay = salary ? '$'+salary.toLocaleString() : '[Enter salary]';
+
+  var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Total Compensation Statement \u2014 '+orgName+'</title>'
+    +'<style>body{font-family:Georgia,serif;max-width:680px;margin:0 auto;padding:48px 40px;color:#1a1a1a;line-height:1.8;font-size:10.5pt;}'
+    +'h1{font-size:20pt;font-weight:400;color:#1b4436;}'
+    +'h2{font-size:12pt;font-weight:600;color:#1b4436;margin:20px 0 8px;padding-bottom:5px;border-bottom:1px solid #e0d8cf;}'
+    +'.intro{background:#f5f0ea;padding:14px 18px;border-radius:4px;margin:20px 0;font-size:9.5pt;color:#555;line-height:1.7;}'
+    +'.benefit-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #e0d8cf;font-size:10pt;}'
+    +'.benefit-label{color:#444;}.benefit-value{color:#1b4436;font-weight:400;}'
+    +'.total-row{display:flex;justify-content:space-between;padding:12px 0;margin-top:8px;border-top:2px solid #1b4436;font-size:11pt;}'
+    +'@page{size:letter;margin:1in;}@media print{body{padding:0;}}'
+    +'</style></head><body>'
+    +'<h1>'+orgName+'</h1>'
+    +'<p style="font-size:11pt;color:#555;margin-bottom:4px">Total Compensation Statement</p>'
+    +'<p style="font-size:9pt;color:#777;margin-bottom:20px">'+today+'</p>'
+    +'<div class="intro">Your total compensation from '+orgName+' includes more than your base salary. This statement summarizes the full value of the investment '+orgName+' makes in your employment &mdash; including benefits that do not appear on your paycheck.</div>'
+    +'<p style="font-size:9pt;color:#777;font-style:italic;margin-bottom:16px">This statement reflects the estimated annual value of employer-provided benefits. Individual values may vary. Plan documents govern all benefit terms.</p>'
+    +'<h2>Direct Compensation</h2>'
+    +'<div class="benefit-row"><span class="benefit-label">Annual Base Salary</span><span class="benefit-value">'+salaryDisplay+'</span></div>';
+
+  if(carrier||emprPrem) html+='<h2>Health &amp; Welfare Benefits</h2><div class="benefit-row"><span class="benefit-label">Health Insurance'+(carrier?' &mdash; '+carrier:'')+(planType?' ('+planType.toUpperCase()+')':'')+'</span><span class="benefit-value">'+(emprPrem||'Employer contribution')+'</span></div>';
+  if(dental) html+='<div class="benefit-row"><span class="benefit-label">Dental Insurance</span><span class="benefit-value">'+dental+'</span></div>';
+  if(vision) html+='<div class="benefit-row"><span class="benefit-label">Vision Insurance</span><span class="benefit-value">'+vision+'</span></div>';
+  if(life) html+='<div class="benefit-row"><span class="benefit-label">Life Insurance</span><span class="benefit-value">'+life+'</span></div>';
+  if(disability) html+='<div class="benefit-row"><span class="benefit-label">Disability Coverage</span><span class="benefit-value">'+disability+'</span></div>';
+  if(fsaHsa&&fsaHsa!=='none') html+='<div class="benefit-row"><span class="benefit-label">FSA/HSA Account</span><span class="benefit-value">'+fsaHsa.toUpperCase()+' available</span></div>';
+  if(salary) html+='<div class="benefit-row"><span class="benefit-label">Employer FICA (Social Security &amp; Medicare)</span><span class="benefit-value">$'+Math.round(salary*0.0765).toLocaleString()+'/year (7.65% of salary)</span></div>';
+  if(retType&&retType!=='none') html+='<h2>Retirement</h2><div class="benefit-row"><span class="benefit-label">Retirement Plan ('+retType.toUpperCase()+')</span><span class="benefit-value">'+(retMatch||'Plan available')+'</span></div>';
+  if(eap==='yes') html+='<h2>Employee Assistance Program</h2><div class="benefit-row"><span class="benefit-label">EAP'+(eapProvider?' &mdash; '+eapProvider:'')+'</span><span class="benefit-value">Employer-provided</span></div>';
+  if(other) html+='<h2>Additional Benefits</h2><p style="font-size:10pt;color:#444;line-height:1.7">'+other+'</p>';
+  html+='<div class="total-row"><span style="font-weight:600">Total Annual Compensation</span><span style="color:#1b4436;font-weight:600">'+salaryDisplay+' + employer benefits</span></div>';
+  html+='<p style="font-size:8.5pt;color:#777;margin-top:20px;line-height:1.6">This statement is for informational purposes only. Benefit values are estimates and may not reflect individual usage or elections. Plan documents govern the specific terms of all benefit plans. Questions should be directed to HR.</p>';
+  html+='<p style="font-size:8pt;color:#999;margin-top:20px;border-top:1px solid #e0d8cf;padding-top:10px">Prepared with support from The Coherence Collective, LLC via Plinth.</p>';
+  html+='</body></html>';
+
+  const win=window.open('','_blank');
+  win.document.write(html);
+  win.document.close();
+  
+}
+
+document.addEventListener('DOMContentLoaded',()=>{ restoreData(); animateCards(); });
+</script>
+</body>
+</html>

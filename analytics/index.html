@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Plinth · Analytics</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--green:#1b4436;--green-light:#235a47;--green-deep:#122e24;--mauve:#916179;--sand:#D2BB9F;--gold:#D99E32;--pale:#cccf8e;--crimson:#A42F30;--beige:#F5EDE4;--white:#fff;--off-white:#faf8f5;--text-dark:#1a1a1a;--text-mid:#444;--text-light:#777;--border:#e0d8cf;--shadow:0 2px 16px rgba(27,68,54,0.08);--radius:4px;--radius-md:8px;--radius-lg:12px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Jost',sans-serif;font-weight:300;font-size:14px;color:var(--text-dark);background:var(--off-white);min-height:100vh;}
+nav{position:sticky;top:0;z-index:100;background:var(--green);padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,0.2);}
+.nav-left{display:flex;align-items:center;gap:14px;}
+.back-btn{display:inline-flex;align-items:center;gap:5px;font-family:'Jost',sans-serif;font-size:11px;font-weight:300;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.5);padding:5px 10px;border:1px solid rgba(245,237,228,0.15);border-radius:var(--radius);background:none;cursor:pointer;transition:all 0.2s;}
+.back-btn:hover{color:var(--beige);}
+.nav-sep{width:1px;height:18px;background:rgba(255,255,255,0.15);}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:17px;color:var(--beige);}
+.nav-brand span{color:var(--gold);}
+.nav-sub{font-size:12px;font-weight:300;color:rgba(245,237,228,0.45);}
+.nav-right{display:flex;gap:7px;align-items:center;}
+.nbtn{font-family:'Jost',sans-serif;font-weight:300;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:5px 13px;border-radius:var(--radius);cursor:pointer;border:none;transition:all 0.2s;white-space:nowrap;}
+.nbtn-ghost{background:transparent;color:var(--sand);border:1px solid rgba(210,187,159,0.3);}
+.nbtn-ghost:hover{background:rgba(210,187,159,0.1);color:var(--beige);}
+.nbtn-gold{background:var(--gold);color:var(--green-deep);font-weight:400;}
+.nbtn-gold:hover{background:#e8aa38;}
+.sflash{font-size:11px;color:var(--pale);margin-right:4px;opacity:0;transition:opacity 0.3s;}
+.sflash.on{opacity:1;}
+.tabs{background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;display:flex;overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{font-size:11px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:13px 18px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.2s;}
+.tab:hover{color:var(--green);}
+.tab.active{color:var(--green);border-bottom-color:var(--green);}
+.hero{background:linear-gradient(150deg,var(--green-deep) 0%,var(--green) 55%,var(--green-light) 100%);padding:44px 28px 38px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-60px;right:-40px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(204,207,142,0.07) 0%,transparent 70%);pointer-events:none;}
+.hero-inner{max-width:1060px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+.hero-eye{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--pale);margin-bottom:10px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:36px;color:var(--white);line-height:1.05;margin-bottom:8px;}
+.hero-title em{font-style:italic;color:var(--sand);}
+.hero-desc{font-size:12.5px;font-weight:300;color:rgba(245,237,228,0.65);max-width:500px;line-height:1.75;}
+.hero-stats{display:flex;gap:24px;flex-shrink:0;}
+.hero-stat{text-align:center;}
+.hero-stat-n{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--gold);line-height:1;}
+.hero-stat-l{font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.45);margin-top:3px;}
+.main{max-width:1060px;margin:0 auto;padding:32px 28px 80px;}
+.main-cols{display:grid;grid-template-columns:1fr 280px;gap:24px;align-items:start;}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;opacity:0;transform:translateY(10px);transition:opacity 0.35s,transform 0.35s;}
+.card.vis{opacity:1;transform:translateY(0);}
+.card-hdr{padding:16px 22px 13px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.05));display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:16px;color:var(--green);}
+.card-desc{font-size:11px;color:var(--text-light);margin-top:2px;line-height:1.5;}
+.card-body{padding:20px 22px;}
+.fg{display:grid;gap:14px;}
+.g2{grid-template-columns:1fr 1fr;}
+.g3{grid-template-columns:1fr 1fr 1fr;}
+.g4{grid-template-columns:1fr 1fr 1fr 1fr;}
+.c2{grid-column:span 2;}
+.c3{grid-column:span 3;}
+.f label{display:block;font-size:11px;font-weight:400;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-mid);margin-bottom:5px;line-height:1.4;}
+input[type="number"],input[type="text"],select,textarea{width:100%;font-family:'Jost',sans-serif;font-weight:300;font-size:13px;color:var(--text-dark);background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:8px 11px;outline:none;transition:border-color 0.2s;appearance:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(27,68,54,0.07);}
+textarea{resize:vertical;min-height:68px;line-height:1.7;}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23777' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer;}
+.fhint{font-size:10.5px;color:var(--text-light);margin-top:4px;line-height:1.5;}
+.div{height:1px;background:var(--border);margin:16px 0;}
+.div-lbl{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);margin:-14px 0 12px;display:flex;align-items:center;gap:8px;}
+.div-lbl::before,.div-lbl::after{content:'';flex:1;height:1px;background:var(--border);}
+.al{border-radius:var(--radius);padding:9px 12px;font-size:12px;line-height:1.6;margin-bottom:10px;display:flex;gap:8px;align-items:flex-start;}
+.al-ic{font-size:13px;flex-shrink:0;margin-top:1px;}
+.al-i{background:rgba(27,68,54,0.05);border-left:3px solid var(--pale);color:var(--text-mid);}
+.al-w{background:rgba(217,158,50,0.07);border-left:3px solid var(--gold);color:var(--text-mid);}
+.al-c{background:rgba(145,97,121,0.07);border-left:3px solid var(--mauve);color:var(--text-mid);}
+.al-d{background:rgba(164,47,48,0.06);border-left:3px solid var(--crimson);color:var(--text-mid);}
+/* METRIC CARDS */
+.metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
+.metric-card{background:linear-gradient(135deg,rgba(27,68,54,0.04),rgba(210,187,159,0.06));border:1px solid var(--border);border-radius:var(--radius-md);padding:16px 18px;}
+.metric-val{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600;color:var(--green);line-height:1;}
+.metric-lbl{font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-top:4px;margin-bottom:6px;}
+.metric-bench{font-size:11px;color:var(--text-light);}
+.metric-flag{font-size:10px;padding:2px 7px;border-radius:8px;margin-top:6px;display:inline-block;}
+.mf-ok{background:rgba(204,207,142,0.2);color:#5a6020;}
+.mf-warn{background:rgba(217,158,50,0.1);color:#8a6010;}
+.mf-alert{background:rgba(164,47,48,0.07);color:var(--crimson);}
+/* SIDEBAR */
+.sidebar{position:sticky;top:76px;}
+.sb-panel{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow);margin-bottom:14px;}
+.sbph{background:linear-gradient(135deg,var(--green-deep),var(--green));padding:13px 16px;}
+.sbpt{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:15px;color:var(--white);margin-bottom:2px;}
+.sbps{font-size:10.5px;color:rgba(245,237,228,0.55);}
+.sbpb{padding:14px 16px;}
+.stat-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(224,216,207,0.4);font-size:12px;}
+.stat-row:last-child{border-bottom:none;}
+.stat-lbl{color:var(--text-light);}
+.stat-val{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--green);}
+/* TABLES */
+.ref-table{width:100%;border-collapse:collapse;}
+.ref-table th{font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:8px 12px;text-align:left;border-bottom:2px solid var(--border);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.04));}
+.ref-table td{padding:9px 12px;border-bottom:1px solid rgba(224,216,207,0.5);font-size:12px;font-weight:300;vertical-align:top;}
+.ref-table td:first-child{font-weight:400;}
+.ref-table tr:last-child td{border-bottom:none;}
+.ref-table tr:hover td{background:rgba(27,68,54,0.015);}
+/* PRIORITY CARDS */
+.priority-card{border:1px solid var(--border);border-radius:var(--radius-md);padding:16px 18px;margin-bottom:12px;display:flex;gap:16px;align-items:flex-start;}
+.priority-badge{padding:3px 10px;border-radius:10px;font-size:9px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;white-space:nowrap;flex-shrink:0;margin-top:2px;}
+.pb-critical{background:rgba(164,47,48,0.08);color:var(--crimson);}
+.pb-high{background:rgba(217,158,50,0.1);color:#8a6010;}
+.pb-moderate{background:rgba(27,68,54,0.07);color:var(--green);}
+.priority-issue{font-size:13px;font-weight:400;color:var(--text-dark);margin-bottom:4px;}
+.priority-detail{font-size:11.5px;color:var(--text-mid);line-height:1.65;}
+/* RISK METER */
+.risk-bar{height:8px;border-radius:4px;background:var(--border);overflow:hidden;margin:8px 0;}
+.risk-fill{height:100%;border-radius:4px;transition:width 0.5s ease;}
+/* SCATTER INDICATORS */
+.factor-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
+.factor-item{padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-md);}
+.factor-lbl{font-size:10px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-light);margin-bottom:4px;}
+.factor-val{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;}
+footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:center;justify-content:space-between;}
+.fb{font-family:'Cormorant Garamond',serif;font-size:13px;color:rgba(245,237,228,0.4);}
+.fb span{color:var(--sand);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.fu{animation:fadeUp 0.4s ease both;}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-left">
+    <button class="back-btn" onclick="window.location.href='/'">&#8592; All Tools</button>
+    <div class="nav-sep"></div>
+    <div class="nav-brand">Pl<span>in</span>th</div>
+    <div class="nav-sub">&nbsp;&middot;&nbsp; Analytics</div>
+  </div>
+  <div class="nav-right">
+    <span class="sflash" id="sflash">Saved</span>
+    <button class="nbtn nbtn-ghost" onclick="saveData()">Save</button>
+    <button class="nbtn nbtn-gold" onclick="generateReport()">Generate Report</button>
+  </div>
+</nav>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('workforce')" id="tab-workforce">Workforce Snapshot</div>
+  <div class="tab" onclick="showTab('turnover')" id="tab-turnover">Turnover &amp; Cost</div>
+  <div class="tab" onclick="showTab('diagnostic')" id="tab-diagnostic">Diagnostic</div>
+  <div class="tab" onclick="showTab('predictive')" id="tab-predictive">Predictive</div>
+  <div class="tab" onclick="showTab('prescriptive')" id="tab-prescriptive">Prescriptive</div>
+  <div class="tab" onclick="showTab('equity')" id="tab-equity">Pay Equity</div>
+  <div class="tab" onclick="showTab('benchmarks')" id="tab-benchmarks">Benchmarks</div>
+</div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eye">Plinth &middot; Tool 15</div>
+      <div class="hero-title">Workforce <em>Analytics</em></div>
+      <div class="hero-desc">Descriptive, diagnostic, predictive, and prescriptive workforce intelligence. Input the organization's data and surface advisor-ready analysis across all four analytics layers — exportable for CEO or board review.</div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-n" id="heroTurnover">—</div><div class="hero-stat-l">Turnover Rate</div></div>
+      <div class="hero-stat"><div class="hero-stat-n" id="heroHeadcount">—</div><div class="hero-stat-l">Headcount</div></div>
+      <div class="hero-stat"><div class="hero-stat-n" id="heroPayPct">—</div><div class="hero-stat-l">Payroll / Budget</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     TAB 1 — WORKFORCE SNAPSHOT
+══════════════════════════════════════════════════════════ -->
+<div id="view-workforce" class="main">
+<div class="main-cols">
+<div>
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Workforce Snapshot</div><div class="card-desc">Enter current data to calculate key metrics. Fields save automatically on each input.</div></div>
+      <button class="nbtn nbtn-gold" onclick="calcMetrics()">Calculate</button>
+    </div>
+    <div class="card-body">
+      <div class="div"></div>
+      <div class="div-lbl">Headcount</div>
+      <div class="fg g3" style="margin-bottom:18px">
+        <div class="f"><label>Total W-2 Headcount</label><input type="number" id="mHeadcount" placeholder="All W-2 employees" oninput="saveData()"></div>
+        <div class="f"><label>Full-Time Employees</label><input type="number" id="mFT" placeholder="Number" oninput="saveData()"></div>
+        <div class="f"><label>Part-Time Employees</label><input type="number" id="mPT" placeholder="Number" oninput="saveData()"></div>
+        <div class="f"><label>Contractors / 1099</label><input type="number" id="mContract" placeholder="Number" oninput="saveData()"></div>
+        <div class="f"><label>Open Positions</label><input type="number" id="mOpen" placeholder="Currently unfilled" oninput="saveData()"></div>
+        <div class="f"><label>New Hires (12 mo)</label><input type="number" id="mHires" placeholder="Hired this year" oninput="saveData()"></div>
+      </div>
+      <div class="div"></div>
+      <div class="div-lbl">Separations</div>
+      <div class="fg g3" style="margin-bottom:18px">
+        <div class="f"><label>Total Separations (12 mo)</label><input type="number" id="mSeparations" placeholder="All exits" oninput="saveData()"></div>
+        <div class="f"><label>Voluntary Separations</label><input type="number" id="mVoluntary" placeholder="Resignations" oninput="saveData()"></div>
+        <div class="f"><label>Avg Days to Fill</label><input type="number" id="mDaysToFill" placeholder="Calendar days" oninput="saveData()"></div>
+      </div>
+      <div class="div"></div>
+      <div class="div-lbl">Budget &amp; Tenure</div>
+      <div class="fg g3" style="margin-bottom:18px">
+        <div class="f"><label>Total Base Payroll</label><input type="number" id="mPayroll" placeholder="Annual total ($)" oninput="saveData()"></div>
+        <div class="f"><label>Operating Budget</label><input type="number" id="mBudget" placeholder="Total annual budget ($)" oninput="saveData()"></div>
+        <div class="f"><label>Avg Tenure (years)</label><input type="number" id="mTenure" placeholder="Org average" step="0.1" oninput="saveData()"></div>
+      </div>
+      <div id="metricsOutput"></div>
+    </div>
+  </div>
+</div>
+<div class="sidebar">
+  <div class="sb-panel">
+    <div class="sbph"><div class="sbpt">Quick Reference</div><div class="sbps">Nonprofit sector thresholds</div></div>
+    <div class="sbpb">
+      <div class="stat-row"><span class="stat-lbl">Healthy turnover</span><span style="font-size:11px;color:var(--text-mid)">18–22%</span></div>
+      <div class="stat-row"><span class="stat-lbl">Regrettable turnover target</span><span style="font-size:11px;color:var(--text-mid)">&lt; 8%</span></div>
+      <div class="stat-row"><span class="stat-lbl">Payroll / budget</span><span style="font-size:11px;color:var(--text-mid)">60–80%</span></div>
+      <div class="stat-row"><span class="stat-lbl">Avg time to fill</span><span style="font-size:11px;color:var(--text-mid)">45–75 days</span></div>
+      <div class="stat-row"><span class="stat-lbl">Avg nonprofit tenure</span><span style="font-size:11px;color:var(--text-mid)">3.2 years</span></div>
+      <div class="stat-row"><span class="stat-lbl">HR:employee ratio</span><span style="font-size:11px;color:var(--text-mid)">1 : 50–75</span></div>
+    </div>
+  </div>
+  <div class="sb-panel">
+    <div class="sbph"><div class="sbpt">Data Sources</div><div class="sbps">Benchmark methodology</div></div>
+    <div class="sbpb"><p style="font-size:11px;color:var(--text-mid);line-height:1.7">Benchmarks sourced from SHRM Benchmarking Reports, Nonprofit HR State of the Nonprofit Sector Survey, Candid Compensation and Finance Reports, and BLS JOLTS data calibrated for nonprofits and social impact organizations.</p></div>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     TAB 2 — TURNOVER & COST
+══════════════════════════════════════════════════════════ -->
+<div id="view-turnover" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Turnover Rate Analysis</div><div class="card-desc">Separate regrettable from non-regrettable turnover. The distinction drives retention strategy.</div></div>
+      <div style="display:flex;gap:8px"><button class="nbtn nbtn-ghost" onclick="calcTurnover()">Calculate</button><button class="nbtn nbtn-gold" onclick="generateTurnoverReport()">Generate Report</button></div>
+    </div>
+    <div class="card-body">
+      <div class="al al-i" style="margin-bottom:16px"><span class="al-ic">ℹ</span><span>Turnover rate = (Separations &divide; Average Headcount) &times; 100. Average headcount = (beginning + ending) &divide; 2. Voluntary regrettable turnover — exits you would have reversed — is the metric that should drive retention investment.</span></div>
+      <div class="fg g3" style="margin-bottom:20px">
+        <div class="f"><label>Beginning Headcount</label><input type="number" id="tBegin" placeholder="Start of period" oninput="saveData()"></div>
+        <div class="f"><label>Ending Headcount</label><input type="number" id="tEnd" placeholder="End of period" oninput="saveData()"></div>
+        <div class="f"><label>Period</label><select id="tPeriod" onchange="saveData()"><option value="annual">Annual (12 months)</option><option value="qtr">Quarterly</option></select></div>
+        <div class="f"><label>Total Separations</label><input type="number" id="tTotal" placeholder="All exits" oninput="saveData()"></div>
+        <div class="f"><label>Voluntary — Regrettable</label><input type="number" id="tVolReg" placeholder="Exits you'd reverse" oninput="saveData()"><div class="fhint">Employees whose exit you consider a loss to the mission.</div></div>
+        <div class="f"><label>Voluntary — Non-Regrettable</label><input type="number" id="tVolNon" placeholder="Acceptable departures" oninput="saveData()"></div>
+        <div class="f"><label>Involuntary — Performance</label><input type="number" id="tInvPerf" placeholder="Terminations" oninput="saveData()"></div>
+        <div class="f"><label>Involuntary — RIF</label><input type="number" id="tInvRIF" placeholder="Layoffs" oninput="saveData()"></div>
+        <div class="f"><label>End of Contract</label><input type="number" id="tContract" placeholder="Natural endings" oninput="saveData()"></div>
+      </div>
+      <div id="turnoverOutput"></div>
+    </div>
+  </div>
+  <div class="card fu" style="animation-delay:0.07s">
+    <div class="card-hdr"><div><div class="card-title">Cost of Turnover Calculator</div><div class="card-desc">The true financial cost of a single departure. Most organizations dramatically underestimate this number — which is why retention investment never gets prioritized.</div></div></div>
+    <div class="card-body">
+      <div class="al al-i" style="margin-bottom:16px"><span class="al-ic">ℹ</span><span>SHRM and Center for American Progress research consistently shows that replacing a professional-level employee costs 50–200% of annual salary when all factors are included. Most organizations never see this number because the cost is distributed across budget lines with no one adding it up.</span></div>
+      <div class="fg g3" style="margin-bottom:16px">
+        <div class="f"><label>Departing Employee Annual Salary</label><input type="number" id="cotSalary" placeholder="Annual base salary ($)" oninput="calcCOT()"></div>
+        <div class="f"><label>Role Type</label><select id="cotRoleType" onchange="calcCOT()"><option value="">Select type</option><option value="professional">Professional / Knowledge Worker</option><option value="manager">Manager / Leadership</option><option value="executive">Executive / Director+</option><option value="frontline">Front-Line / Program Staff</option><option value="specialist">Technical Specialist</option></select></div>
+        <div class="f"><label>Estimated Days to Fill</label><input type="number" id="cotDaysToFill" placeholder="Days open" oninput="calcCOT()"></div>
+      </div>
+      <div id="cotOutput"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     TAB 3 — DIAGNOSTIC ANALYTICS
+══════════════════════════════════════════════════════════ -->
+<div id="view-diagnostic" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Exit Interview Analysis</div><div class="card-desc">Diagnostic analytics: identifying the root causes behind turnover. Categorize departures to surface patterns that aggregate data cannot show.</div></div>
+      <div style="display:flex;gap:8px"><button class="nbtn nbtn-ghost" onclick="calcExitAnalysis()">Analyze</button><button class="nbtn nbtn-gold" onclick="generateDiagnosticReport()">Generate Report</button></div>
+    </div>
+    <div class="card-body">
+      <div class="al al-i" style="margin-bottom:16px"><span class="al-ic">ℹ</span><span>Voluntary turnover rarely has one cause. Enter the number of exits attributed to each factor — a single departure may reflect multiple factors. Patterns in the top two or three categories point to specific organizational interventions, not generic retention programs.</span></div>
+      <div class="fg g3" style="margin-bottom:20px">
+        <div class="f"><label>Total Voluntary Exits Analyzed</label><input type="number" id="exitTotal" placeholder="Number of exit interviews" oninput="saveData()"></div>
+        <div class="f"><label>Period Covered</label><select id="exitPeriod" onchange="saveData()"><option value="12mo">Past 12 months</option><option value="6mo">Past 6 months</option><option value="24mo">Past 24 months</option></select></div>
+        <div class="f"><label>Exit Interview Completion Rate</label><input type="number" id="exitCompRate" placeholder="% who completed exit interview" oninput="saveData()"></div>
+      </div>
+      <div class="div"></div>
+      <div class="div-lbl">Reasons Cited (can exceed total — multiple reasons per exit)</div>
+      <div class="fg g3" style="margin-bottom:20px">
+        <div class="f"><label>Compensation Below Market</label><input type="number" id="exitComp" placeholder="Number" oninput="saveData()"></div>
+        <div class="f"><label>Limited Growth / Advancement</label><input type="number" id="exitGrowth" placeholder="Number" oninput="saveData()"></div>
+        <div class="f"><label>Management Quality</label><input type="number" id="exitMgmt" placeholder="Number" oninput="saveData()"></div>
+        <div class="f"><label>Culture / Organizational Fit</label><input type="number" id="exitCulture" placeholder="Number" oninput="saveData()"></div>
+        <div class="f"><label>Work-Life Balance / Burnout</label><input type="number" id="exitWLB" placeholder="Number" oninput="saveData()"></div>
+        <div class="f"><label>Role Clarity / Scope Creep</label><input type="number" id="exitScope" placeholder="Number" oninput="saveData()"></div>
+        <div class="f"><label>Mission Alignment (changed over time)</label><input type="number" id="exitMission" placeholder="Number" oninput="saveData()"></div>
+        <div class="f"><label>Personal / Life Circumstances</label><input type="number" id="exitPersonal" placeholder="Number" oninput="saveData()"></div>
+        <div class="f"><label>Better External Opportunity</label><input type="number" id="exitExternal" placeholder="Number" oninput="saveData()"></div>
+      </div>
+      <div id="exitOutput"></div>
+    </div>
+  </div>
+
+  <div class="card fu" style="animation-delay:0.07s">
+    <div class="card-hdr">
+      <div><div class="card-title">Engagement &amp; Manager Effectiveness</div><div class="card-desc">Correlating engagement scores with manager span of control surfaces where people problems are actually management problems.</div></div>
+      <button class="nbtn nbtn-gold" onclick="calcEngagement()">Analyze</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-i" style="margin-bottom:16px"><span class="al-ic">ℹ</span><span>Research consistently shows that 70% of variance in team engagement is explained by the manager, not the organization. If engagement is low overall but high in certain teams, the intervention is management development — not a culture initiative. If it is uniformly low, the problem is structural.</span></div>
+      <div class="fg g3" style="margin-bottom:18px">
+        <div class="f"><label>Org-Wide Engagement Score</label><input type="number" id="engOrg" placeholder="Score (e.g., 1–10 or 1–100)" oninput="saveData()"></div>
+        <div class="f"><label>Score Scale</label><select id="engScale" onchange="saveData()"><option value="10">1–10 scale</option><option value="5">1–5 scale</option><option value="100">1–100 scale</option></select></div>
+        <div class="f"><label>Survey Participation Rate (%)</label><input type="number" id="engPartic" placeholder="% who responded" oninput="saveData()"></div>
+        <div class="f"><label>Highest-Performing Team Score</label><input type="number" id="engHigh" placeholder="Best manager's team" oninput="saveData()"></div>
+        <div class="f"><label>Lowest-Performing Team Score</label><input type="number" id="engLow" placeholder="Lowest manager's team" oninput="saveData()"></div>
+        <div class="f"><label>Number of Managers Assessed</label><input type="number" id="engMgrs" placeholder="Managers with scores" oninput="saveData()"></div>
+      </div>
+      <div class="div"></div>
+      <div class="div-lbl">Key Engagement Driver Scores (if available)</div>
+      <div class="fg g3" style="margin-bottom:16px">
+        <div class="f"><label>Leadership Trust</label><input type="number" id="engTrust" placeholder="Score" oninput="saveData()"></div>
+        <div class="f"><label>Growth &amp; Development</label><input type="number" id="engGrowth" placeholder="Score" oninput="saveData()"></div>
+        <div class="f"><label>Recognition &amp; Appreciation</label><input type="number" id="engRecog" placeholder="Score" oninput="saveData()"></div>
+        <div class="f"><label>Role Clarity</label><input type="number" id="engClarity" placeholder="Score" oninput="saveData()"></div>
+        <div class="f"><label>Psychological Safety</label><input type="number" id="engSafety" placeholder="Score" oninput="saveData()"></div>
+        <div class="f"><label>Workload Sustainability</label><input type="number" id="engWorkload" placeholder="Score" oninput="saveData()"></div>
+      </div>
+      <div id="engagementOutput"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     TAB 4 — PREDICTIVE ANALYTICS
+══════════════════════════════════════════════════════════ -->
+<div id="view-predictive" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Attrition Risk Indicator</div><div class="card-desc">Predictive analytics: using organizational conditions to forecast which populations are at elevated risk of departure before they decide to leave.</div></div>
+      <div style="display:flex;gap:8px"><button class="nbtn nbtn-ghost" onclick="calcAttritionRisk()">Score Risk</button><button class="nbtn nbtn-gold" onclick="generatePredictiveReport()">Generate Report</button></div>
+    </div>
+    <div class="card-body">
+      <div class="al al-w" style="margin-bottom:16px"><span class="al-ic">△</span><span>This tool scores structural attrition risk based on known predictors. It does not identify individuals — it identifies organizational conditions that statistically increase flight risk across a population. High scores indicate where retention investment should be concentrated before exits occur.</span></div>
+      <div class="fg g3" style="margin-bottom:18px">
+        <div class="f"><label>% of Staff at or Below Market Midpoint</label><input type="number" id="riskBelowMid" placeholder="% underpaid vs. market" oninput="saveData()"></div>
+        <div class="f"><label>% With No Promotion in 3+ Years</label><input type="number" id="riskNoPromo" placeholder="% stagnant" oninput="saveData()"></div>
+        <div class="f"><label>% With Tenure Under 2 Years</label><input type="number" id="riskLowTenure" placeholder="% new employees" oninput="saveData()"></div>
+        <div class="f"><label>Engagement Score (from Diagnostic tab)</label><input type="number" id="riskEngagement" placeholder="Score" oninput="saveData()"></div>
+        <div class="f"><label>Engagement Scale</label><select id="riskEngScale" onchange="saveData()"><option value="10">1–10</option><option value="5">1–5</option><option value="100">1–100</option></select></div>
+        <div class="f"><label>Months Since Last Compensation Review</label><input type="number" id="riskLastReview" placeholder="Months" oninput="saveData()"></div>
+        <div class="f"><label>% of Managers Without Direct Reports Training</label><input type="number" id="riskMgrTrained" placeholder="% untrained managers" oninput="saveData()"></div>
+        <div class="f"><label>Prior Year Voluntary Turnover Rate (%)</label><input type="number" id="riskPriorTurnover" placeholder="Last year's rate" oninput="saveData()"></div>
+        <div class="f"><label>Open Positions as % of Headcount</label><input type="number" id="riskVacancy" placeholder="% open" oninput="saveData()"></div>
+      </div>
+      <div id="attritionOutput"></div>
+    </div>
+  </div>
+
+  <div class="card fu" style="animation-delay:0.07s">
+    <div class="card-hdr">
+      <div><div class="card-title">Labor Demand Forecast</div><div class="card-desc">Translate growth targets and operational plans into projected headcount requirements by role type and timeline.</div></div>
+      <button class="nbtn nbtn-gold" onclick="calcLaborDemand()">Forecast</button>
+    </div>
+    <div class="card-body">
+      <div class="fg g3" style="margin-bottom:18px">
+        <div class="f"><label>Current Headcount</label><input type="number" id="ldCurrentHC" placeholder="Today" oninput="saveData()"></div>
+        <div class="f"><label>Projected Revenue / Budget Growth (%)</label><input type="number" id="ldBudgetGrowth" placeholder="Year-over-year %" oninput="saveData()"></div>
+        <div class="f"><label>Forecast Period</label><select id="ldPeriod" onchange="saveData()"><option value="12">12 months</option><option value="18">18 months</option><option value="24">24 months</option><option value="36">36 months</option></select></div>
+        <div class="f"><label>Expected Attrition Rate (%)</label><input type="number" id="ldAttrition" placeholder="Expected exits %" oninput="saveData()"></div>
+        <div class="f"><label>Productivity Improvement Target (%)</label><input type="number" id="ldProductivity" placeholder="% efficiency gain planned" oninput="saveData()"><div class="fhint">Reduces net headcount need.</div></div>
+        <div class="f"><label>New Program / Service Additions</label><input type="number" id="ldNewPrograms" placeholder="FTEs required for new work" oninput="saveData()"></div>
+      </div>
+      <div id="laborDemandOutput"></div>
+    </div>
+  </div>
+
+  <div class="card fu" style="animation-delay:0.14s">
+    <div class="card-hdr">
+      <div><div class="card-title">Succession &amp; Talent Pipeline</div><div class="card-desc">Identify concentration risk and readiness gaps before they become emergency vacancies.</div></div>
+    </div>
+    <div class="card-body">
+      <div class="al al-i" style="margin-bottom:16px"><span class="al-ic">ℹ</span><span>Succession planning is a predictive activity. The question is not who replaces someone — it is whether the organization can absorb the departure without a mission impact. Rate each critical role below for vacancy risk and internal readiness.</span></div>
+      <div class="fg g2" style="margin-bottom:14px">
+        <div class="f"><label>Critical Roles with No Internal Successor</label><input type="number" id="succNoSuccessor" placeholder="Number of roles" oninput="saveData()"></div>
+        <div class="f"><label>Critical Roles with Identified High-Potentials</label><input type="number" id="succHiPo" placeholder="Number of roles" oninput="saveData()"></div>
+        <div class="f"><label>Avg Estimated Time to Readiness (months)</label><input type="number" id="succReadiness" placeholder="Months to develop successor" oninput="saveData()"></div>
+        <div class="f"><label>Roles Dependent on One Person (key-person risk)</label><input type="number" id="succKeyPerson" placeholder="Single points of failure" oninput="saveData()"></div>
+      </div>
+      <div id="successionOutput"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     TAB 5 — PRESCRIPTIVE ANALYTICS
+══════════════════════════════════════════════════════════ -->
+<div id="view-prescriptive" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Priority Action Engine</div><div class="card-desc">Prescriptive analytics: synthesizing your data across all tabs to surface the highest-impact interventions in priority order.</div></div>
+      <div style="display:flex;gap:8px"><button class="nbtn nbtn-ghost" onclick="runPrescriptive()">Preview</button><button class="nbtn nbtn-gold" onclick="generatePrescriptiveReport()">Generate Report</button></div>
+    </div>
+    <div class="card-body">
+      <div class="al al-c" style="margin-bottom:16px"><span class="al-ic">&#9670;</span><span>This engine reads data entered across all other tabs and scores organizational issues by severity and mission impact. Complete the Workforce Snapshot and at least one other tab before generating recommendations. The more data entered, the more specific the output.</span></div>
+      <div id="prescriptiveOutput">
+        <div style="padding:24px;text-align:center;color:var(--text-light);font-size:12px;background:rgba(27,68,54,0.02);border-radius:var(--radius-md);border:1px dashed var(--border)">Enter workforce data across the other tabs, then click Generate Recommendations to surface priority actions.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card fu" style="animation-delay:0.07s">
+    <div class="card-hdr">
+      <div><div class="card-title">Retention Investment ROI Model</div><div class="card-desc">Model the return on targeted retention investments against the cost of continued turnover.</div></div>
+      <button class="nbtn nbtn-gold" onclick="calcRetentionROI()">Model ROI</button>
+    </div>
+    <div class="card-body">
+      <div class="fg g3" style="margin-bottom:18px">
+        <div class="f"><label>Annual Regrettable Turnover Count</label><input type="number" id="roiExits" placeholder="Exits per year" oninput="saveData()"></div>
+        <div class="f"><label>Average Salary of Departing Employees</label><input type="number" id="roiAvgSalary" placeholder="Average annual base ($)" oninput="saveData()"></div>
+        <div class="f"><label>Role Type (for cost multiplier)</label><select id="roiRoleType" onchange="saveData()"><option value="professional">Professional</option><option value="manager">Manager</option><option value="executive">Executive</option><option value="frontline">Front-Line</option><option value="specialist">Specialist</option></select></div>
+        <div class="f"><label>Proposed Retention Investment ($)</label><input type="number" id="roiInvestment" placeholder="Annual investment amount" oninput="saveData()"><div class="fhint">Compensation adjustment, benefits upgrade, development budget, etc.</div></div>
+        <div class="f"><label>Expected Reduction in Regrettable Exits (%)</label><input type="number" id="roiReductionPct" placeholder="Expected % improvement" oninput="saveData()"></div>
+        <div class="f"><label>Implementation Timeline (months)</label><input type="number" id="roiTimeline" placeholder="Months to full impact" oninput="saveData()"></div>
+      </div>
+      <div id="roiOutput"></div>
+    </div>
+  </div>
+
+  <div class="card fu" style="animation-delay:0.14s">
+    <div class="card-hdr">
+      <div><div class="card-title">Compensation Budget Optimizer</div><div class="card-desc">Model merit budget allocation scenarios to maximize retention impact — who gets what, and why.</div></div>
+      <button class="nbtn nbtn-gold" onclick="calcCompOptimizer()">Optimize</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-i" style="margin-bottom:16px"><span class="al-ic">ℹ</span><span>Uniform merit increases deliver the lowest retention return per dollar. Targeted allocation to employees below market midpoint or in high-risk segments returns 3–5x more retention value than across-the-board increases of the same total cost.</span></div>
+      <div class="fg g3" style="margin-bottom:18px">
+        <div class="f"><label>Total Merit Budget ($)</label><input type="number" id="compBudget" placeholder="Total available for merit" oninput="saveData()"></div>
+        <div class="f"><label>Total Payroll ($)</label><input type="number" id="compPayroll" placeholder="Current total base payroll" oninput="saveData()"></div>
+        <div class="f"><label>Total Headcount</label><input type="number" id="compHC" placeholder="Number of employees" oninput="saveData()"></div>
+        <div class="f"><label>% Below Market Midpoint</label><input type="number" id="compBelowMid" placeholder="% underpaid vs. market" oninput="saveData()"></div>
+        <div class="f"><label>% High-Performers (top 20%)</label><input type="number" id="compHiPerf" placeholder="% of workforce" oninput="saveData()"></div>
+        <div class="f"><label>% At-Risk for Departure</label><input type="number" id="compAtRisk" placeholder="% flight risk" oninput="saveData()"></div>
+      </div>
+      <div id="compOptimizerOutput"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     TAB 6 — PAY EQUITY
+══════════════════════════════════════════════════════════ -->
+<div id="view-equity" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Pay Equity Indicators</div><div class="card-desc">High-level screening using aggregated averages. Use this to determine whether a formal equity analysis is warranted — not as a substitute for one.</div></div>
+      <div style="display:flex;gap:8px"><button class="nbtn nbtn-ghost" onclick="calcEquity()">Calculate</button><button class="nbtn nbtn-gold" onclick="generateEquityReport()">Generate Report</button></div>
+    </div>
+    <div class="card-body">
+      <div class="al al-i" style="margin-bottom:16px"><span class="al-ic">ℹ</span><span>A formal pay equity analysis requires individual-level data, statistical controls for tenure, level, and function, and legal review. This tool provides an aggregate indicator only. If gaps appear here, engage employment counsel or a compensation specialist before communicating findings or taking corrective action.</span></div>
+      <div class="fg g3" style="margin-bottom:16px">
+        <div class="f"><label>Org-Wide Average Salary</label><input type="number" id="eqOverall" placeholder="Organization-wide average ($)" oninput="saveData()"></div>
+        <div class="f"><label>Average Salary — Women</label><input type="number" id="eqWomen" placeholder="Average annual base ($)" oninput="saveData()"></div>
+        <div class="f"><label>Average Salary — Men</label><input type="number" id="eqMen" placeholder="Average annual base ($)" oninput="saveData()"></div>
+        <div class="f"><label>Average Salary — Employees of Color</label><input type="number" id="eqColor" placeholder="Average annual base ($)" oninput="saveData()"></div>
+        <div class="f"><label>Average Salary — White / Non-Hispanic</label><input type="number" id="eqWhite" placeholder="Average annual base ($)" oninput="saveData()"></div>
+        <div class="f"><label>Average Salary — Manager Track &amp; Above</label><input type="number" id="eqMgr" placeholder="Average for managers and above ($)" oninput="saveData()"></div>
+      </div>
+      <div class="div"></div>
+      <div class="div-lbl">Promotion Rate Equity</div>
+      <div class="fg g3" style="margin-bottom:16px">
+        <div class="f"><label>Promotion Rate — Women (%)</label><input type="number" id="promoWomen" placeholder="% promoted last 12 mo" oninput="saveData()"></div>
+        <div class="f"><label>Promotion Rate — Men (%)</label><input type="number" id="promoMen" placeholder="% promoted last 12 mo" oninput="saveData()"></div>
+        <div class="f"><label>Promotion Rate — Employees of Color (%)</label><input type="number" id="promoColor" placeholder="% promoted last 12 mo" oninput="saveData()"></div>
+      </div>
+      <div id="equityOutput"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     TAB 7 — BENCHMARKS
+══════════════════════════════════════════════════════════ -->
+<div id="view-benchmarks" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Industry Benchmarks</div><div class="card-desc">Nonprofit and social impact sector benchmarks. Sources: SHRM, Nonprofit HR, Candid, BLS JOLTS calibrated for mission-driven organizations.</div></div>
+      <button onclick="window.print()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Print / PDF</button>
+    </div>
+    <div class="card-body">
+      <table class="ref-table">
+        <thead><tr><th>Metric</th><th>Nonprofit Benchmark</th><th>All-Sector Comparison</th><th>Interpretation</th></tr></thead>
+        <tbody>
+          <tr><td>Total Turnover Rate</td><td style="color:var(--green)">18–22% annually</td><td style="color:var(--text-mid)">15–20% annually</td><td>Above 25% is a retention crisis. Below 10% may indicate stagnation or fear of leaving.</td></tr>
+          <tr><td>Voluntary Turnover Rate</td><td style="color:var(--green)">12–16% annually</td><td style="color:var(--text-mid)">10–15% annually</td><td>Higher in mission-driven orgs — compensation gaps, burnout, and leadership are primary drivers.</td></tr>
+          <tr><td>Regrettable Turnover Target</td><td style="color:var(--green)">Under 8%</td><td style="color:var(--text-mid)">Under 6%</td><td>Above 10% signals a strategic retention problem. Requires root cause analysis.</td></tr>
+          <tr><td>Time to Fill (average)</td><td style="color:var(--green)">45–75 days</td><td style="color:var(--text-mid)">42–60 days</td><td>90+ days signals weak talent pipeline, misaligned compensation, or a broken hiring process.</td></tr>
+          <tr><td>Cost Per Hire (estimated)</td><td style="color:var(--green)">$3,500–$6,000</td><td style="color:var(--text-mid)">$4,000–$6,500</td><td>Includes recruiter time, posting costs, background checks, and onboarding. Hidden cost of turnover is 1–2&times; annual salary for professional roles.</td></tr>
+          <tr><td>HR Staff Ratio</td><td style="color:var(--green)">1 per 50–75 employees</td><td style="color:var(--text-mid)">1 per 50–100 employees</td><td>Many nonprofits under-invest in HR relative to program complexity and compliance exposure.</td></tr>
+          <tr><td>Payroll as % of Budget</td><td style="color:var(--green)">65–80%</td><td style="color:var(--text-mid)">Varies widely</td><td>Below 55%: potential underinvestment. Above 82%: financial fragility — limited flexibility for programs, reserves, or disruption.</td></tr>
+          <tr><td>Average Employee Tenure</td><td style="color:var(--green)">3.2 years</td><td style="color:var(--text-mid)">4.2 years (all sectors)</td><td>Shorter nonprofit tenure reflects compensation gaps and limited advancement. Under 2 years average is a significant risk signal.</td></tr>
+          <tr><td>Benefits Cost as % of Payroll</td><td style="color:var(--green)">22–28%</td><td style="color:var(--text-mid)">28–35%</td><td>Nonprofits typically offer less supplemental benefit value. Total compensation gap is often larger than salary gap alone.</td></tr>
+          <tr><td>Absenteeism Rate</td><td style="color:var(--green)">2–4% of scheduled hours</td><td style="color:var(--text-mid)">2.5–4%</td><td>Above 5% sustained is a warning sign for culture, burnout, or management quality.</td></tr>
+          <tr><td>Internal Promotion Rate</td><td style="color:var(--green)">25–35% of open roles</td><td style="color:var(--text-mid)">30–40%</td><td>Low internal promotion rates indicate limited growth pathways — a leading indicator of regrettable turnover among high performers.</td></tr>
+          <tr><td>Employee Engagement Score</td><td style="color:var(--green)">70–75% favorable</td><td style="color:var(--text-mid)">65–70% favorable</td><td>Nonprofits often outperform on mission connection but underperform on compensation satisfaction and growth opportunity.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="fb">The Coherence Collective &nbsp;&middot;&nbsp; <span>Plinth</span></div>
+  <div style="display:flex;gap:16px;align-items:center">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.35)">Jump to</span>
+      <select onchange="if(this.value)window.location.href=this.value" style="font-family:'Jost',sans-serif;font-weight:300;font-size:11px;background:rgba(255,255,255,0.06);color:rgba(245,237,228,0.6);border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:4px 24px 4px 8px;cursor:pointer;outline:none;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(245,237,228,0.4)' stroke-width='1.4' fill='none' stroke-repeat:no-repeat;background-position:right 7px center">
+        <option value="/org-profile/">01 &middot; Org Profile</option><option value="/handbook/">02 &middot; Handbook</option><option value="/job-architecture/">03 &middot; Job Architecture</option><option value="/compensation/">04 &middot; Compensation</option><option value="/offer-hiring/">05 &middot; Offer &amp; Hiring</option><option value="/onboarding/">06 &middot; Onboarding</option><option value="/pay-practices/">07 &middot; Pay Practices</option><option value="/benefits/">08 &middot; Benefits Administration</option><option value="/leave/">09 &middot; Leave Management</option><option value="/performance/">10 &middot; Performance Management</option><option value="/er-investigation/">11 &middot; ER &amp; Investigation</option><option value="/separation/">12 &middot; Separation</option><option value="/compliance-calendar/">13 &middot; Compliance Calendar</option><option value="/manager-toolkit/">14 &middot; Manager Toolkit</option><option value="/analytics/" selected>15 &middot; Analytics</option>
+      </select>
+    </div>
+    <span style="color:rgba(245,237,228,0.15)">|</span>
+    <a href="/manager-toolkit/" style="font-size:11px;color:rgba(245,237,228,0.4);text-decoration:none" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">&larr; Tool 14</a>
+  </div>
+</footer>
+
+<script>
+const ALL_TABS_AN = ['workforce','turnover','diagnostic','predictive','prescriptive','equity','benchmarks'];
+var DISPLAY_MODE = {workforce:'block',turnover:'block',diagnostic:'block',predictive:'block',prescriptive:'block',equity:'block',benchmarks:'block'};
+
+var profile = {};
+try{ profile = JSON.parse(localStorage.getItem('plinth_op')||'{}'); }catch(e){}
+
+var analyticsData = {};
+try{ analyticsData = JSON.parse(localStorage.getItem('plinth_analytics')||'{}'); }catch(e){}
+
+var ALL_FIELD_IDS = [
+  'mHeadcount','mFT','mPT','mContract','mSeparations','mVoluntary','mHires','mOpen','mDaysToFill','mPayroll','mBudget','mTenure',
+  'tBegin','tEnd','tPeriod','tTotal','tVolReg','tVolNon','tInvPerf','tInvRIF','tContract',
+  'exitTotal','exitPeriod','exitCompRate','exitComp','exitGrowth','exitMgmt','exitCulture','exitWLB','exitScope','exitMission','exitPersonal','exitExternal',
+  'engOrg','engScale','engPartic','engHigh','engLow','engMgrs','engTrust','engGrowth','engRecog','engClarity','engSafety','engWorkload',
+  'riskBelowMid','riskNoPromo','riskLowTenure','riskEngagement','riskEngScale','riskLastReview','riskMgrTrained','riskPriorTurnover','riskVacancy',
+  'ldCurrentHC','ldBudgetGrowth','ldPeriod','ldAttrition','ldProductivity','ldNewPrograms',
+  'succNoSuccessor','succHiPo','succReadiness','succKeyPerson',
+  'roiExits','roiAvgSalary','roiRoleType','roiInvestment','roiReductionPct','roiTimeline',
+  'compBudget','compPayroll','compHC','compBelowMid','compHiPerf','compAtRisk',
+  'eqOverall','eqWomen','eqMen','eqColor','eqWhite','eqMgr','promoWomen','promoMen','promoColor'
+];
+
+function saveData(){
+  ALL_FIELD_IDS.forEach(function(id){
+    var el=document.getElementById(id); if(el) analyticsData[id]=el.value;
+  });
+  localStorage.setItem('plinth_analytics', JSON.stringify(analyticsData));
+  var fl=document.getElementById('sflash'); fl.classList.add('on'); setTimeout(function(){fl.classList.remove('on');},1800);
+}
+
+function restoreData(){
+  ALL_FIELD_IDS.forEach(function(id){
+    var el=document.getElementById(id);
+    if(el && analyticsData[id]!==undefined) el.value=analyticsData[id];
+  });
+}
+
+function showTab(tab){
+  ALL_TABS_AN.forEach(function(t){
+    var v=document.getElementById('view-'+t); if(v) v.style.display=t===tab?'block':'none';
+    var el=document.getElementById('tab-'+t); if(el) el.classList.toggle('active',t===tab);
+  });
+}
+
+function animateCards(){
+  var obs=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('vis'); });
+  },{threshold:0.04});
+  document.querySelectorAll('.card').forEach(function(c){obs.observe(c);});
+}
+
+function getN(id){ var el=document.getElementById(id); return el ? (parseFloat(el.value)||0) : 0; }
+function getV(id){ var el=document.getElementById(id); return el ? el.value : ''; }
+
+function flag(val, warnThresh, alertThresh, dir){
+  var v=parseFloat(val); dir=dir||'high';
+  if(dir==='high'){ if(v>alertThresh) return 'mf-alert'; if(v>warnThresh) return 'mf-warn'; return 'mf-ok'; }
+  else { if(v<alertThresh) return 'mf-alert'; if(v<warnThresh) return 'mf-warn'; return 'mf-ok'; }
+}
+
+// ── WORKFORCE METRICS ────────────────────────────────────────────────────────
+function calcMetrics(){
+  var hc=getN('mHeadcount'), sep=getN('mSeparations'), vol=getN('mVoluntary'),
+    hires=getN('mHires'), open=getN('mOpen'), dtf=getN('mDaysToFill'),
+    payroll=getN('mPayroll'), budget=getN('mBudget'), tenure=getN('mTenure');
+  if(!hc){ alert('Enter total headcount to calculate.'); return; }
+
+  var turnRate=hc?((sep/hc)*100).toFixed(1):'—';
+  var volRate=hc?((vol/hc)*100).toFixed(1):'—';
+  var payPct=budget&&payroll?((payroll/budget)*100).toFixed(1):null;
+  var costPerHire=hires&&payroll?Math.round(payroll*0.20/hires):null;
+
+  document.getElementById('heroTurnover').textContent=turnRate+'%';
+  document.getElementById('heroHeadcount').textContent=hc;
+  if(payPct) document.getElementById('heroPayPct').textContent=payPct+'%';
+
+  var cards=[
+    {val:turnRate+'%', lbl:'Total Turnover Rate', bench:'Nonprofit benchmark: 18–22%', f:flag(turnRate,22,28)},
+    {val:volRate+'%', lbl:'Voluntary Turnover Rate', bench:'Nonprofit benchmark: 12–16%', f:flag(volRate,16,22)},
+    dtf?{val:dtf+' days', lbl:'Avg Days to Fill', bench:'Benchmark: 45–75 days', f:flag(dtf,75,100)}:null,
+    payPct?{val:payPct+'%', lbl:'Payroll as % of Budget', bench:'Healthy range: 60–80%', f:flag(payPct,80,88)}:null,
+    tenure?{val:tenure+'y', lbl:'Avg Employee Tenure', bench:'Nonprofit avg: 3.2 years', f:flag(tenure,3,2,'low')}:null,
+    costPerHire?{val:'$'+costPerHire.toLocaleString(), lbl:'Est. Cost Per Hire', bench:'Based on 20% of payroll', f:'mf-ok'}:null,
+  ].filter(Boolean);
+
+  var out='<div class="metric-grid">';
+  for(var i=0;i<cards.length;i++){
+    var c=cards[i];
+    var flagLabel=c.f==='mf-alert'?'Above threshold':c.f==='mf-warn'?'Watch':'Within range';
+    out+='<div class="metric-card"><div class="metric-val">'+c.val+'</div><div class="metric-lbl">'+c.lbl+'</div><div class="metric-bench">'+c.bench+'</div><div class="metric-flag '+c.f+'">'+flagLabel+'</div></div>';
+  }
+  out+='</div>';
+
+  var notes=[];
+  if(parseFloat(turnRate)>25) notes.push('Total turnover above 25% is a retention crisis. Conduct a root cause analysis before the next hiring cycle. Common drivers: compensation below market, limited advancement, management quality, or mission fatigue.');
+  if(parseFloat(volRate)>18) notes.push('Voluntary turnover is elevated. Conduct stay interviews with high-performers before they decide to leave. Review exit interview data for patterns.');
+  if(payPct&&parseFloat(payPct)>80) notes.push('Payroll exceeds 80% of the operating budget. Review the staffing model against program delivery requirements before any new hiring.');
+  if(tenure&&parseFloat(tenure)<2.5) notes.push('Average tenure below 2.5 years creates ongoing recruitment cost and institutional knowledge risk. Compensation benchmarking and manager effectiveness reviews are the highest-priority interventions.');
+
+  for(var n=0;n<notes.length;n++){
+    out+='<div class="al al-w" style="margin-top:8px"><span class="al-ic">&#9651;</span><span>'+notes[n]+'</span></div>';
+  }
+  document.getElementById('metricsOutput').innerHTML=out;
+}
+
+// ── COST OF TURNOVER ─────────────────────────────────────────────────────────
+function calcCOT(){
+  var salary=getN('cotSalary'), roleType=getV('cotRoleType'), dtf=getN('cotDaysToFill')||60;
+  var container=document.getElementById('cotOutput');
+  if(!salary||!roleType){if(container)container.innerHTML='';return;}
+  var multipliers={
+    frontline:{recruiting:0.10,separation:0.05,training:0.08,ramp:0.12},
+    professional:{recruiting:0.15,separation:0.07,training:0.15,ramp:0.25},
+    manager:{recruiting:0.20,separation:0.10,training:0.20,ramp:0.35},
+    specialist:{recruiting:0.25,separation:0.08,training:0.20,ramp:0.40},
+    executive:{recruiting:0.30,separation:0.10,training:0.15,ramp:0.60}
+  };
+  var m=multipliers[roleType]||multipliers.professional;
+  var vacancyCost=Math.round((salary/260)*dtf);
+  var items=[
+    {label:'Recruiting costs',cost:Math.round(salary*m.recruiting)},
+    {label:'Separation costs (HR processing, admin)',cost:Math.round(salary*m.separation)},
+    {label:'Vacancy cost (productivity loss during open role)',cost:vacancyCost},
+    {label:'Training and onboarding costs',cost:Math.round(salary*m.training)},
+    {label:'Ramp-up productivity gap (3\u20136 months at 50\u201380%)',cost:Math.round(salary*m.ramp)}
+  ];
+  var total=0; for(var k=0;k<items.length;k++) total+=items[k].cost;
+  var html='<table style="width:100%;border-collapse:collapse;margin-bottom:12px">';
+  html+='<thead><tr style="border-bottom:2px solid var(--border)"><th style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:7px 10px;text-align:left">Cost Component</th><th style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:7px 10px;text-align:right">Estimated Cost</th><th style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:7px 10px;text-align:right">% of Salary</th></tr></thead><tbody>';
+  for(var j=0;j<items.length;j++){
+    var item=items[j];
+    html+='<tr style="border-bottom:1px solid rgba(224,216,207,0.5)"><td style="padding:8px 10px;font-size:12px;color:var(--text-mid)">'+item.label+'</td><td style="padding:8px 10px;text-align:right;font-size:12px">$'+item.cost.toLocaleString()+'</td><td style="padding:8px 10px;text-align:right;font-size:12px;color:var(--text-light)">'+((item.cost/salary)*100).toFixed(0)+'%</td></tr>';
+  }
+  html+='<tr style="background:rgba(27,68,54,0.04)"><td style="padding:10px;font-weight:400;font-size:13px">Total Estimated Cost of One Departure</td><td style="padding:10px;text-align:right;font-family:\'Cormorant Garamond\',serif;font-size:20px;font-weight:600;color:var(--crimson)">$'+total.toLocaleString()+'</td><td style="padding:10px;text-align:right;font-size:13px;color:var(--green);font-weight:400">'+((total/salary)*100).toFixed(0)+'% of salary</td></tr></tbody></table>';
+  html+='<div class="al al-w"><span class="al-ic">&#9651;</span><span>This is the cost of <strong>one departure</strong> at $'+salary.toLocaleString()+'/year. An organization with 10% regrettable turnover across a 30-person team at this average salary loses approximately $'+(total*3).toLocaleString()+' per year to turnover before accounting for mission impact of lost institutional knowledge.</span></div>';
+  container.innerHTML=html;
+}
+
+// ── TURNOVER ANALYSIS ────────────────────────────────────────────────────────
+function calcTurnover(){
+  var begin=getN('tBegin'), end=getN('tEnd'), total=getN('tTotal'),
+    volReg=getN('tVolReg'), volNon=getN('tVolNon'), invPerf=getN('tInvPerf'),
+    invRIF=getN('tInvRIF'), contract=getN('tContract');
+  if(!begin&&!end){ document.getElementById('turnoverOutput').innerHTML=''; return; }
+  var avg=(begin+end)/2||1;
+  function r(n){ return ((n/avg)*100).toFixed(1); }
+  var totalRate=r(total), volRegRate=r(volReg);
+  var html='<table class="ref-table" style="margin-bottom:12px"><thead><tr><th>Separation Type</th><th>Count</th><th>Rate</th><th>Assessment</th></tr></thead><tbody>';
+  html+='<tr style="background:rgba(27,68,54,0.03)"><td>Total Turnover</td><td>'+total+'</td><td style="font-family:\'Cormorant Garamond\',serif;font-size:18px;font-weight:600;color:var(--green)">'+totalRate+'%</td><td><span class="metric-flag '+flag(totalRate,22,28)+'">'+(parseFloat(totalRate)>28?'Critical':parseFloat(totalRate)>22?'Elevated':'Within range')+'</span></td></tr>';
+  html+='<tr><td style="color:var(--crimson)">Voluntary — Regrettable</td><td>'+volReg+'</td><td style="font-size:14px;color:var(--crimson)">'+volRegRate+'%</td><td><span class="metric-flag '+flag(volRegRate,8,12)+'">'+(parseFloat(volRegRate)>12?'High — retention strategy needed':parseFloat(volRegRate)>8?'Watch':'Target met')+'</span></td></tr>';
+  html+='<tr><td>Voluntary — Non-Regrettable</td><td>'+volNon+'</td><td>'+r(volNon)+'%</td><td><span class="metric-flag mf-ok">Expected attrition</span></td></tr>';
+  html+='<tr><td>Involuntary — Performance</td><td>'+invPerf+'</td><td>'+r(invPerf)+'%</td><td style="font-size:11px;color:var(--text-light)">Managed exits</td></tr>';
+  html+='<tr><td>Involuntary — RIF</td><td>'+invRIF+'</td><td>'+r(invRIF)+'%</td><td style="font-size:11px;color:var(--text-light)">Structural reduction</td></tr>';
+  html+='<tr><td>End of Contract</td><td>'+contract+'</td><td>'+r(contract)+'%</td><td style="font-size:11px;color:var(--text-light)">Planned endings</td></tr>';
+  html+='</tbody></table>';
+  html+='<div style="font-size:11px;color:var(--text-light)">Average headcount used: '+avg.toFixed(0)+'</div>';
+  document.getElementById('turnoverOutput').innerHTML=html;
+}
+
+// ── EXIT ANALYSIS ────────────────────────────────────────────────────────────
+function calcExitAnalysis(){
+  var total=getN('exitTotal');
+  if(!total){ document.getElementById('exitOutput').innerHTML='<div class="al al-w"><span class="al-ic">△</span><span>Enter the total number of exit interviews analyzed.</span></div>'; return; }
+  var reasons=[
+    {label:'Compensation Below Market',id:'exitComp',color:'var(--crimson)'},
+    {label:'Limited Growth / Advancement',id:'exitGrowth',color:'var(--mauve)'},
+    {label:'Management Quality',id:'exitMgmt',color:'#8a6010'},
+    {label:'Culture / Fit',id:'exitCulture',color:var_green()},
+    {label:'Work-Life Balance / Burnout',id:'exitWLB',color:'var(--mauve)'},
+    {label:'Role Clarity / Scope Creep',id:'exitScope',color:'#5a6020'},
+    {label:'Mission Alignment',id:'exitMission',color:var_green()},
+    {label:'Personal Circumstances',id:'exitPersonal',color:'var(--text-light)'},
+    {label:'Better External Opportunity',id:'exitExternal',color:'var(--sand)'},
+  ];
+  var data=[];
+  for(var i=0;i<reasons.length;i++){
+    var n=getN(reasons[i].id);
+    if(n>0) data.push({label:reasons[i].label,n:n,pct:((n/total)*100).toFixed(0),color:reasons[i].color});
+  }
+  data.sort(function(a,b){return b.n-a.n;});
+  if(!data.length){ document.getElementById('exitOutput').innerHTML='<div style="font-size:12px;color:var(--text-light);padding:12px 0">Enter exit interview data above to see analysis.</div>'; return; }
+  var html='<div class="div"></div><div class="div-lbl">Exit Reason Distribution</div>';
+  for(var j=0;j<data.length;j++){
+    var d=data[j];
+    var width=Math.max(2, parseFloat(d.pct));
+    html+='<div style="margin-bottom:10px">';
+    html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-size:12px;color:var(--text-dark)">'+d.label+'</span><span style="font-family:\'Cormorant Garamond\',serif;font-size:16px;font-weight:600;color:'+d.color+'">'+d.pct+'%</span></div>';
+    html+='<div class="risk-bar"><div class="risk-fill" style="width:'+width+'%;background:'+d.color+'"></div></div>';
+    html+='</div>';
+  }
+  if(data.length>=1){
+    html+='<div class="al al-c" style="margin-top:12px"><span class="al-ic">&#9670;</span><span><strong>Primary driver:</strong> '+data[0].label+' (cited in '+data[0].pct+'% of exits). ';
+    if(data[0].id==='exitComp'||data[0].label.indexOf('Compensation')>-1) html+='Compensation-driven turnover responds to compensation analysis and targeted market adjustments, not culture initiatives.';
+    else if(data[0].label.indexOf('Management')>-1) html+='Management-driven turnover requires manager effectiveness assessment and targeted development — not a culture initiative.';
+    else if(data[0].label.indexOf('Growth')>-1) html+='Growth-driven turnover requires visible promotion pathways and development investment, particularly for tenure-2–5 year employees.';
+    else if(data[0].label.indexOf('Balance')>-1||data[0].label.indexOf('Burnout')>-1) html+='Burnout-driven turnover signals a workload sustainability problem. Headcount, scope, or efficiency intervention is required before culture work will land.';
+    html+='</span></div>';
+  }
+  document.getElementById('exitOutput').innerHTML=html;
+}
+function var_green(){ return 'var(--green)'; }
+
+// ── ENGAGEMENT ANALYSIS ───────────────────────────────────────────────────────
+function calcEngagement(){
+  var orgScore=getN('engOrg'), scale=getN('engScale')||10;
+  var high=getN('engHigh'), low=getN('engLow');
+  if(!orgScore){ document.getElementById('engagementOutput').innerHTML=''; return; }
+  var pctFavorable=Math.round((orgScore/scale)*100);
+  var spread=high&&low?(high-low):0;
+  var html='<div class="div"></div>';
+  html+='<div class="metric-grid">';
+  var fColor=pctFavorable>=75?'var(--green)':pctFavorable>=65?'#8a6010':'var(--crimson)';
+  html+='<div class="metric-card"><div class="metric-val" style="color:'+fColor+'">'+pctFavorable+'%</div><div class="metric-lbl">Favorable Score</div><div class="metric-bench">Nonprofit benchmark: 70–75%</div><div class="metric-flag '+(pctFavorable>=70?'mf-ok':pctFavorable>=60?'mf-warn':'mf-alert')+'">'+(pctFavorable>=70?'Within benchmark':pctFavorable>=60?'Below benchmark':'Significant concern')+'</div></div>';
+  if(spread>0){
+    var spreadPct=Math.round((spread/scale)*100);
+    html+='<div class="metric-card"><div class="metric-val" style="color:var(--crimson)">'+spreadPct+'pts</div><div class="metric-lbl">Manager Score Spread</div><div class="metric-bench">High spread = manager-driven gap</div><div class="metric-flag '+(spreadPct>20?'mf-alert':spreadPct>10?'mf-warn':'mf-ok')+'">'+(spreadPct>20?'Significant variance':'Moderate variance')+'</div></div>';
+  }
+  html+='</div>';
+  var drivers=['engTrust','engGrowth','engRecog','engClarity','engSafety','engWorkload'];
+  var dLabels=['Leadership Trust','Growth & Development','Recognition','Role Clarity','Psychological Safety','Workload Sustainability'];
+  var dData=[];
+  for(var i=0;i<drivers.length;i++){
+    var n=getN(drivers[i]);
+    if(n>0) dData.push({label:dLabels[i],pct:Math.round((n/scale)*100)});
+  }
+  if(dData.length>0){
+    dData.sort(function(a,b){return a.pct-b.pct;});
+    html+='<div class="div"></div><div class="div-lbl">Engagement Drivers — Lowest to Highest</div>';
+    for(var j=0;j<dData.length;j++){
+      var d=dData[j];
+      var c=d.pct>=70?'var(--green)':d.pct>=55?'#8a6010':'var(--crimson)';
+      html+='<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:12px">'+d.label+'</span><span style="font-size:12px;font-weight:400;color:'+c+'">'+d.pct+'%</span></div><div class="risk-bar"><div class="risk-fill" style="width:'+d.pct+'%;background:'+c+'"></div></div></div>';
+    }
+    var lowest=dData[0];
+    html+='<div class="al al-c" style="margin-top:10px"><span class="al-ic">&#9670;</span><span>Lowest-scoring driver: <strong>'+lowest.label+'</strong> at '+lowest.pct+'%. This is the highest-leverage engagement intervention — not an across-the-board initiative.</span></div>';
+  }
+  document.getElementById('engagementOutput').innerHTML=html;
+}
+
+// ── ATTRITION RISK ───────────────────────────────────────────────────────────
+function calcAttritionRisk(){
+  var belowMid=getN('riskBelowMid'), noPromo=getN('riskNoPromo'), lowTenure=getN('riskLowTenure');
+  var engScore=getN('riskEngagement'), engScale=getN('riskEngScale')||10;
+  var lastReview=getN('riskLastReview'), mgrTrained=getN('riskMgrTrained');
+  var priorTurnover=getN('riskPriorTurnover'), vacancy=getN('riskVacancy');
+  var engPct=engScore?(Math.round((engScore/engScale)*100)):0;
+  
+  // Score each risk factor (0-10 each, total out of 80)
+  var scores={};
+  scores.comp = belowMid>40?10:belowMid>25?7:belowMid>15?4:2;
+  scores.growth = noPromo>50?10:noPromo>35?7:noPromo>20?4:2;
+  scores.tenure = lowTenure>40?8:lowTenure>25?5:lowTenure>15?3:1;
+  scores.engagement = engPct&&engPct<55?10:engPct&&engPct<65?6:engPct&&engPct<75?3:1;
+  scores.reviewGap = lastReview>24?8:lastReview>18?6:lastReview>12?3:1;
+  scores.mgmt = mgrTrained>50?7:mgrTrained>30?5:mgrTrained>15?3:1;
+  scores.history = priorTurnover>25?8:priorTurnover>18?5:priorTurnover>12?3:1;
+  scores.vacancy = vacancy>20?7:vacancy>12?5:vacancy>6?3:1;
+  
+  var totalRisk=0;
+  for(var k in scores) totalRisk+=scores[k];
+  var maxRisk=70; // practical max
+  var riskPct=Math.min(100, Math.round((totalRisk/maxRisk)*100));
+  var riskLevel=riskPct>=70?'Critical':riskPct>=50?'High':riskPct>=35?'Moderate':'Low';
+  var riskColor=riskPct>=70?'var(--crimson)':riskPct>=50?'#8a6010':riskPct>=35?'var(--gold)':'var(--green)';
+  
+  var html='<div style="background:linear-gradient(135deg,rgba(27,68,54,0.04),rgba(210,187,159,0.06));border:1px solid var(--border);border-radius:var(--radius-md);padding:20px 22px;margin-bottom:16px">';
+  html+='<div style="display:flex;align-items:flex-end;gap:20px;margin-bottom:14px">';
+  html+='<div><div style="font-size:11px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:4px">Attrition Risk Score</div><div style="font-family:\'Cormorant Garamond\',serif;font-size:48px;font-weight:600;color:'+riskColor+';line-height:1">'+riskPct+'</div></div>';
+  html+='<div style="flex:1;padding-bottom:10px"><div style="font-size:14px;font-weight:400;color:'+riskColor+'">'+riskLevel+' Risk</div><div class="risk-bar" style="height:10px;margin:8px 0"><div class="risk-fill" style="width:'+riskPct+'%;background:'+riskColor+'"></div></div><div style="font-size:11px;color:var(--text-light)">Composite score across 8 structural risk factors</div></div>';
+  html+='</div></div>';
+  
+  html+='<div class="div-lbl">Risk Factor Breakdown</div>';
+  var factors=[
+    {label:'Compensation positioning',score:scores.comp,note:belowMid?belowMid+'% below market midpoint':'No data entered'},
+    {label:'Growth pathway stagnation',score:scores.growth,note:noPromo?noPromo+'% with no promotion in 3+ years':'No data entered'},
+    {label:'New employee concentration',score:scores.tenure,note:lowTenure?lowTenure+'% with tenure under 2 years':'No data entered'},
+    {label:'Engagement indicator',score:scores.engagement,note:engPct?engPct+'% favorable':'No data entered'},
+    {label:'Compensation review recency',score:scores.reviewGap,note:lastReview?lastReview+' months since last review':'No data entered'},
+    {label:'Manager capability gap',score:scores.mgmt,note:mgrTrained?mgrTrained+'% of managers without training':'No data entered'},
+    {label:'Historical turnover signal',score:scores.history,note:priorTurnover?priorTurnover+'% prior year rate':'No data entered'},
+    {label:'Vacancy load on remaining staff',score:scores.vacancy,note:vacancy?vacancy+'% open positions':'No data entered'},
+  ];
+  html+='<div class="factor-grid">';
+  for(var f=0;f<factors.length;f++){
+    var fc=factors[f];
+    var fColor2=fc.score>=8?'var(--crimson)':fc.score>=6?'#8a6010':fc.score>=4?'var(--gold)':'var(--green)';
+    html+='<div class="factor-item"><div class="factor-lbl">'+fc.label+'</div><div style="display:flex;align-items:baseline;gap:8px;margin-bottom:3px"><div class="factor-val" style="color:'+fColor2+'">'+fc.score+'</div><span style="font-size:10px;color:var(--text-light)">/ 10</span></div><div style="font-size:10.5px;color:var(--text-light)">'+fc.note+'</div></div>';
+  }
+  html+='</div>';
+  document.getElementById('attritionOutput').innerHTML=html;
+}
+
+// ── LABOR DEMAND ─────────────────────────────────────────────────────────────
+function calcLaborDemand(){
+  var current=getN('ldCurrentHC'), growth=getN('ldBudgetGrowth');
+  var period=getN('ldPeriod')||12, attrition=getN('ldAttrition');
+  var productivity=getN('ldProductivity'), newPrograms=getN('ldNewPrograms');
+  if(!current){ document.getElementById('laborDemandOutput').innerHTML=''; return; }
+  
+  var years=period/12;
+  var growthFactor=growth?(1+(growth/100)*years):1;
+  var productivityFactor=productivity?(1-(productivity/100)*years):1;
+  var grossNeed=Math.round(current*growthFactor*productivityFactor)+newPrograms;
+  var attritionReplacement=Math.round(current*(attrition/100||0.18)*years);
+  var netNew=Math.max(0,grossNeed-current);
+  var totalHires=netNew+attritionReplacement;
+  
+  var html='<div class="metric-grid">';
+  html+='<div class="metric-card"><div class="metric-val" style="color:var(--green)">'+grossNeed+'</div><div class="metric-lbl">Projected Headcount Need</div><div class="metric-bench">In '+period+' months</div></div>';
+  html+='<div class="metric-card"><div class="metric-val" style="color:var(--gold)">'+netNew+'</div><div class="metric-lbl">Net New Positions</div><div class="metric-bench">Growth-driven additions</div></div>';
+  html+='<div class="metric-card"><div class="metric-val" style="color:var(--crimson)">'+totalHires+'</div><div class="metric-lbl">Total Hires Required</div><div class="metric-bench">Net new + attrition backfill</div></div>';
+  html+='</div>';
+  html+='<div class="al al-i"><span class="al-ic">ℹ</span><span>Projected need of <strong>'+grossNeed+'</strong> ('+netNew+' net new + '+attritionReplacement+' attrition backfill = '+totalHires+' total hires over '+period+' months). At an average of 60 days to fill, recruiting should be actively working on <strong>'+Math.round(totalHires/(period/2))+' concurrent searches</strong> per month to hit this pace.</span></div>';
+  document.getElementById('laborDemandOutput').innerHTML=html;
+}
+
+// ── SUCCESSION ───────────────────────────────────────────────────────────────
+
+function injectActionBar(html,title,filename,docType){var css='<style>.pb{position:fixed;top:0;left:0;right:0;z-index:9999;background:#1b4436;padding:10px 28px;display:flex;gap:10px;align-items:center;box-shadow:0 2px 12px rgba(0,0,0,0.3);}.pb-title{font-family:Georgia,serif;font-size:11pt;color:rgba(245,237,228,0.75);flex:1;font-weight:400;}.pb-btn{font-family:Arial,sans-serif;font-size:8.5pt;padding:7px 16px;border:none;border-radius:3px;cursor:pointer;font-weight:500;}.pb-gold{background:#D99E32;color:#122e24;}.pb-ghost{background:rgba(255,255,255,0.09);color:rgba(245,237,228,0.82);border:1px solid rgba(255,255,255,0.14);}.pb-spacer{height:52px;}@media print{.pb,.pb-spacer{display:none!important;}}</style>';var bar='<div class="pb"><span class="pb-title">'+title+'</span><button class="pb-btn pb-gold" onclick="window.print()">&#8681; Print / Save as PDF</button><button class="pb-btn pb-ghost" onclick="plDl()">&#8659; Download</button><button class="pb-btn pb-ghost" onclick="plSave()">&#9729; Save to Plinth</button><button class="pb-btn pb-ghost" onclick="window.close()" style="margin-left:4px">&#10005;</button></div><div class="pb-spacer"></div>';var js='<scr'+'ipt>var _pf="'+filename+'",_pt="'+title+'",_pd="'+docType+'";function plDl(){var blob=new Blob([document.documentElement.outerHTML],{type:"text/html"});var url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download=_pf;a.click();setTimeout(function(){URL.revokeObjectURL(url);},1200);}function plSave(){var d=[];try{d=JSON.parse(localStorage.getItem("plinth_docs")||"[]");}catch(e){}d.push({id:"doc_"+Date.now(),title:_pt,type:_pd,date:new Date().toISOString()});localStorage.setItem("plinth_docs",JSON.stringify(d));var b=document.querySelectorAll(".pb-ghost");if(b[1]){b[1].textContent="\u2713 Saved to Plinth";b[1].style.background="rgba(27,68,54,0.5)";}}</s'+'cript>';html=html.replace('<body>','<body>'+bar);html=html.replace('</style></head>',css+'</style></head>');html+=js;return html;}
+function openReport(html,title,filename,docType){html=injectActionBar(html,title,filename,docType);var win=window.open('','_blank');win.document.write(html);win.document.close();}
+function reportBase(org,title,subtitle,today){var h='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+title+'</title><style>body{font-family:Georgia,serif;font-size:10.5pt;color:#1a1a1a;max-width:720px;margin:0 auto;padding:48px 40px;line-height:1.8;}h1{font-size:22pt;font-weight:400;color:#1b4436;margin-bottom:4px;}h2{font-size:13pt;font-weight:600;color:#1b4436;margin:28px 0 8px;padding-bottom:5px;border-bottom:1px solid #e0d8cf;}h3{font-size:11pt;font-weight:600;color:#1a1a1a;margin:18px 0 6px;}p{margin:0 0 12px;}ul{margin:0 0 12px;padding-left:18px;}li{margin-bottom:5px;}table{width:100%;border-collapse:collapse;margin-bottom:16px;}th{background:#1b4436;color:white;padding:8px 12px;font-size:9pt;text-align:left;letter-spacing:0.04em;}td{padding:8px 12px;border-bottom:1px solid #e0d8cf;font-size:10pt;vertical-align:top;}.metric{display:inline-block;border:1px solid #e0d8cf;border-radius:4px;padding:12px 20px;margin:6px 6px 6px 0;text-align:center;min-width:120px;}.metric-n{font-size:22pt;color:#1b4436;font-weight:400;line-height:1.1;margin-bottom:3px;}.metric-l{font-size:8pt;color:#777;text-transform:uppercase;letter-spacing:0.1em;}.flag-r{color:#A42F30;font-weight:600;}.flag-w{color:#8a6010;font-weight:600;}.flag-g{color:#1b4436;font-weight:600;}.note{background:#f9f5f0;border-left:3px solid #D99E32;padding:10px 14px;margin:10px 0;font-size:9.5pt;color:#555;}.finding{background:#f5f0ea;border-left:3px solid #1b4436;padding:12px 16px;margin:12px 0;font-size:9.5pt;color:#333;}.conf{font-size:8pt;color:#A42F30;border:1px solid #A42F30;padding:4px 12px;display:inline-block;margin-bottom:24px;letter-spacing:0.08em;text-transform:uppercase;}@page{size:letter;margin:1in;}@media print{body{padding:0;}}</style></head><body>';h+='<div class="conf">Confidential &nbsp;|&nbsp; Advisor Use Only</div>';h+='<h1>'+org+'</h1><p style="font-size:11pt;color:#555;margin-bottom:3px">'+title+'</p>';if(subtitle)h+='<p style="font-size:9.5pt;color:#777;margin-bottom:3px">'+subtitle+'</p>';h+='<p style="font-size:9pt;color:#999;margin-bottom:30px">'+today+' &nbsp;|&nbsp; The Coherence Collective, LLC &nbsp;|&nbsp; Plinth</p>';return h;}
+function generateTurnoverReport(){var org=(profile&&profile.legalName)||'Organization';var today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});var begin=getN('tBegin'),end=getN('tEnd'),total=getN('tTotal'),volReg=getN('tVolReg'),volNon=getN('tVolNon'),invPerf=getN('tInvPerf'),invRIF=getN('tInvRIF'),contract=getN('tContract');var cotSalary=getN('cotSalary'),cotRole=getV('cotRoleType');var avg=(begin+end)/2||1;function r(n){return((n/avg)*100).toFixed(1);}var totalRate=r(total),volRegRate=r(volReg);var multipliers={frontline:0.43,professional:0.74,manager:1.03,specialist:1.08,executive:1.40};var costPerExit=cotSalary&&cotRole?Math.round(cotSalary*(multipliers[cotRole]||0.74)):0;var annualTurnCost=costPerExit?Math.round(volReg*costPerExit):0;var h=reportBase(org,'Turnover Analysis Report','12-Month Workforce Attrition Summary',today);h+='<h2>Summary</h2><div>';h+='<div class="metric"><div class="metric-n '+(parseFloat(totalRate)>28?'flag-r':parseFloat(totalRate)>22?'flag-w':'flag-g')+'">'+totalRate+'%</div><div class="metric-l">Total Turnover</div></div>';h+='<div class="metric"><div class="metric-n '+(parseFloat(volRegRate)>12?'flag-r':parseFloat(volRegRate)>8?'flag-w':'flag-g')+'">'+volRegRate+'%</div><div class="metric-l">Regrettable Turnover</div></div>';if(annualTurnCost)h+='<div class="metric"><div class="metric-n flag-r">$'+annualTurnCost.toLocaleString()+'</div><div class="metric-l">Est. Annual Cost</div></div>';h+='</div>';h+='<h2>Turnover Breakdown</h2><table><thead><tr><th>Separation Type</th><th>Count</th><th>Rate</th><th>Benchmark</th></tr></thead><tbody>';h+='<tr><td>Total Separations</td><td>'+total+'</td><td>'+totalRate+'%</td><td>18\u201322% nonprofit avg</td></tr>';h+='<tr><td>Voluntary \u2014 Regrettable</td><td>'+volReg+'</td><td>'+volRegRate+'%</td><td>Under 8% target</td></tr>';h+='<tr><td>Voluntary \u2014 Non-Regrettable</td><td>'+volNon+'</td><td>'+r(volNon)+'%</td><td>Expected attrition</td></tr>';h+='<tr><td>Involuntary \u2014 Performance</td><td>'+invPerf+'</td><td>'+r(invPerf)+'%</td><td>Managed exits</td></tr>';h+='<tr><td>Involuntary \u2014 RIF</td><td>'+invRIF+'</td><td>'+r(invRIF)+'%</td><td>Structural reduction</td></tr>';h+='<tr><td>End of Contract</td><td>'+contract+'</td><td>'+r(contract)+'%</td><td>Planned endings</td></tr></tbody></table>';h+='<p style="font-size:9pt;color:#777">Average headcount: '+avg.toFixed(0)+'. Period: beginning '+begin+', ending '+end+'.</p>';h+='<h2>Interpretation</h2>';var interp='';if(parseFloat(totalRate)>28)interp+='<p>Total turnover of '+totalRate+'% is in the critical range. The organization is replacing more than one in four employees annually. At this level, the cost in institutional knowledge, mission continuity, and client relationship integrity exceeds the direct financial cost. A root cause analysis focused on the top two or three exit drivers is the required first step before any retention investment is made.</p>';else if(parseFloat(totalRate)>22)interp+='<p>Total turnover of '+totalRate+'% is elevated relative to the nonprofit benchmark of 18\u201322%. Identify whether turnover is concentrated in specific departments, tenure bands, or under specific managers before designing interventions.</p>';else interp+='<p>Total turnover of '+totalRate+'% is within nonprofit benchmark range. The more important metric is regrettable voluntary turnover of '+volRegRate+'%, which represents exits the organization would have reversed if able.</p>';if(parseFloat(volRegRate)>12)interp+='<p>Regrettable voluntary turnover of '+volRegRate+'% significantly exceeds the 8% target. This is the metric that should drive retention investment decisions \u2014 not total turnover, which includes non-correctable attrition.</p>';if(annualTurnCost)interp+='<p>Based on an average departure cost of $'+costPerExit.toLocaleString()+' per regrettable exit, the organization is spending an estimated $'+annualTurnCost.toLocaleString()+' annually on regrettable turnover. This is the floor for evaluating retention investment ROI.</p>';h+=interp;h+='<h2>Recommended Next Steps</h2><ul>';if(parseFloat(volRegRate)>8)h+='<li>Conduct structured stay interviews with all employees in the 1\u20134 year tenure band within 60 days.</li>';h+='<li>Segment exit interview data by department and manager to identify where regrettable turnover is concentrated.</li>';h+='<li>Compare voluntary regrettable exits against compa-ratio data to test the compensation hypothesis.</li>';if(annualTurnCost)h+='<li>Present the $'+annualTurnCost.toLocaleString()+' annual turnover cost to the board alongside any proposed retention investment as a break-even analysis.</li>';h+='<li>Set a regrettable turnover target for the next 12 months with quarterly review built into HR reporting.</li></ul>';h+='<p style="font-size:8pt;color:#999;margin-top:36px;padding-top:10px;border-top:1px solid #e0d8cf">Generated via Plinth by The Coherence Collective, LLC. For advisor and leadership use only.</p></body></html>';openReport(h,'Turnover Analysis Report \u2014 '+org,'turnover-report.html','Turnover Report');}
+
+function generateDiagnosticReport(){var org=(profile&&profile.legalName)||'Organization';var today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});var exitTotal=getN('exitTotal');var exitFields=[['Compensation Below Market',getN('exitComp')],['Limited Growth / Advancement',getN('exitGrowth')],['Management Quality',getN('exitMgmt')],['Culture / Fit',getN('exitCulture')],['Work-Life Balance / Burnout',getN('exitWLB')],['Role Clarity / Scope Creep',getN('exitScope')],['Mission Alignment',getN('exitMission')],['Personal Circumstances',getN('exitPersonal')],['Better External Opportunity',getN('exitExternal')]];exitFields.sort(function(a,b){return b[1]-a[1];});var engOrg=getN('engOrg'),engScale=getN('engScale')||10,engHigh=getN('engHigh'),engLow=getN('engLow');var engPct=engOrg?Math.round((engOrg/engScale)*100):0;var engSpread=engHigh&&engLow?Math.round(((engHigh-engLow)/engScale)*100):0;var drivers=[['Leadership Trust',getN('engTrust')],['Growth & Development',getN('engGrowth')],['Recognition',getN('engRecog')],['Role Clarity',getN('engClarity')],['Psychological Safety',getN('engSafety')],['Workload Sustainability',getN('engWorkload')]];drivers=drivers.filter(function(d){return d[1]>0;});drivers.sort(function(a,b){return a[1]-b[1];});var h=reportBase(org,'Diagnostic Analytics Report','Root Cause Analysis \u2014 Turnover & Engagement',today);h+='<h2>Overview</h2><p>This report identifies the root causes behind workforce attrition and engagement patterns. Diagnostic analytics explains the why behind key metrics, enabling targeted interventions rather than broad programs that address symptoms.</p>';if(exitTotal>0){h+='<h2>Exit Interview Analysis</h2><p>Based on '+exitTotal+' exit interview'+(exitTotal>1?'s':'')+' analyzed.</p><table><thead><tr><th>Exit Reason</th><th>Count</th><th>% of Exits</th></tr></thead><tbody>';var interps={'Compensation Below Market':'Compensation exits respond to market adjustments and compensation analysis, not culture initiatives.','Limited Growth / Advancement':'Growth exits concentrate in the 2\u20134 year tenure band. The intervention is visible career pathways and documented development plans.','Management Quality':'Management exits require manager assessment and individual plans for the bottom-quartile managers.','Culture / Fit':'Segment by demographic and tenure to distinguish inclusion failures from expectations misalignment.','Work-Life Balance / Burnout':'Burnout exits signal a workload sustainability problem. Headcount or scope intervention is required before well-being programming.','Role Clarity / Scope Creep':'Conduct a role audit. Scope creep without compensation adjustment is a compensation problem with a different name.','Mission Alignment':'Mission exits in long-tenure employees may signal organizational drift rather than personal change.','Personal Circumstances':'Non-correctable from an organizational standpoint.','Better External Opportunity':'Meaningful when correlated with below-market compensation or limited growth pathways.'};for(var i=0;i<exitFields.length;i++){if(exitFields[i][1]===0)continue;var pct=((exitFields[i][1]/exitTotal)*100).toFixed(0);h+='<tr><td>'+exitFields[i][0]+'</td><td>'+exitFields[i][1]+'</td><td>'+pct+'%</td></tr>';}h+='</tbody></table>';if(exitFields[0]&&exitFields[0][1]>0){h+='<div class="finding"><strong>Primary exit driver: '+exitFields[0][0]+'</strong> \u2014 cited in '+((exitFields[0][1]/exitTotal)*100).toFixed(0)+'% of exits. Intervention must address this driver specifically before broader retention programming will be credible.</div>';}}if(engOrg>0){h+='<h2>Engagement Analysis</h2><p>Org-wide engagement: <strong>'+engPct+'% favorable</strong> (benchmark: 70\u201375%). ';if(engPct>=70)h+='Within benchmark range.';else if(engPct>=60)h+='Below benchmark. This is a leading indicator of elevated voluntary turnover within 12\u201318 months.';else h+='Significantly below benchmark. Predicts elevated regrettable turnover and difficulty attracting talent.';h+='</p>';if(engSpread>0){h+='<p>Manager score spread: <strong>'+engSpread+' percentage points</strong>. ';if(engSpread>20)h+='This magnitude is diagnostic of a manager-driven problem, not an organizational culture problem.';else if(engSpread>10)h+='Meaningful manager variance. Identify patterns in the highest-scoring teams.';h+='</p>';}if(drivers.length>0){h+='<h3>Lowest-Scoring Engagement Drivers</h3><table><thead><tr><th>Driver</th><th>Favorable %</th></tr></thead><tbody>';for(var d=0;d<drivers.length;d++){var dpct=Math.round((drivers[d][1]/engScale)*100);h+='<tr><td>'+drivers[d][0]+'</td><td class="'+(dpct>=70?'flag-g':dpct>=55?'flag-w':'flag-r')+'">'+dpct+'%</td></tr>';}h+='</tbody></table>';h+='<div class="finding"><strong>Highest-leverage driver: '+drivers[0][0]+'</strong> at '+Math.round((drivers[0][1]/engScale)*100)+'% favorable. Address the root cause of this specific driver before launching any broader engagement initiative.</div>';}}h+='<h2>Diagnostic Conclusions</h2>';var hasData=(exitTotal>0||engOrg>0);if(!hasData){h+='<p>Insufficient data. Complete the Diagnostic tab fields.</p>';}else{h+='<p>Primary drivers requiring organizational intervention:</p><ul>';if(exitFields[0]&&exitFields[0][1]>0)h+='<li><strong>'+exitFields[0][0]+'</strong> \u2014 leading cited departure reason</li>';if(exitFields[1]&&exitFields[1][1]>0)h+='<li><strong>'+exitFields[1][0]+'</strong> \u2014 second-highest cited reason</li>';if(drivers.length>0)h+='<li><strong>'+drivers[0][0]+'</strong> \u2014 lowest-scoring engagement driver</li>';if(engSpread>20)h+='<li><strong>Manager effectiveness variance</strong> \u2014 '+engSpread+'-point spread signals a manager-driven problem</li>';h+='</ul><p>The above drivers should inform specific interventions. Generic programming that does not address the identified causes will not move the metrics.</p>';}h+='<p style="font-size:8pt;color:#999;margin-top:36px;padding-top:10px;border-top:1px solid #e0d8cf">Generated via Plinth by The Coherence Collective, LLC.</p></body></html>';openReport(h,'Diagnostic Analytics Report \u2014 '+org,'diagnostic-report.html','Diagnostic Report');}
+
+function generatePredictiveReport(){var org=(profile&&profile.legalName)||'Organization';var today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});var belowMid=getN('riskBelowMid'),noPromo=getN('riskNoPromo'),lowTenure=getN('riskLowTenure');var engScore=getN('riskEngagement'),engScale=getN('riskEngScale')||10;var lastReview=getN('riskLastReview'),mgrTrained=getN('riskMgrTrained'),priorTurnover=getN('riskPriorTurnover'),vacancy=getN('riskVacancy');var engPct=engScore?Math.round((engScore/engScale)*100):0;var scores={comp:belowMid>40?10:belowMid>25?7:belowMid>15?4:2,growth:noPromo>50?10:noPromo>35?7:noPromo>20?4:2,tenure:lowTenure>40?8:lowTenure>25?5:lowTenure>15?3:1,engagement:engPct&&engPct<55?10:engPct&&engPct<65?6:engPct&&engPct<75?3:1,reviewGap:lastReview>24?8:lastReview>18?6:lastReview>12?3:1,mgmt:mgrTrained>50?7:mgrTrained>30?5:mgrTrained>15?3:1,history:priorTurnover>25?8:priorTurnover>18?5:priorTurnover>12?3:1,vacancy:vacancy>20?7:vacancy>12?5:vacancy>6?3:1};var totalRisk=0;for(var k in scores)totalRisk+=scores[k];var riskPct=Math.min(100,Math.round((totalRisk/70)*100));var riskLevel=riskPct>=70?'Critical':riskPct>=50?'High':riskPct>=35?'Moderate':'Low';var ldHC=getN('ldCurrentHC'),ldGrowth=getN('ldBudgetGrowth'),ldPeriod=getN('ldPeriod')||12,ldAttrition=getN('ldAttrition'),ldNew=getN('ldNewPrograms');var years=ldPeriod/12;var grossNeed=ldHC?Math.round(ldHC*(1+(ldGrowth/100||0)*years))+ldNew:0;var attrReplacement=ldHC?Math.round(ldHC*(ldAttrition/100||0.18)*years):0;var netNew=Math.max(0,grossNeed-ldHC);var keyPerson=getN('succKeyPerson'),noSucc=getN('succNoSuccessor'),succReady=getN('succReadiness');var h=reportBase(org,'Predictive Analytics Report','Workforce Risk Forecast & Demand Planning',today);h+='<h2>Attrition Risk Assessment</h2><p>Composite risk score: <strong class="'+(riskPct>=70?'flag-r':riskPct>=50?'flag-w':'flag-g')+'">'+riskPct+'/100 \u2014 '+riskLevel+'</strong></p><table><thead><tr><th>Risk Factor</th><th>Score</th><th>Organizational Data</th></tr></thead><tbody>';var factorData=[['Compensation positioning',scores.comp,belowMid?(belowMid+'% below market midpoint'):'No data'],['Growth stagnation',scores.growth,noPromo?(noPromo+'% no promotion in 3+ years'):'No data'],['New employee concentration',scores.tenure,lowTenure?(lowTenure+'% tenure under 2 years'):'No data'],['Engagement indicator',scores.engagement,engPct?(engPct+'% favorable'):'No data'],['Compensation review recency',scores.reviewGap,lastReview?(lastReview+' months since last review'):'No data'],['Manager capability gap',scores.mgmt,mgrTrained?(mgrTrained+'% managers without training'):'No data'],['Historical turnover signal',scores.history,priorTurnover?(priorTurnover+'% prior year rate'):'No data'],['Vacancy load',scores.vacancy,vacancy?(vacancy+'% open positions'):'No data']];factorData.sort(function(a,b){return b[1]-a[1];});for(var f=0;f<factorData.length;f++){var fc=factorData[f];h+='<tr><td>'+fc[0]+'</td><td class="'+(fc[1]>=8?'flag-r':fc[1]>=6?'flag-w':'flag-g')+'">'+fc[1]+'/10</td><td>'+fc[2]+'</td></tr>';}h+='</tbody></table>';if(riskPct>=50)h+='<div class="finding">Elevated voluntary turnover is likely within 12\u201318 months if current conditions remain unchanged. Intervention on the top-scoring factors will have the greatest near-term risk reduction impact.</div>';else if(riskPct>=35)h+='<div class="note">Moderate attrition risk. Conditions warrant monitoring and targeted improvement on the highest-scoring factors.</div>';else h+='<div class="note">Low structural attrition risk based on available data.</div>';if(ldHC>0){h+='<h2>Labor Demand Forecast</h2><p>Based on current headcount of '+ldHC+', '+ldGrowth+'% projected budget growth, over a '+ldPeriod+'-month horizon:</p><div><div class="metric"><div class="metric-n flag-g">'+grossNeed+'</div><div class="metric-l">Projected Need</div></div><div class="metric"><div class="metric-n flag-w">'+netNew+'</div><div class="metric-l">Net New Positions</div></div><div class="metric"><div class="metric-n flag-r">'+(netNew+attrReplacement)+'</div><div class="metric-l">Total Hires Required</div></div></div><p style="margin-top:14px">Meeting this demand requires managing approximately <strong>'+Math.round((netNew+attrReplacement)/(ldPeriod/2))+' concurrent open searches per month</strong>. If current hiring capacity falls short of this pace, the growth timeline or headcount plan requires adjustment.</p>';}if(keyPerson>0||noSucc>0){h+='<h2>Succession Risk</h2>';if(keyPerson>0)h+='<p><strong class="flag-r">'+keyPerson+' key-person risk position'+(keyPerson>1?'s':'')+' identified.</strong> A knowledge transfer plan should be active for each of these roles now, independent of whether departure is anticipated.</p>';if(noSucc>0)h+='<p><strong>'+noSucc+' critical role'+(noSucc>1?'s':'')+' without an internal succession plan.</strong> '+(succReady?'At '+succReady+' months average readiness timeline, '+Math.round(noSucc*succReady)+' total months of development investment are required to close the gap. ':'')+'If any of these roles become vacant without a ready successor, external fill time will extend the disruption window significantly.</p>';}h+='<h2>Summary Forecast</h2><ul>';if(riskPct>=50)h+='<li>Elevated voluntary turnover probability under current organizational conditions</li>';if(netNew>0)h+='<li>Net headcount growth requirement of '+netNew+' positions over '+ldPeriod+' months</li>';if(attrReplacement>0)h+='<li>Attrition backfill requirement of approximately '+attrReplacement+' hires</li>';if(keyPerson>0)h+='<li>Key-person departure risk in '+keyPerson+' critical role'+(keyPerson>1?'s':'')+' without knowledge transfer plans</li>';h+='</ul><p>Intervening on the highest-scoring risk factors before these conditions develop into exits or operational disruptions is significantly less costly than responding after.</p>';h+='<p style="font-size:8pt;color:#999;margin-top:36px;padding-top:10px;border-top:1px solid #e0d8cf">Generated via Plinth by The Coherence Collective, LLC. Predictive indicators are based on structural factors and sector patterns, not guarantees of future outcomes.</p></body></html>';openReport(h,'Predictive Analytics Report \u2014 '+org,'predictive-report.html','Predictive Report');}
+
+function generatePrescriptiveReport(){var org=(profile&&profile.legalName)||'Organization';var today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});var hc=getN('mHeadcount'),sep=getN('mSeparations'),vol=getN('mVoluntary');var turnRate=hc?((sep/hc)*100):0;var riskBelowMid=getN('riskBelowMid'),riskNoPromo=getN('riskNoPromo');var riskEng=getN('riskEngagement'),riskEngScale=getN('riskEngScale')||10;var engPct=riskEng?Math.round((riskEng/riskEngScale)*100):0;var exitComp=getN('exitComp'),exitGrowth=getN('exitGrowth'),exitMgmt=getN('exitMgmt'),exitTotal=getN('exitTotal');var keyPerson=getN('succKeyPerson'),noSucc=getN('succNoSuccessor');var eqWomen=getN('eqWomen'),eqMen=getN('eqMen'),eqColor=getN('eqColor'),eqWhite=getN('eqWhite');var roiExits=getN('roiExits'),roiSalary=getN('roiAvgSalary'),roiInvest=getN('roiInvestment'),roiReduce=getN('roiReductionPct');var multipliers={frontline:0.43,professional:0.74,manager:1.03,specialist:1.08,executive:1.40};var roiCostPerExit=roiSalary&&getV('roiRoleType')?Math.round(roiSalary*(multipliers[getV('roiRoleType')]||0.74)):0;var roiCurrentCost=roiExits&&roiCostPerExit?Math.round(roiExits*roiCostPerExit):0;var roiSavings=roiInvest&&roiReduce&&roiCurrentCost?Math.round(roiCurrentCost*(roiReduce/100)):0;var roiROI=roiInvest&&roiSavings?Math.round(((roiSavings-roiInvest)/roiInvest)*100):0;var h=reportBase(org,'Prescriptive Analytics \u2014 Advisory Memo','Priority Workforce Recommendations',today);h+='<h2>Purpose</h2><p>This document presents prescriptive recommendations derived from workforce analytics data. Each recommendation names a specific issue, a specific action, the expected impact, and an implementation timeline. Recommendations are sorted by priority. Implement them in the order presented \u2014 addressing the highest-priority conditions first produces the highest aggregate return.</p>';if(!hc){h+='<div class="note">Insufficient data to generate recommendations. Complete the Workforce Snapshot and at least one other module.</div></body></html>';openReport(h,'Prescriptive Report \u2014 '+org,'prescriptive-report.html','Prescriptive Report');return;}var recs=[];if(riskBelowMid>25||(exitTotal&&(exitComp/exitTotal)>0.3))recs.push({p:'Critical',c:'flag-r',issue:'Compensation below market is the primary driver of current turnover risk',action:'Commission a compensation benchmarking study. Develop a 12\u201318 month market adjustment roadmap prioritizing highest-flight-risk roles. Present the investment requirement to the board alongside the annual turnover cost as a break-even analysis. Communicate the roadmap to staff \u2014 credible communication of a plan reduces attrition before a dollar is spent.',impact:'A market adjustment roadmap, communicated transparently, begins reducing flight risk immediately. Full implementation typically reduces compensation-driven turnover by 30\u201350% within 18 months.',timeline:'30 days: benchmarking study initiated. 90 days: adjustment plan complete. 6 months: phase-one adjustments implemented.'});if(turnRate>22)recs.push({p:'Critical',c:'flag-r',issue:'Total turnover of '+turnRate.toFixed(1)+'% exceeds the 22% sector threshold',action:'Implement structured stay interviews with all employees in the 1\u20134 year tenure band within 60 days. Segment exit data by department and manager. Build a turnover reduction target into leadership scorecards and quarterly HR reporting.',impact:'Stay interviews reduce voluntary turnover by 8\u201312% when followed by documented action on the top two concerns raised. The process also signals to high-performers that their retention is a priority.',timeline:'30 days: stay interview protocol. 60 days: complete first wave. 90 days: findings actioned.'});if(exitTotal&&(exitMgmt/exitTotal)>0.25)recs.push({p:'High',c:'flag-w',issue:'Management quality cited in '+(((exitMgmt/exitTotal)*100).toFixed(0))+'% of exits',action:'Conduct manager effectiveness assessments. Identify the bottom quartile by direct report engagement and turnover. Develop individual performance plans for those managers. Do not invest in org-wide management training until the bottom-quartile managers have specific improvement plans in place.',impact:'Addressing the bottom 1\u20132 managers accounts for the majority of recoverable management-driven turnover at most organizations.',timeline:'60 days: assessments. 90 days: individual plans. 6 months: reassess, escalate if no improvement.'});if(engPct>0&&engPct<65)recs.push({p:'High',c:'flag-w',issue:'Engagement at '+engPct+'% favorable is below the 65% threshold',action:'Identify the two lowest-scoring engagement drivers and build targeted interventions. Do not launch org-wide culture programming. If leadership trust is low, the intervention is leadership behavior change. If growth is low, the intervention is visible career pathways.',impact:'Each 5-point improvement in engagement favorable score correlates with approximately 1\u20132 points of reduction in voluntary turnover.',timeline:'30 days: driver analysis. 60 days: intervention plan. 90 days: initial actions visible to employees.'});if(keyPerson>0)recs.push({p:'High',c:'flag-w',issue:keyPerson+' key-person risk position'+(keyPerson>1?'s':'')+' identified',action:'For each role: document the function, institutional relationships, and decision-making authority. Identify a cross-training partner. Activate a 90-day knowledge transfer plan. This is a risk management action, not a succession planning exercise.',impact:'Active knowledge transfer plans reduce disruption duration from 6\u201312 months to 2\u20134 months when a departure occurs.',timeline:'Immediate: brief role holders. 30 days: documentation. 90 days: cross-training active.'});if(riskNoPromo>35||(exitTotal&&(exitGrowth/exitTotal)>0.3))recs.push({p:'High',c:'flag-w',issue:'Growth and advancement pathways are insufficient to retain developing staff',action:'Audit the career ladder. Create lateral development tracks for roles where vertical promotion is not near-term feasible. Communicate these explicitly to employees in the 2\u20134 year tenure band.',impact:'Visible pathways reduce departure intent among 2\u20134 year tenure employees by approximately 20\u201325%.',timeline:'60 days: career ladder audit. 90 days: lateral tracks designed. 6 months: communicated.'});if((eqWomen&&eqMen&&(eqWomen/eqMen)<0.92)||(eqColor&&eqWhite&&(eqColor/eqWhite)<0.92))recs.push({p:'Moderate',c:'flag-g',issue:'Raw pay gaps indicate a formal equity analysis is warranted',action:'Engage employment counsel and a compensation specialist for a controlled equity analysis. Do not communicate findings until the analysis is complete and legally reviewed.',impact:'Early remediation is significantly less costly than post-complaint remediation and improves retention among affected populations.',timeline:'30 days: engage counsel. 60\u201390 days: analysis complete. Decision before next merit cycle.'});if(recs.length===0){h+='<div class="note">No critical or high-priority thresholds exceeded based on available data. Enter additional data across the diagnostic and predictive modules for more specific analysis.</div>';}else{h+='<p>The following '+recs.length+' recommendation'+(recs.length>1?'s have':'has')+' been identified based on current organizational data, in priority order.</p>';for(var i=0;i<recs.length;i++){var rec=recs[i];h+='<h3 style="color:'+(rec.c==='flag-r'?'#A42F30':rec.c==='flag-w'?'#8a6010':'#1b4436')+'">&#9679; '+rec.p+' Priority</h3>';h+='<p><strong>Issue:</strong> '+rec.issue+'</p>';h+='<table style="margin-bottom:8px"><tbody><tr><td style="font-weight:600;width:130px;color:#555">Action</td><td>'+rec.action+'</td></tr><tr><td style="font-weight:600;color:#555">Expected Impact</td><td>'+rec.impact+'</td></tr><tr><td style="font-weight:600;color:#555">Timeline</td><td>'+rec.timeline+'</td></tr></tbody></table>';}}if(roiROI>0){h+='<h2>Retention Investment ROI</h2><p>Modeled investment of $'+roiInvest.toLocaleString()+' with '+roiReduce+'% expected reduction in regrettable exits:</p><div><div class="metric"><div class="metric-n flag-r">$'+roiCurrentCost.toLocaleString()+'</div><div class="metric-l">Current Annual Turnover Cost</div></div><div class="metric"><div class="metric-n flag-g">$'+roiSavings.toLocaleString()+'</div><div class="metric-l">Projected Annual Savings</div></div><div class="metric"><div class="metric-n flag-g">'+roiROI+'%</div><div class="metric-l">ROI</div></div></div><p style="margin-top:14px">The question for the board is not whether to invest in retention \u2014 it is whether the cost of inaction exceeds the cost of intervention. At these numbers, it does.</p>';}h+='<h2>Implementation Guidance</h2><p>Implement in the priority order above. Compensation credibility must be established before culture or engagement programming will be received as genuine. Every recommendation above should have a named owner, a defined deliverable, a deadline, and a board-level review date.</p>';h+='<p style="font-size:8pt;color:#999;margin-top:36px;padding-top:10px;border-top:1px solid #e0d8cf">Generated via Plinth by The Coherence Collective, LLC. These recommendations are based on data entered by the advisor. They do not constitute legal, financial, or HR compliance advice.</p></body></html>';openReport(h,'Prescriptive Analytics Report \u2014 '+org,'prescriptive-report.html','Prescriptive Report');}
+
+function generateEquityReport(){var org=(profile&&profile.legalName)||'Organization';var today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});var women=getN('eqWomen'),men=getN('eqMen'),color=getN('eqColor'),white=getN('eqWhite'),overall=getN('eqOverall');var promoW=getN('promoWomen'),promoM=getN('promoMen'),promoC=getN('promoColor');var h=reportBase(org,'Pay Equity Indicators Report','Aggregate Screening \u2014 For Preliminary Assessment Only',today);h+='<div class="note"><strong>Limitation:</strong> This report presents raw salary averages without statistical controls for job level, function, or tenure. A gap indicates that a formal controlled analysis may be warranted \u2014 it does not confirm discriminatory pay practices. Engage employment counsel before drawing conclusions or communicating externally.</div>';h+='<h2>Compensation Equity</h2>';if(!women&&!color){h+='<p>No compensation data entered.</p>';}else{h+='<table><thead><tr><th>Comparison</th><th>Group Average</th><th>Reference Average</th><th>Ratio</th><th>Annual Gap</th><th>Signal</th></tr></thead><tbody>';if(women&&men){var ratio=((women/men)*100).toFixed(1);var gap=men-women;h+='<tr><td>Women vs. Men</td><td>$'+women.toLocaleString()+'</td><td>$'+men.toLocaleString()+'</td><td class="'+(parseFloat(ratio)<85?'flag-r':parseFloat(ratio)<92?'flag-w':'flag-g')+'">'+ratio+'&cent; per $1.00</td><td>$'+gap.toLocaleString()+'</td><td>'+(parseFloat(ratio)<85?'Formal analysis required':parseFloat(ratio)<92?'Review warranted':'Within range')+'</td></tr>';}if(color&&white){var ratioC=((color/white)*100).toFixed(1);var gapC=white-color;h+='<tr><td>Employees of Color vs. White</td><td>$'+color.toLocaleString()+'</td><td>$'+white.toLocaleString()+'</td><td class="'+(parseFloat(ratioC)<85?'flag-r':parseFloat(ratioC)<92?'flag-w':'flag-g')+'">'+ratioC+'&cent; per $1.00</td><td>$'+gapC.toLocaleString()+'</td><td>'+(parseFloat(ratioC)<85?'Formal analysis required':parseFloat(ratioC)<92?'Review warranted':'Within range')+'</td></tr>';}if(overall)h+='<tr><td>Overall average</td><td colspan="5">$'+overall.toLocaleString()+'</td></tr>';h+='</tbody></table>';h+='<h3>Interpretation</h3><p>Raw pay ratios do not control for factors that legitimately explain pay variation: job level, tenure, performance, function, and geography. A gap in raw averages may reflect compositional differences rather than unequal pay for equal work. A formal equity analysis controls for these factors and identifies gaps that cannot be explained by legitimate factors. That analysis is the required next step if any ratio above is below 92%.</p>';if((women&&men&&(women/men)<0.92)||(color&&white&&(color/white)<0.92)){h+='<div class="finding"><strong>At least one gap exceeds 8%.</strong> A controlled equity analysis should be completed before the next merit cycle. Unexplained pay gaps increase turnover risk among affected populations and create legal exposure that compounds over time.</div>';}}if(promoW||promoM){h+='<h2>Promotion Rate Equity</h2><table><thead><tr><th>Group</th><th>Promotion Rate</th><th>Signal</th></tr></thead><tbody>';if(promoW&&promoM){var promoRatio=((promoW/promoM)*100).toFixed(1);h+='<tr><td>Women</td><td>'+promoW+'%</td><td class="'+(parseFloat(promoRatio)<80?'flag-r':parseFloat(promoRatio)<90?'flag-w':'flag-g')+'">'+(parseFloat(promoRatio)<80?'Gap exceeds 20% \u2014 review required':parseFloat(promoRatio)<90?'Moderate gap \u2014 monitor':'Within range')+'</td></tr><tr><td>Men</td><td>'+promoM+'%</td><td>\u2014 (reference)</td></tr>';}if(promoC)h+='<tr><td>Employees of Color</td><td>'+promoC+'%</td><td>Compare to overall average</td></tr>';h+='</tbody></table>';if(promoW&&promoM&&parseFloat((promoW/promoM)*100)<80)h+='<div class="finding"><strong>Women are being promoted at '+(((promoW/promoM)*100).toFixed(0))+'% the rate of men.</strong> A promotion gap below 80% warrants a review of promotion criteria application and whether sponsorship and visibility opportunities are equitably distributed.</div>';}h+='<h2>Recommended Next Steps</h2><ul><li>If any ratio shows a gap exceeding 8%, engage employment counsel and a compensation specialist for a controlled analysis before the next merit cycle.</li><li>Do not communicate preliminary findings to employees or externally until the controlled analysis is complete and legal has reviewed.</li><li>If a gap is confirmed, remediate through the regular merit cycle with targeted adjustments \u2014 not a flagged "equity adjustment" process that creates stigma.</li><li>Review promotion rate equity quarterly. Promotion equity is less visible than pay equity and compounds over time.</li></ul>';h+='<p style="font-size:8pt;color:#999;margin-top:36px;padding-top:10px;border-top:1px solid #e0d8cf">Generated via Plinth by The Coherence Collective, LLC. This is an advisory screening tool only, not a legal pay equity analysis. Engage employment counsel before any action based on this data.</p></body></html>';openReport(h,'Pay Equity Indicators Report \u2014 '+org,'pay-equity-report.html','Pay Equity Report');}
+
+
+document.addEventListener('DOMContentLoaded',function(){
+  var noSucc=document.getElementById('succNoSuccessor');
+  var hiPo=document.getElementById('succHiPo');
+  var readiness=document.getElementById('succReadiness');
+  var keyPerson=document.getElementById('succKeyPerson');
+  function calcSuccession(){
+    var ns=getN('succNoSuccessor'), hp=getN('succHiPo'), ready=getN('succReadiness'), kp=getN('succKeyPerson');
+    var out=document.getElementById('successionOutput');
+    if(!ns&&!hp&&!kp){ out.innerHTML=''; return; }
+    var html='<div class="div"></div>';
+    if(kp>0) html+='<div class="al al-d"><span class="al-ic">&#9888;</span><span><strong>'+kp+' key-person risk'+(kp>1?' positions':' position')+'</strong> identified — '+kp+' role'+(kp>1?'s':'')+' where one person departure would create a mission-critical gap. These require immediate succession documentation and cross-training investment regardless of the employee\'s tenure or intent.</span></div>';
+    if(ns>0) html+='<div class="al al-w"><span class="al-ic">&#9651;</span><span><strong>'+ns+' critical role'+(ns>1?'s':'')+' with no internal successor.</strong> Average readiness timeline of '+ready+' months means '+Math.round(ns*(ready||6))+' total months of development investment are required to close the gap. Prioritize those with the highest mission impact or shortest external fill time.</span></div>';
+    if(hp>0) html+='<div class="al al-i"><span class="al-ic">&#9670;</span><span><strong>'+hp+' role'+(hp>1?'s':'')+' with an identified high-potential.</strong> Development plans should be formalized, documented, and shared with the employee. Informal identification without explicit development investment has a low conversion rate.</span></div>';
+    out.innerHTML=html;
+  }
+  if(noSucc) noSucc.addEventListener('input', calcSuccession);
+  if(hiPo) hiPo.addEventListener('input', calcSuccession);
+  if(readiness) readiness.addEventListener('input', calcSuccession);
+  if(keyPerson) keyPerson.addEventListener('input', calcSuccession);
+});
+
+// ── PRESCRIPTIVE ENGINE ───────────────────────────────────────────────────────
+function runPrescriptive(){
+  var hc=getN('mHeadcount'), sep=getN('mSeparations'), vol=getN('mVoluntary');
+  var payroll=getN('mPayroll'), budget=getN('mBudget'), tenure=getN('mTenure');
+  var turnRate=hc?((sep/hc)*100):0;
+  var volRate=hc?((vol/hc)*100):0;
+  var payPct=budget&&payroll?((payroll/budget)*100):0;
+  var exitComp=getN('exitComp'), exitGrowth=getN('exitGrowth'), exitMgmt=getN('exitMgmt');
+  var exitTotal=getN('exitTotal');
+  var riskBelowMid=getN('riskBelowMid'), riskNoPromo=getN('riskNoPromo');
+  var riskEngagement=getN('riskEngagement'), riskEngScale=getN('riskEngScale')||10;
+  var engPct=riskEngagement?Math.round((riskEngagement/riskEngScale)*100):0;
+  var keyPerson=getN('succKeyPerson'), noSucc=getN('succNoSuccessor');
+  var eqWomen=getN('eqWomen'), eqMen=getN('eqMen'), eqColor=getN('eqColor'), eqWhite=getN('eqWhite');
+  
+  var recommendations=[];
+  
+  // Compensation
+  if(riskBelowMid>25||(exitTotal&&(exitComp/exitTotal)>0.3)){
+    recommendations.push({
+      priority:'Critical', badge:'pb-critical', icon:'&#9888;',
+      issue:'Compensation is below market for a significant portion of staff',
+      action:'Commission a formal compensation benchmarking study. Develop a 12–18 month market adjustment roadmap prioritizing highest-flight-risk roles. Present investment requirement to board with turnover cost comparison.',
+      impact:'Estimated 30–40% reduction in voluntary turnover within 18 months of market realignment.',
+      timeline:'Immediate: benchmark study. 90 days: adjustment plan. 6 months: first-phase implementation.'
+    });
+  }
+  
+  // Turnover
+  if(turnRate>22){
+    recommendations.push({
+      priority:'Critical', badge:'pb-critical', icon:'&#9888;',
+      issue:'Total turnover rate of '+turnRate.toFixed(1)+'% exceeds the 22% threshold for nonprofit organizations',
+      action:'Conduct stay interviews with all employees with 1–3 years of tenure before the end of the current quarter. Segment exit interview data by department, tenure band, and manager to identify where turnover is concentrated.',
+      impact:'Stay interviews alone reduce voluntary turnover by 8–12% when followed by documented action on the top two concerns raised.',
+      timeline:'30 days: complete stay interview protocol. 60 days: synthesize findings. 90 days: action plan to leadership.'
+    });
+  }
+  
+  // Management
+  if(exitTotal&&(exitMgmt/exitTotal)>0.25){
+    recommendations.push({
+      priority:'High', badge:'pb-high', icon:'&#9651;',
+      issue:'Management quality cited in '+(((exitMgmt/exitTotal)*100).toFixed(0))+'% of exits — above the 25% threshold that indicates a systemic problem',
+      action:'Conduct manager effectiveness assessments across all people managers. Identify the 1–2 lowest-scoring managers with the highest direct report turnover. Develop individual performance plans for those managers before escalating to broader manager development programming.',
+      impact:'Management improvements in the bottom quartile of managers account for the majority of recoverable turnover.',
+      timeline:'60 days: manager effectiveness assessments. 90 days: individual development plans. 6 months: reassess.'
+    });
+  }
+  
+  // Engagement
+  if(engPct>0&&engPct<65){
+    recommendations.push({
+      priority:'High', badge:'pb-high', icon:'&#9651;',
+      issue:'Engagement score of '+engPct+'% favorable is below the 65% floor that precedes elevated turnover',
+      action:'Do not launch a culture initiative. Identify the two lowest-scoring engagement drivers and build targeted interventions for each. If leadership trust is low, the intervention is leadership behavior change — not a workshop. If growth is low, the intervention is visible promotion pathways and documented development plans.',
+      impact:'Each 5-point improvement in engagement favorable score reduces voluntary turnover by approximately 1–2 percentage points.',
+      timeline:'30 days: engagement driver analysis. 60 days: targeted intervention plan. 90 days: manager-level communication.'
+    });
+  }
+  
+  // Key person risk
+  if(keyPerson>0){
+    recommendations.push({
+      priority:'High', badge:'pb-high', icon:'&#9651;',
+      issue:keyPerson+' key-person risk position'+(keyPerson>1?'s':'')+' identified — single points of failure for mission-critical functions',
+      action:'For each key-person role, document the function, institutional knowledge, key relationships, and decision-making authority. Identify a cross-training partner. Establish a minimum 3-month knowledge transfer plan independent of whether departure is imminent.',
+      impact:'Key-person risk mitigation reduces the average disruption window from 6–12 months to 2–4 months when departure occurs.',
+      timeline:'Immediate: identify and document. 90 days: cross-training active. 6 months: knowledge transfer complete.'
+    });
+  }
+  
+  // Growth
+  if(riskNoPromo>35||(exitTotal&&(exitGrowth/exitTotal)>0.3)){
+    recommendations.push({
+      priority:'High', badge:'pb-high', icon:'&#9651;',
+      issue:'Limited growth pathways are a top driver of turnover — '+(riskNoPromo||0)+'% of staff have not been promoted in 3+ years',
+      action:'Audit your career ladder and identify roles with no formal advancement pathway. For roles where vertical promotion is not feasible, create lateral development tracks (expanded scope, project ownership, advisory responsibilities). Communicate them explicitly to employees in the 2–4 year tenure band.',
+      impact:'Visible growth pathways reduce departure intent among 2–4 year tenure employees by approximately 20–25%.',
+      timeline:'60 days: career ladder audit. 90 days: lateral development tracks. 6 months: communicated to affected employees.'
+    });
+  }
+  
+  // Pay equity
+  if((eqWomen&&eqMen&&(eqWomen/eqMen)<0.92)||(eqColor&&eqWhite&&(eqColor/eqWhite)<0.92)){
+    recommendations.push({
+      priority:'Moderate', badge:'pb-moderate', icon:'&#9670;',
+      issue:'Pay equity indicators suggest raw salary gaps by gender or race that may warrant a formal equity analysis',
+      action:'Engage employment counsel and a compensation specialist for a controlled equity analysis (individual-level data, statistical controls for level, function, and tenure). Do not communicate preliminary findings until analysis is complete and legal has reviewed.',
+      impact:'Early equity intervention is less costly and less legally exposed than post-complaint remediation.',
+      timeline:'30 days: engage counsel and specialist. 60–90 days: analysis complete. Decision on remediation before next merit cycle.'
+    });
+  }
+  
+  // Succession
+  if(noSucc>2){
+    recommendations.push({
+      priority:'Moderate', badge:'pb-moderate', icon:'&#9670;',
+      issue:noSucc+' critical roles with no internal succession plan in place',
+      action:'Formalize succession planning as a board and leadership priority. For each open succession role, complete a role documentation brief and identify the nearest available internal candidate — even if not fully ready. Begin structured development investment immediately.',
+      impact:'Organizations with documented succession plans for critical roles reduce unplanned vacancy disruption duration by 40–60%.',
+      timeline:'60 days: role documentation complete. 90 days: development plans active. Annual board review.'
+    });
+  }
+  
+  if(!recommendations.length){
+    if(!hc) {
+      document.getElementById('prescriptiveOutput').innerHTML='<div class="al al-i"><span class="al-ic">ℹ</span><span>Complete the Workforce Snapshot tab and at least one other tab with data before generating recommendations.</span></div>';
+      return;
+    }
+    document.getElementById('prescriptiveOutput').innerHTML='<div class="al al-i"><span class="al-ic">ℹ</span><span>No significant risk thresholds exceeded based on data entered. Add data to the Diagnostic and Predictive tabs for more specific analysis.</span></div>';
+    return;
+  }
+  
+  var html='<div class="al al-c" style="margin-bottom:20px"><span class="al-ic">&#9670;</span><span><strong>'+recommendations.length+' priority action'+(recommendations.length>1?'s':'')+' identified</strong> based on data entered. Sorted by severity. Each recommendation includes a specific action, expected impact, and implementation timeline.</span></div>';
+  
+  for(var i=0;i<recommendations.length;i++){
+    var rec=recommendations[i];
+    html+='<div class="priority-card">';
+    html+='<span class="priority-badge '+rec.badge+'">'+rec.priority+'</span>';
+    html+='<div style="flex:1">';
+    html+='<div class="priority-issue">'+rec.issue+'</div>';
+    html+='<div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px">';
+    html+='<div style="background:rgba(27,68,54,0.03);border-radius:var(--radius);padding:10px 12px"><div style="font-size:10px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-light);margin-bottom:5px">Recommended Action</div><div style="font-size:11.5px;color:var(--text-mid);line-height:1.65">'+rec.action+'</div></div>';
+    html+='<div style="background:rgba(27,68,54,0.03);border-radius:var(--radius);padding:10px 12px"><div style="font-size:10px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-light);margin-bottom:5px">Expected Impact</div><div style="font-size:11.5px;color:var(--text-mid);line-height:1.65">'+rec.impact+'</div><div style="font-size:10.5px;color:var(--text-light);margin-top:6px">'+rec.timeline+'</div></div>';
+    html+='</div></div></div>';
+  }
+  document.getElementById('prescriptiveOutput').innerHTML=html;
+}
+
+// ── RETENTION ROI ─────────────────────────────────────────────────────────────
+function calcRetentionROI(){
+  var exits=getN('roiExits'), avgSalary=getN('roiAvgSalary');
+  var roleType=getV('roiRoleType')||'professional';
+  var investment=getN('roiInvestment'), reductionPct=getN('roiReductionPct');
+  var timeline=getN('roiTimeline')||12;
+  if(!exits||!avgSalary){ document.getElementById('roiOutput').innerHTML=''; return; }
+  var multipliers={frontline:0.43,professional:0.74,manager:1.03,specialist:1.08,executive:1.40};
+  var m=multipliers[roleType]||0.74;
+  var costPerExit=Math.round(avgSalary*m);
+  var currentAnnualCost=Math.round(exits*costPerExit);
+  var exitsSaved=reductionPct?Math.round(exits*(reductionPct/100)):0;
+  var savingsAnnual=Math.round(exitsSaved*costPerExit);
+  var netROI=savingsAnnual-investment;
+  var roiPct=investment?Math.round((netROI/investment)*100):0;
+  var paybackMonths=investment&&savingsAnnual>0?Math.round((investment/savingsAnnual)*12):0;
+  
+  var html='<div class="metric-grid">';
+  html+='<div class="metric-card"><div class="metric-val" style="color:var(--crimson)">$'+currentAnnualCost.toLocaleString()+'</div><div class="metric-lbl">Current Annual Turnover Cost</div><div class="metric-bench">'+exits+' exits at $'+costPerExit.toLocaleString()+' each</div></div>';
+  if(investment){
+    html+='<div class="metric-card"><div class="metric-val" style="color:var(--green)">$'+savingsAnnual.toLocaleString()+'</div><div class="metric-lbl">Projected Annual Savings</div><div class="metric-bench">'+exitsSaved+' fewer exits per year</div></div>';
+    html+='<div class="metric-card"><div class="metric-val" style="color:'+(roiPct>0?'var(--green)':'var(--crimson)')+'">'+roiPct+'%</div><div class="metric-lbl">Return on Investment</div><div class="metric-bench">'+(paybackMonths>0?'Payback: '+paybackMonths+' months':'N/A')+'</div></div>';
+  }
+  html+='</div>';
+  if(investment&&roiPct>0){
+    html+='<div class="al al-i"><span class="al-ic">ℹ</span><span>A $'+investment.toLocaleString()+' retention investment that reduces regrettable exits by '+reductionPct+'% returns $'+savingsAnnual.toLocaleString()+' in avoided turnover cost annually — a '+roiPct+'% ROI with a '+paybackMonths+'-month payback period. This is the framing for the board conversation about investing in compensation, benefits, or development.</span></div>';
+  }
+  document.getElementById('roiOutput').innerHTML=html;
+}
+
+// ── COMP OPTIMIZER ────────────────────────────────────────────────────────────
+function calcCompOptimizer(){
+  var budget=getN('compBudget'), payroll=getN('compPayroll'), hc=getN('compHC');
+  var belowMid=getN('compBelowMid'), hiPerf=getN('compHiPerf'), atRisk=getN('compAtRisk');
+  if(!budget||!payroll){ document.getElementById('compOptimizerOutput').innerHTML=''; return; }
+  var budgetPct=((budget/payroll)*100).toFixed(1);
+  var uniformIncrease=budget/payroll*100;
+  
+  // Targeted scenario: 60% to below-midpoint, 30% to high-performers at risk, 10% broad
+  var belowMidPop=hc?Math.round(hc*(belowMid/100)):0;
+  var hiPerfPop=hc?Math.round(hc*(hiPerf/100)):0;
+  var atRiskPop=hc?Math.round(hc*(atRisk/100)):0;
+  
+  var scenario1Increase=(payroll&&belowMidPop)?((budget*0.6)/(payroll*(belowMid/100))*100).toFixed(1):0; // below midpoint
+  var scenario2Increase=(payroll&&hiPerfPop)?((budget*0.25)/(payroll*(hiPerf/100))*100).toFixed(1):0; // high performers
+  
+  var html='<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">';
+  
+  // Scenario A: Uniform
+  html+='<div style="border:1px solid var(--border);border-radius:var(--radius-md);padding:16px">';
+  html+='<div style="font-size:11px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-light);margin-bottom:8px">Scenario A &mdash; Uniform Merit</div>';
+  html+='<div style="font-family:\'Cormorant Garamond\',serif;font-size:28px;font-weight:600;color:var(--green)">'+uniformIncrease.toFixed(1)+'%</div>';
+  html+='<div style="font-size:11px;color:var(--text-mid);margin-top:6px;line-height:1.6">'+budgetPct+'% merit budget applied equally across all '+hc+' employees. Low retention return — does not address compensation gaps or flight risk.</div>';
+  html+='<div class="metric-flag mf-warn" style="margin-top:8px">Low retention ROI</div>';
+  html+='</div>';
+  
+  // Scenario B: Targeted
+  html+='<div style="border:1px solid var(--green);border-radius:var(--radius-md);padding:16px;background:rgba(27,68,54,0.02)">';
+  html+='<div style="font-size:11px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--green);margin-bottom:8px">Scenario B &mdash; Targeted Allocation</div>';
+  if(scenario1Increase>0){
+    html+='<div style="font-size:12px;color:var(--text-mid);line-height:1.8">';
+    html+='<strong>'+scenario1Increase+'%</strong> average to below-midpoint staff ('+belowMidPop+' employees)<br>';
+    html+='<strong>'+scenario2Increase+'%</strong> average to high-performers ('+hiPerfPop+' employees)<br>';
+    html+='<strong>'+uniformIncrease.toFixed(1)+'%</strong> baseline to remaining staff</div>';
+    html+='<div class="metric-flag mf-ok" style="margin-top:8px">3&ndash;5&times; higher retention ROI</div>';
+  } else {
+    html+='<div style="font-size:12px;color:var(--text-mid)">Enter % below midpoint and % high-performers to model targeted scenarios.</div>';
+  }
+  html+='</div></div>';
+  
+  html+='<div class="al al-i"><span class="al-ic">ℹ</span><span>Targeted allocation delivers 3–5&times; more retention value per dollar than uniform merit. The employee population most at risk of departure and most below market should receive the highest concentration of available budget — not the employee population that is already satisfied.</span></div>';
+  document.getElementById('compOptimizerOutput').innerHTML=html;
+}
+
+// ── PAY EQUITY ────────────────────────────────────────────────────────────────
+function calcEquity(){
+  var women=getN('eqWomen'), men=getN('eqMen'), color=getN('eqColor'), white=getN('eqWhite');
+  var promoW=getN('promoWomen'), promoM=getN('promoMen'), promoC=getN('promoColor');
+  var html='<div class="div"></div><div class="div-lbl">Pay Equity Ratios</div>';
+  html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">';
+  if(women&&men){
+    var ratio=((women/men)*100).toFixed(1);
+    var gap=men-women;
+    var cls=parseFloat(ratio)<85?'mf-alert':parseFloat(ratio)<92?'mf-warn':'mf-ok';
+    html+='<div style="border:1px solid var(--border);border-radius:var(--radius-md);padding:16px 18px"><div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:8px">Gender Pay Ratio</div><div style="font-family:\'Cormorant Garamond\',serif;font-size:28px;font-weight:600;color:'+(parseFloat(ratio)<85?'var(--crimson)':parseFloat(ratio)<92?'#8a6010':'var(--green)')+'">'+ratio+'&cent; per $1.00</div><div style="font-size:11.5px;color:var(--text-mid);margin-top:6px;line-height:1.6">Women earn '+ratio+' cents per dollar earned by men. Average gap: $'+gap.toLocaleString()+'/year.</div><div class="metric-flag '+cls+'" style="margin-top:8px">'+(parseFloat(ratio)<85?'Significant — formal analysis required':parseFloat(ratio)<92?'Moderate gap — review and document':'Within acceptable range')+'</div></div>';
+  }
+  if(color&&white){
+    var ratioC=((color/white)*100).toFixed(1);
+    var gapC=white-color;
+    var clsC=parseFloat(ratioC)<85?'mf-alert':parseFloat(ratioC)<92?'mf-warn':'mf-ok';
+    html+='<div style="border:1px solid var(--border);border-radius:var(--radius-md);padding:16px 18px"><div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:8px">Racial Pay Ratio</div><div style="font-family:\'Cormorant Garamond\',serif;font-size:28px;font-weight:600;color:'+(parseFloat(ratioC)<85?'var(--crimson)':parseFloat(ratioC)<92?'#8a6010':'var(--green)')+'">'+ratioC+'&cent; per $1.00</div><div style="font-size:11.5px;color:var(--text-mid);margin-top:6px;line-height:1.6">Employees of color earn '+ratioC+' cents per dollar. Average gap: $'+gapC.toLocaleString()+'/year.</div><div class="metric-flag '+clsC+'" style="margin-top:8px">'+(parseFloat(ratioC)<85?'Significant — formal analysis required':parseFloat(ratioC)<92?'Moderate gap — review and document':'Within acceptable range')+'</div></div>';
+  }
+  html+='</div>';
+  if(promoW&&promoM){
+    var promoRatio=((promoW/promoM)*100).toFixed(1);
+    html+='<div class="div-lbl">Promotion Rate Equity</div>';
+    html+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">';
+    html+='<div style="padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-md)"><div style="font-size:10px;font-weight:400;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-light);margin-bottom:4px">Women promoted</div><div style="font-family:\'Cormorant Garamond\',serif;font-size:24px;font-weight:600;color:var(--green)">'+promoW+'%</div></div>';
+    html+='<div style="padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-md)"><div style="font-size:10px;font-weight:400;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-light);margin-bottom:4px">Men promoted</div><div style="font-family:\'Cormorant Garamond\',serif;font-size:24px;font-weight:600;color:var(--green)">'+promoM+'%</div></div>';
+    if(promoC) html+='<div style="padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-md)"><div style="font-size:10px;font-weight:400;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-light);margin-bottom:4px">Employees of color</div><div style="font-family:\'Cormorant Garamond\',serif;font-size:24px;font-weight:600;color:var(--green)">'+promoC+'%</div></div>';
+    html+='</div>';
+    if(parseFloat(promoRatio)<80){
+      html+='<div class="al al-d" style="margin-top:10px"><span class="al-ic">&#9888;</span><span>Women are promoted at '+promoRatio+'% the rate of men. A promotion rate gap below 80% is a significant equity signal that warrants a formal review of promotion criteria application and manager decision-making patterns.</span></div>';
+    }
+  }
+  if(!women&&!color){ html='<div class="al al-i"><span class="al-ic">ℹ</span><span>Enter salary averages above to calculate equity indicators.</span></div>'; }
+  html+='<div class="al al-w" style="margin-top:10px"><span class="al-ic">&#9651;</span><span>These ratios reflect raw averages and do not control for level, function, or tenure. A gap does not automatically indicate discrimination — but it does indicate that a formal, controlled analysis is warranted. Engage employment counsel before communicating any findings or taking corrective action.</span></div>';
+  document.getElementById('equityOutput').innerHTML=html;
+}
+
+// ── REPORT GENERATION ─────────────────────────────────────────────────────────
+function generateReport(){
+  var orgName=profile.legalName||'Organization';
+  var hc=getN('mHeadcount'), sep=getN('mSeparations'), vol=getN('mVoluntary');
+  var payroll=getN('mPayroll'), budget=getN('mBudget'), tenure=getN('mTenure'), dtf=getN('mDaysToFill');
+  var turnRate=hc?((sep/hc)*100).toFixed(1):'N/A';
+  var volRate=hc?((vol/hc)*100).toFixed(1):'N/A';
+  var payPct=budget&&payroll?((payroll/budget)*100).toFixed(1):'N/A';
+  var today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  var _pbTitle='Workforce Analytics Report \u2014 '+orgName;
+  var _pbFile='workforce-analytics.html';
+  var _pbType='Analytics Report';
+
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+_pbTitle+'</title>';
+  html+='<style>body{font-family:Georgia,serif;font-size:10.5pt;color:#1a1a1a;max-width:720px;margin:0 auto;padding:48px 40px;line-height:1.75;}h1{font-size:22pt;font-weight:400;color:#1b4436;margin-bottom:4px;}h2{font-size:13pt;font-weight:600;color:#1b4436;margin:28px 0 10px;padding-bottom:6px;border-bottom:1px solid #e0d8cf;}table{width:100%;border-collapse:collapse;margin-bottom:16px;}th{background:#1b4436;color:white;padding:8px 12px;font-size:9pt;text-align:left;letter-spacing:0.05em;}td{padding:7px 12px;border-bottom:1px solid #e0d8cf;font-size:10pt;}.metric-box{display:inline-block;border:1px solid #e0d8cf;border-radius:4px;padding:12px 18px;margin:6px;text-align:center;min-width:130px;}.metric-n{font-size:24pt;color:#1b4436;font-weight:400;}.metric-l{font-size:8.5pt;color:#777;text-transform:uppercase;letter-spacing:0.08em;}.note{background:#f9f5f0;border-left:3px solid #D99E32;padding:10px 14px;margin:10px 0;font-size:9.5pt;color:#555;}.confidential{font-size:8pt;color:#A42F30;border:1px solid #A42F30;padding:4px 12px;display:inline-block;margin-bottom:24px;letter-spacing:0.08em;text-transform:uppercase;}@page{size:letter;margin:1in;}@media print{body{padding:0;}}</style></head><body>';
+  html+='<div class="confidential">Advisor Use &nbsp;|&nbsp; The Coherence Collective &nbsp;|&nbsp; Plinth</div>';
+  html+='<h1>'+orgName+'</h1>';
+  html+='<p style="color:#555;font-size:11pt;margin-bottom:6px">Workforce Analytics Report</p>';
+  html+='<p style="color:#777;font-size:9pt;margin-bottom:28px">'+today+' &nbsp;|&nbsp; The Coherence Collective, LLC</p>';
+  html+='<h2>Key Metrics</h2><div>';
+  var metrics=[];
+  if(turnRate!=='N/A') metrics.push([turnRate+'%','Total Turnover']);
+  if(volRate!=='N/A') metrics.push([volRate+'%','Voluntary Turnover']);
+  if(hc) metrics.push([hc,'Headcount']);
+  if(dtf) metrics.push([dtf+' days','Avg Days to Fill']);
+  if(tenure) metrics.push([tenure+'y','Avg Tenure']);
+  if(payPct!=='N/A') metrics.push([payPct+'%','Payroll / Budget']);
+  for(var m=0;m<metrics.length;m++){
+    html+='<div class="metric-box"><div class="metric-n">'+metrics[m][0]+'</div><div class="metric-l">'+metrics[m][1]+'</div></div>';
+  }
+  html+='</div>';
+  html+='<h2>Workforce Composition</h2><table><thead><tr><th>Category</th><th>Count</th><th>% of Total</th></tr></thead><tbody>';
+  if(hc){
+    var ft=getN('mFT'), pt=getN('mPT'), contract=getN('mContract');
+    html+='<tr><td>Full-Time W-2</td><td>'+ft+'</td><td>'+(hc?(ft/hc*100).toFixed(0):0)+'%</td></tr>';
+    html+='<tr><td>Part-Time W-2</td><td>'+pt+'</td><td>'+(hc?(pt/hc*100).toFixed(0):0)+'%</td></tr>';
+    html+='<tr><td>Contractors / 1099</td><td>'+contract+'</td><td>\u2014</td></tr>';
+  } else { html+='<tr><td colspan="3">No data entered</td></tr>'; }
+  html+='</tbody></table>';
+  html+='<h2>Turnover Analysis</h2><table><thead><tr><th>Type</th><th>Count</th><th>Rate</th></tr></thead><tbody>';
+  html+='<tr><td>Total Separations</td><td>'+sep+'</td><td>'+turnRate+'%</td></tr>';
+  html+='<tr><td>Voluntary</td><td>'+vol+'</td><td>'+volRate+'%</td></tr>';
+  html+='</tbody></table>';
+  if(payPct!=='N/A'){
+    html+='<h2>Budget Impact</h2><p>Total base payroll of $'+payroll.toLocaleString()+' represents <strong>'+payPct+'%</strong> of the operating budget of $'+budget.toLocaleString()+'. '+(parseFloat(payPct)>80?'This exceeds the 80% guideline.':parseFloat(payPct)<60?'This is below the 60% floor.':'This is within the healthy 60\u201380% range.')+'</p>';
+  }
+  html+='<p style="font-size:8pt;color:#999;margin-top:36px;padding-top:12px;border-top:1px solid #e0d8cf">This report was generated through the Plinth Advisory Operations Platform by The Coherence Collective, LLC. It is intended for advisor and leadership use. It does not constitute legal, financial, or HR compliance advice.</p>';
+  html+='</body></html>';
+
+  var _pbC='<style>.pb{position:fixed;top:0;left:0;right:0;z-index:9999;background:#1b4436;padding:10px 28px;display:flex;gap:10px;align-items:center;box-shadow:0 2px 12px rgba(0,0,0,0.3);}.pb-title{font-family:Georgia,serif;font-size:11pt;color:rgba(245,237,228,0.75);flex:1;font-weight:400;}.pb-btn{font-family:Arial,sans-serif;font-size:8.5pt;padding:7px 16px;border:none;border-radius:3px;cursor:pointer;font-weight:500;}.pb-gold{background:#D99E32;color:#122e24;}.pb-ghost{background:rgba(255,255,255,0.09);color:rgba(245,237,228,0.82);border:1px solid rgba(255,255,255,0.14);}.pb-spacer{height:52px;}@media print{.pb,.pb-spacer{display:none!important;}}</style>';
+  var _pbH='<div class="pb"><span class="pb-title">'+_pbTitle+'</span><button class="pb-btn pb-gold" onclick="window.print()">&#8681; Print / Save as PDF</button><button class="pb-btn pb-ghost" onclick="plDl()">&#8659; Download</button><button class="pb-btn pb-ghost" onclick="plSave()">&#9729; Save to Plinth</button><button class="pb-btn pb-ghost" onclick="window.close()" style="margin-left:4px">&#10005;</button></div><div class="pb-spacer"></div>';
+  var _pbJS='<scr'+'ipt>function plDl(){var blob=new Blob([document.documentElement.outerHTML],{type:"text/html"});var url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download="'+_pbFile+'";a.click();}function plSave(){var d=[];try{d=JSON.parse(localStorage.getItem("plinth_docs")||"[]");}catch(e){}d.push({id:"doc_"+Date.now(),title:"'+_pbTitle+'",type:"'+_pbType+'",date:new Date().toISOString()});localStorage.setItem("plinth_docs",JSON.stringify(d));var b=document.querySelectorAll(".pb-ghost");if(b[1]){b[1].textContent="\u2713 Saved";b[1].style.background="rgba(27,68,54,0.5)";}}</s'+'cript>';
+  html=html.replace('<body>','<body>'+_pbH);
+  html=html.replace('@media print{body{padding:0;}}','@media print{body{padding:0;}.pb,.pb-spacer{display:none!important;}}');
+  html=html.replace('</style></head>',_pbC+'</style></head>');
+  html+=_pbJS;
+  var win=window.open('','_blank'); win.document.write(html); win.document.close();
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  restoreData();
+  animateCards();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Plinth · Org Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--green:#1b4436;--green-light:#235a47;--green-deep:#122e24;--mauve:#916179;--sand:#D2BB9F;--gold:#D99E32;--pale:#cccf8e;--crimson:#A42F30;--beige:#F5EDE4;--white:#fff;--off-white:#faf8f5;--text-dark:#1a1a1a;--text-mid:#444;--text-light:#777;--border:#e0d8cf;--shadow:0 2px 16px rgba(27,68,54,0.08);--radius:4px;--radius-md:8px;--radius-lg:12px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Jost',sans-serif;font-weight:300;font-size:14px;color:var(--text-dark);background:var(--off-white);min-height:100vh;}
+nav{position:sticky;top:0;z-index:100;background:var(--green);padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,0.2);}
+.nav-left{display:flex;align-items:center;gap:14px;}
+.back-btn{display:inline-flex;align-items:center;gap:5px;font-family:'Jost',sans-serif;font-size:11px;font-weight:300;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.5);padding:5px 10px;border:1px solid rgba(245,237,228,0.15);border-radius:var(--radius);background:none;cursor:pointer;transition:all 0.2s;}
+.back-btn:hover{color:var(--beige);}
+.nav-sep{width:1px;height:18px;background:rgba(255,255,255,0.15);}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:17px;color:var(--beige);}
+.nav-brand span{color:var(--gold);}
+.nav-sub{font-size:12px;font-weight:300;color:rgba(245,237,228,0.45);}
+.nav-right{display:flex;gap:7px;align-items:center;}
+.nbtn{font-family:'Jost',sans-serif;font-weight:300;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:5px 13px;border-radius:var(--radius);cursor:pointer;border:none;transition:all 0.2s;white-space:nowrap;}
+.nbtn-ghost{background:transparent;color:var(--sand);border:1px solid rgba(210,187,159,0.3);}
+.nbtn-ghost:hover{background:rgba(210,187,159,0.1);color:var(--beige);}
+.nbtn-gold{background:var(--gold);color:var(--green-deep);font-weight:400;}
+.sflash{font-size:11px;color:var(--pale);margin-right:4px;opacity:0;transition:opacity 0.3s;}
+.sflash.on{opacity:1;}
+.tabs{background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;display:flex;overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{font-size:11px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:13px 18px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.2s;}
+.tab:hover{color:var(--green);}
+.tab.active{color:var(--green);border-bottom-color:var(--green);}
+.hero{background:linear-gradient(150deg,var(--green-deep) 0%,var(--green) 55%,var(--green-light) 100%);padding:44px 28px 38px;}
+.hero-inner{max-width:1060px;margin:0 auto;}
+.hero-eye{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--pale);margin-bottom:10px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:36px;color:var(--white);line-height:1.05;margin-bottom:8px;}
+.hero-title em{font-style:italic;color:var(--sand);}
+.hero-desc{font-size:12.5px;font-weight:300;color:rgba(245,237,228,0.65);max-width:600px;line-height:1.75;}
+.main{max-width:1060px;margin:0 auto;padding:32px 28px 80px;}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;opacity:0;transform:translateY(10px);transition:opacity 0.35s,transform 0.35s;}
+.card.vis{opacity:1;transform:translateY(0);}
+.card-hdr{padding:16px 22px 13px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.05));display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:16px;color:var(--green);}
+.card-desc{font-size:11px;color:var(--text-light);margin-top:2px;line-height:1.5;}
+.card-body{padding:20px 22px;}
+.fg{display:grid;gap:14px;}
+.g2{grid-template-columns:1fr 1fr;}
+.g3{grid-template-columns:1fr 1fr 1fr;}
+.c2{grid-column:span 2;}
+.c3{grid-column:span 3;}
+.f label{display:block;font-size:11px;font-weight:400;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-mid);margin-bottom:5px;line-height:1.4;}
+input[type="text"],input[type="number"],input[type="email"],select,textarea{width:100%;font-family:'Jost',sans-serif;font-weight:300;font-size:13px;color:var(--text-dark);background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:8px 11px;outline:none;transition:border-color 0.2s;appearance:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(27,68,54,0.07);}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23777' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer;}
+.fhint{font-size:10.5px;color:var(--text-light);margin-top:4px;line-height:1.5;}
+.div{height:1px;background:var(--border);margin:16px 0;}
+.div-lbl{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);margin:-14px 0 12px;display:flex;align-items:center;gap:8px;}
+.div-lbl::before,.div-lbl::after{content:'';flex:1;height:1px;background:var(--border);}
+.al{border-radius:var(--radius);padding:9px 12px;font-size:12px;line-height:1.6;margin-bottom:10px;display:flex;gap:8px;align-items:flex-start;}
+.al-ic{font-size:13px;flex-shrink:0;margin-top:1px;}
+.al-i{background:rgba(27,68,54,0.05);border-left:3px solid var(--pale);color:var(--text-mid);}
+.al-w{background:rgba(217,158,50,0.07);border-left:3px solid var(--gold);color:var(--text-mid);}
+.chk-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(224,216,207,0.35);font-size:12.5px;}
+.chk-row:last-child{border-bottom:none;}
+.chk-row input[type="checkbox"]{width:15px;height:15px;accent-color:var(--green);cursor:pointer;flex-shrink:0;}
+.appl-tag{display:inline-block;padding:3px 9px;border-radius:9px;font-size:10px;font-weight:400;letter-spacing:0.07em;text-transform:uppercase;margin:3px 3px 3px 0;}
+.appl-yes{background:rgba(27,68,54,0.08);color:var(--green);}
+.appl-no{background:rgba(224,216,207,0.35);color:var(--text-light);}
+.appl-maybe{background:rgba(217,158,50,0.1);color:#8a6010;}
+.ref-table{width:100%;border-collapse:collapse;}
+.ref-table th{font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:8px 12px;text-align:left;border-bottom:2px solid var(--border);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.04));}
+.ref-table td{padding:9px 12px;border-bottom:1px solid rgba(224,216,207,0.5);font-size:12px;font-weight:300;vertical-align:top;}
+.ref-table td:first-child{font-weight:400;}
+.ref-table tr:last-child td{border-bottom:none;}
+footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:center;justify-content:space-between;}
+.fb{font-family:'Cormorant Garamond',serif;font-size:13px;color:rgba(245,237,228,0.4);}
+.fb span{color:var(--sand);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.fu{animation:fadeUp 0.4s ease both;}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-left">
+    <button class="back-btn" onclick="window.location.href='/'">&#8592; All Tools</button>
+    <div class="nav-sep"></div>
+    <div class="nav-brand">Pl<span>in</span>th</div>
+    <div class="nav-sub">&nbsp;&middot;&nbsp; Org Profile</div>
+  </div>
+  <div class="nav-right">
+    <span class="sflash" id="sflash">Saved</span>
+    <button class="nbtn nbtn-ghost" onclick="saveData()">Save</button>
+    <button class="nbtn nbtn-gold" onclick="showTab('applicability')">Check Applicability</button>
+  </div>
+</nav>
+<div class="tabs">
+  <div class="tab active" onclick="showTab('details')" id="tab-details">Organization Details</div>
+  <div class="tab" onclick="showTab('workforce')" id="tab-workforce">Workforce Configuration</div>
+  <div class="tab" onclick="showTab('benefits')" id="tab-benefits">Benefits &amp; Compliance</div>
+  <div class="tab" onclick="showTab('applicability')" id="tab-applicability">Applicability Summary</div>
+</div>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eye">Plinth &middot; Tool 01</div>
+    <div class="hero-title">Org <em>Profile</em></div>
+    <div class="hero-desc">The foundation for every other Plinth tool. Complete this profile first — your organization's legal name, workforce configuration, and compliance status populate reports and applicability determinations across the entire suite.</div>
+  </div>
+</div>
+
+<!-- DETAILS TAB -->
+<div id="view-details" class="main">
+  <div class="card fu">
+    <div class="card-hdr"><div><div class="card-title">Organization Identity</div><div class="card-desc">Legal and operational identity information. The legal name populates all generated reports and documents.</div></div></div>
+    <div class="card-body">
+      <div class="fg g3">
+        <div class="f c2"><label>Legal Name</label><input type="text" id="legalName" placeholder="Full legal name as registered" oninput="saveData()"></div>
+        <div class="f"><label>DBA / Common Name</label><input type="text" id="dbaName" placeholder="Operating name if different" oninput="saveData()"></div>
+        <div class="f"><label>Entity Type</label>
+          <select id="entityType" onchange="saveData()">
+            <option value="">Select</option>
+            <option value="501c3">501(c)(3) Public Charity</option>
+            <option value="501c4">501(c)(4) Social Welfare</option>
+            <option value="501c6">501(c)(6) Trade Association</option>
+            <option value="social-enterprise">Social Enterprise (for-profit)</option>
+            <option value="pbc">Public Benefit Corporation</option>
+            <option value="llc">LLC</option>
+            <option value="government">Government / Public Agency</option>
+            <option value="charter">Charter / Public School</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="f"><label>EIN</label><input type="text" id="ein" placeholder="XX-XXXXXXX" oninput="saveData()"></div>
+      </div>
+      <div class="div"></div>
+      <div class="div-lbl">Location</div>
+      <div class="fg g3">
+        <div class="f"><label>Primary State of Operations</label>
+          <select id="primaryState" onchange="saveData()">
+            <option value="">Select state</option>
+            <option value="TX">Texas</option>
+            <option value="CA">California</option>
+            <option value="NY">New York</option>
+            <option value="FL">Florida</option>
+            <option value="IL">Illinois</option>
+            <option value="WA">Washington</option>
+            <option value="MA">Massachusetts</option>
+            <option value="CO">Colorado</option>
+            <option value="DC">District of Columbia</option>
+            <option value="GA">Georgia</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="f"><label>City / Metro Area</label><input type="text" id="city" placeholder="Primary location" oninput="saveData()"></div>
+        <div class="f"><label>Remote Employees in Other States</label><input type="text" id="rStates" placeholder="e.g., CA, NY, WA" oninput="saveData()"><div class="fhint">Multi-state employment triggers additional compliance obligations.</div></div>
+      </div>
+      <div class="div"></div>
+      <div class="div-lbl">Leadership</div>
+      <div class="fg g3">
+        <div class="f"><label>Executive Director / CEO</label><input type="text" id="edName" placeholder="Full name" oninput="saveData()"></div>
+        <div class="f"><label>Board Chair</label><input type="text" id="boardChair" placeholder="Full name" oninput="saveData()"></div>
+        <div class="f"><label>HR Lead / Contact</label><input type="text" id="hrContact" placeholder="Name or title" oninput="saveData()"></div>
+        <div class="f"><label>HR Email</label><input type="email" id="hrEmail" placeholder="HR contact email" oninput="saveData()"></div>
+        <div class="f"><label>Fiscal Year End</label>
+          <select id="fyEnd" onchange="saveData()">
+            <option value="">Select</option>
+            <option value="12/31">December 31</option>
+            <option value="09/30">September 30</option>
+            <option value="06/30">June 30</option>
+            <option value="03/31">March 31</option>
+          </select>
+        </div>
+        <div class="f"><label>Organization Founded</label><input type="text" id="foundedYear" placeholder="Year" oninput="saveData()"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WORKFORCE TAB -->
+<div id="view-workforce" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr"><div><div class="card-title">Workforce Configuration</div><div class="card-desc">Employee classification counts, pay practices, and operational structure. These fields determine which compliance thresholds apply to the organization.</div></div></div>
+    <div class="card-body">
+      <div class="al al-i" style="margin-bottom:16px"><span class="al-ic">ℹ</span><span>Headcount thresholds trigger different legal obligations. Be precise — the difference between 14 and 15 employees determines whether Title VII applies. The difference between 49 and 50 determines FMLA coverage. Keep this updated as headcount changes.</span></div>
+      <div class="div-lbl">Current Headcount</div>
+      <div class="fg g3" style="margin-bottom:18px">
+        <div class="f"><label>Full-Time W-2 Employees</label><input type="number" id="wft" placeholder="Number" oninput="saveData()"></div>
+        <div class="f"><label>Part-Time W-2 Employees</label><input type="number" id="wpt" placeholder="Number" oninput="saveData()"></div>
+        <div class="f"><label>Part-Time (working 6+ months)</label><input type="number" id="wpt6" placeholder="PT employees 6+ months" oninput="saveData()"><div class="fhint">Relevant to benefit plan participation thresholds.</div></div>
+        <div class="f"><label>Independent Contractors / 1099</label><input type="number" id="wic" placeholder="Number" oninput="saveData()"></div>
+        <div class="f"><label>Total W-2 Headcount</label><input type="number" id="totalHC" placeholder="FT + PT" oninput="saveData()"></div>
+        <div class="f"><label>Full-Time Equivalent (FTE) Count</label><input type="number" id="fteFull" placeholder="For ACA ALE determination" oninput="saveData()"><div class="fhint">FT employees + (total PT hours/month ÷ 120). Used for ACA employer mandate threshold.</div></div>
+      </div>
+      <div class="div"></div>
+      <div class="div-lbl">Pay &amp; Work Structure</div>
+      <div class="fg g3" style="margin-bottom:18px">
+        <div class="f"><label>Pay Frequency</label>
+          <select id="payFreq" onchange="saveData()">
+            <option value="">Select</option>
+            <option value="biweekly">Biweekly (26/year)</option>
+            <option value="semimonthly">Semi-monthly (24/year)</option>
+            <option value="monthly">Monthly (12/year)</option>
+            <option value="weekly">Weekly (52/year)</option>
+          </select>
+        </div>
+        <div class="f"><label>Work Structure</label>
+          <select id="workStructure" onchange="saveData()">
+            <option value="">Select</option>
+            <option value="onsite">Primarily On-Site</option>
+            <option value="hybrid">Hybrid</option>
+            <option value="remote">Fully Remote</option>
+            <option value="mixed">Mixed (varies by role)</option>
+          </select>
+        </div>
+        <div class="f"><label>Primary Payroll Provider</label><input type="text" id="payrollProvider" placeholder="e.g., ADP, Gusto, Paychex" oninput="saveData()"></div>
+        <div class="f"><label>HRIS / HR System</label><input type="text" id="hrisSystem" placeholder="e.g., Rippling, BambooHR, None" oninput="saveData()"></div>
+        <div class="f"><label>Unionized Workforce</label>
+          <select id="unionSt" onchange="saveData()">
+            <option value="no">No</option>
+            <option value="partial">Partial — some roles covered</option>
+            <option value="yes">Yes — collective bargaining agreement in place</option>
+          </select>
+        </div>
+        <div class="f"><label>Independent Contractor Pay Basis</label>
+          <select id="icPay" onchange="saveData()">
+            <option value="">N/A or select</option>
+            <option value="hourly">Hourly</option>
+            <option value="project">Per project</option>
+            <option value="retainer">Monthly retainer</option>
+            <option value="mixed">Mixed</option>
+          </select>
+        </div>
+      </div>
+      <div class="div"></div>
+      <div class="div-lbl">Operational Flags</div>
+      <div class="fg g2">
+        <div class="f"><label>Organization Age / Stage</label>
+          <select id="isStartup" onchange="saveData()">
+            <option value="no">Established (3+ years, stable operations)</option>
+            <option value="yes">Startup / Early Stage (under 3 years)</option>
+            <option value="scaling">Scaling (rapid headcount growth)</option>
+          </select>
+        </div>
+        <div class="f"><label>Fixed Physical Worksite</label>
+          <select id="noSite" onchange="saveData()">
+            <option value="no">Yes — has fixed office/site(s)</option>
+            <option value="yes">No fixed worksite — fully remote or dispersed</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BENEFITS TAB -->
+<div id="view-benefits" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr"><div><div class="card-title">Benefits &amp; Compliance Configuration</div><div class="card-desc">Which benefits and compliance programs the organization operates. Used to determine reporting obligations and coverage gaps across all Plinth tools.</div></div></div>
+    <div class="card-body">
+      <div class="div-lbl">Health &amp; Welfare Benefits Offered</div>
+      <div style="margin-bottom:18px">
+        <div class="chk-row"><input type="checkbox" id="benH" onchange="saveData()"><label for="benH" style="font-size:12.5px;cursor:pointer;font-weight:300;margin:0">Medical / Health Insurance (employer-sponsored group plan)</label></div>
+        <div class="chk-row"><input type="checkbox" id="benDen" onchange="saveData()"><label for="benDen" style="font-size:12.5px;cursor:pointer;font-weight:300;margin:0">Dental Insurance</label></div>
+        <div class="chk-row"><input type="checkbox" id="benVis" onchange="saveData()"><label for="benVis" style="font-size:12.5px;cursor:pointer;font-weight:300;margin:0">Vision Insurance</label></div>
+        <div class="chk-row"><input type="checkbox" id="benDis" onchange="saveData()"><label for="benDis" style="font-size:12.5px;cursor:pointer;font-weight:300;margin:0">Short-Term &amp; Long-Term Disability Insurance</label></div>
+        <div class="chk-row"><input type="checkbox" id="benLife" onchange="saveData()"><label for="benLife" style="font-size:12.5px;cursor:pointer;font-weight:300;margin:0">Life Insurance (employer-provided)</label></div>
+        <div class="chk-row"><input type="checkbox" id="benEAP" onchange="saveData()"><label for="benEAP" style="font-size:12.5px;cursor:pointer;font-weight:300;margin:0">Employee Assistance Program (EAP)</label></div>
+        <div class="chk-row"><input type="checkbox" id="benFSA" onchange="saveData()"><label for="benFSA" style="font-size:12.5px;cursor:pointer;font-weight:300;margin:0">FSA / HSA</label></div>
+      </div>
+      <div class="div"></div>
+      <div class="div-lbl">Retirement &amp; Financial Benefits</div>
+      <div style="margin-bottom:18px">
+        <div class="chk-row"><input type="checkbox" id="benR" onchange="saveData()"><label for="benR" style="font-size:12.5px;cursor:pointer;font-weight:300;margin:0">Retirement Plan (403(b), 401(k), SIMPLE IRA, or SEP-IRA)</label></div>
+        <div class="chk-row"><input type="checkbox" id="benMatch" onchange="saveData()"><label for="benMatch" style="font-size:12.5px;cursor:pointer;font-weight:300;margin:0">Employer Match on Retirement Plan</label></div>
+        <div class="chk-row"><input type="checkbox" id="benSev" onchange="saveData()"><label for="benSev" style="font-size:12.5px;cursor:pointer;font-weight:300;margin:0">Formal Severance Policy</label></div>
+        <div class="chk-row"><input type="checkbox" id="benEq" onchange="saveData()"><label for="benEq" style="font-size:12.5px;cursor:pointer;font-weight:300;margin:0">Student Loan Repayment or Tuition Assistance</label></div>
+        <div class="chk-row"><input type="checkbox" id="benPF" onchange="saveData()"><label for="benPF" style="font-size:12.5px;cursor:pointer;font-weight:300;margin:0">Professional Development / Training Budget</label></div>
+      </div>
+      <div class="div"></div>
+      <div class="div-lbl">Insurance &amp; Risk Coverage</div>
+      <div style="margin-bottom:18px">
+        <div class="chk-row"><input type="checkbox" id="benWC" onchange="saveData()"><label for="benWC" style="font-size:12.5px;cursor:pointer;font-weight:300;margin:0">Workers Compensation Coverage</label></div>
+        <div class="chk-row"><input type="checkbox" id="wcSt" onchange="saveData()"><label for="wcSt" style="font-size:12.5px;cursor:pointer;font-weight:300;margin:0">EPLI — Employment Practices Liability Insurance</label></div>
+        <div class="chk-row"><input type="checkbox" id="benGL" onchange="saveData()"><label for="benGL" style="font-size:12.5px;cursor:pointer;font-weight:300;margin:0">Directors &amp; Officers (D&amp;O) Insurance</label></div>
+      </div>
+      <div class="div"></div>
+      <div class="div-lbl">Leave Policies in Place</div>
+      <div>
+        <div class="chk-row"><input type="checkbox" id="levPTO" onchange="saveData()"><label for="levPTO" style="font-size:12.5px;cursor:pointer;font-weight:300;margin:0">PTO / Vacation Policy</label></div>
+        <div class="chk-row"><input type="checkbox" id="levSick" onchange="saveData()"><label for="levSick" style="font-size:12.5px;cursor:pointer;font-weight:300;margin:0">Sick Leave Policy</label></div>
+        <div class="chk-row"><input type="checkbox" id="levParental" onchange="saveData()"><label for="levParental" style="font-size:12.5px;cursor:pointer;font-weight:300;margin:0">Paid Parental Leave Policy</label></div>
+        <div class="chk-row"><input type="checkbox" id="levBereavement" onchange="saveData()"><label for="levBereavement" style="font-size:12.5px;cursor:pointer;font-weight:300;margin:0">Bereavement Leave Policy</label></div>
+        <div class="chk-row"><input type="checkbox" id="levFMLA" onchange="saveData()"><label for="levFMLA" style="font-size:12.5px;cursor:pointer;font-weight:300;margin:0">FMLA Policy (required if 50+ employees)</label></div>
+        <div class="chk-row"><input type="checkbox" id="levADA" onchange="saveData()"><label for="levADA" style="font-size:12.5px;cursor:pointer;font-weight:300;margin:0">ADA Leave / Accommodation Policy</label></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APPLICABILITY TAB -->
+<div id="view-applicability" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Applicability Summary</div><div class="card-desc">Which federal and Texas employment laws apply to this organization based on the profile data entered. Update headcount in Workforce Configuration to recalculate.</div></div>
+      <button onclick="calcApplicability()" class="nbtn nbtn-gold">Recalculate</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-w" style="margin-bottom:16px"><span class="al-ic">&#9651;</span><span>Applicability is based on current headcount. Employment law thresholds must be rechecked whenever the organization crosses a significant headcount milestone (15, 20, 50, 100 employees). This tool does not constitute legal advice — verify applicability determinations with employment counsel.</span></div>
+      <div id="applicabilityOutput">
+        <div style="padding:24px;text-align:center;color:var(--text-light);font-size:12px;background:rgba(27,68,54,0.02);border-radius:var(--radius-md);border:1px dashed var(--border)">Complete the Workforce Configuration tab and click Recalculate to generate the applicability summary.</div>
+      </div>
+    </div>
+  </div>
+  <div class="card fu" style="animation-delay:0.07s">
+    <div class="card-hdr"><div><div class="card-title">Compliance Gap Flags</div><div class="card-desc">Based on profile configuration, items that may require attention.</div></div></div>
+    <div class="card-body">
+      <div id="gapOutput">
+        <div style="padding:24px;text-align:center;color:var(--text-light);font-size:12px;background:rgba(27,68,54,0.02);border-radius:var(--radius-md);border:1px dashed var(--border)">Complete the Benefits &amp; Compliance tab and click Recalculate to surface gaps.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="fb">The Coherence Collective &nbsp;&middot;&nbsp; <span>Plinth</span></div>
+  <div style="display:flex;gap:16px;align-items:center">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.35)">Jump to</span>
+      <select onchange="if(this.value)window.location.href=this.value" style="font-family:'Jost',sans-serif;font-weight:300;font-size:11px;background:rgba(255,255,255,0.06);color:rgba(245,237,228,0.6);border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:4px 24px 4px 8px;cursor:pointer;outline:none;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(245,237,228,0.4)' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 7px center">
+        <option value="/org-profile/" selected>01 &middot; Org Profile</option>
+        <option value="/handbook/">02 &middot; Handbook</option>
+        <option value="/job-architecture/">03 &middot; Job Architecture</option>
+        <option value="/compensation/">04 &middot; Compensation</option>
+        <option value="/offer-hiring/">05 &middot; Offer &amp; Hiring</option>
+        <option value="/onboarding/">06 &middot; Onboarding</option>
+        <option value="/pay-practices/">07 &middot; Pay Practices</option>
+        <option value="/benefits/">08 &middot; Benefits Administration</option>
+        <option value="/leave/">09 &middot; Leave Management</option>
+        <option value="/performance/">10 &middot; Performance Management</option>
+        <option value="/er-investigation/">11 &middot; ER &amp; Investigation</option>
+        <option value="/separation/">12 &middot; Separation</option>
+        <option value="/compliance-calendar/">13 &middot; Compliance Calendar</option>
+        <option value="/manager-toolkit/">14 &middot; Manager Toolkit</option>
+        <option value="/analytics/">15 &middot; Analytics</option>
+      </select>
+    </div>
+    <span style="color:rgba(245,237,228,0.15)">|</span>
+    <a href="/handbook/" style="font-size:11px;color:rgba(245,237,228,0.4);text-decoration:none" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">Tool 02 &rarr;</a>
+  </div>
+</footer>
+
+<script>
+const ALL_TABS_OP = ['details','workforce','benefits','applicability'];
+var profile = {};
+try{ profile = JSON.parse(localStorage.getItem('plinth_op')||'{}'); }catch(e){}
+
+var ALL_FIELDS = ['legalName','dbaName','entityType','ein','primaryState','city','rStates','edName','boardChair','hrContact','hrEmail','fyEnd','foundedYear','wft','wpt','wpt6','wic','totalHC','fteFull','payFreq','workStructure','payrollProvider','hrisSystem','unionSt','icPay','isStartup','noSite'];
+var ALL_CHECKS = ['benH','benDen','benVis','benDis','benLife','benEAP','benFSA','benR','benMatch','benSev','benEq','benPF','benWC','wcSt','benGL','levPTO','levSick','levParental','levBereavement','levFMLA','levADA'];
+
+function saveData(){
+  ALL_FIELDS.forEach(function(id){ var el=document.getElementById(id); if(el) profile[id]=el.value; });
+  ALL_CHECKS.forEach(function(id){ var el=document.getElementById(id); if(el) profile[id]=el.checked; });
+  localStorage.setItem('plinth_op', JSON.stringify(profile));
+  var fl=document.getElementById('sflash'); fl.classList.add('on'); setTimeout(function(){fl.classList.remove('on');},1800);
+}
+
+function restoreData(){
+  ALL_FIELDS.forEach(function(id){ var el=document.getElementById(id); if(el&&profile[id]!==undefined) el.value=profile[id]; });
+  ALL_CHECKS.forEach(function(id){ var el=document.getElementById(id); if(el&&profile[id]!==undefined) el.checked=profile[id]; });
+}
+
+function showTab(tab){
+  ALL_TABS_OP.forEach(function(t){
+    var v=document.getElementById('view-'+t); if(v) v.style.display=t===tab?'block':'none';
+    var el=document.getElementById('tab-'+t); if(el) el.classList.toggle('active',t===tab);
+  });
+  if(tab==='applicability') calcApplicability();
+}
+
+function animateCards(){
+  var obs=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('vis'); }); },{threshold:0.04});
+  document.querySelectorAll('.card').forEach(function(c){obs.observe(c);});
+}
+
+function calcApplicability(){
+  var hc=parseInt(profile.totalHC)||0;
+  var fte=parseInt(profile.fteFull)||hc;
+  var state=profile.primaryState||'';
+  if(!hc){ document.getElementById('applicabilityOutput').innerHTML='<div style="padding:24px;text-align:center;color:var(--text-light);font-size:12px;background:rgba(27,68,54,0.02);border-radius:var(--radius-md);border:1px dashed var(--border)">Enter total headcount in Workforce Configuration to calculate applicability.</div>'; return; }
+
+  function row(law, applies, threshold, notes){
+    var cls=applies==='yes'?'appl-yes':applies==='no'?'appl-no':'appl-maybe';
+    var label=applies==='yes'?'Applies':applies==='no'?'Does not apply':'May apply';
+    return '<tr><td>'+law+'</td><td><span class="appl-tag '+cls+'">'+label+'</span></td><td style="font-size:11px">'+threshold+'</td><td style="font-size:11px;color:var(--text-light)">'+notes+'</td></tr>';
+  }
+
+  var html='<table class="ref-table"><thead><tr><th>Law / Requirement</th><th>Status</th><th>Threshold</th><th>Notes</th></tr></thead><tbody>';
+  html+=row('Title VII &mdash; Discrimination &amp; Harassment', hc>=15?'yes':'no', '15+ employees', hc>=15?'Race, color, religion, sex, national origin. Bostock (2020) adds sexual orientation and gender identity.':'Under threshold. Best practice to adopt an EEO policy regardless.');
+  html+=row('ADA &mdash; Americans with Disabilities Act', hc>=15?'yes':'no', '15+ employees', hc>=15?'Requires reasonable accommodation and interactive process for covered disabilities.':'Under threshold. Accommodation requests should still be handled thoughtfully.');
+  html+=row('ADEA &mdash; Age Discrimination', hc>=20?'yes':'no', '20+ employees', hc>=20?'Protects employees 40+. OWBPA governs severance agreements for employees 40+.':'Under threshold.');
+  html+=row('FMLA &mdash; Family and Medical Leave Act', hc>=50?'yes':'no', '50+ employees within 75 miles', hc>=50?'Eligible employees (12 months tenure, 1,250 hours) entitled to 12 weeks unpaid leave. See Tool 09.':'Under threshold. No federal FMLA obligation. May have state analog depending on location.');
+  html+=row('COBRA &mdash; Health Continuation', (profile.benH&&hc>=20)?'yes':(!profile.benH?'no':'no'), '20+ employees with group health plan', profile.benH&&hc>=20?'Must offer 18-month continuation coverage to qualified beneficiaries within 30 days of qualifying event.':profile.benH&&hc<20?'Under COBRA threshold. Texas state continuation (TXCOR) may apply — 9 months for groups under 20. Verify with benefits broker.':'No group health plan in place.');
+  html+=row('ACA &mdash; Employer Mandate (ALE)', fte>=50?'yes':'no', '50+ FTEs (ALE)', fte>=50?'Applicable Large Employer. Must offer minimum essential coverage to full-time employees or face potential penalties. ACA reporting (1094-C/1095-C) required.':'Not an ALE. No employer mandate obligation. Self-reporting not required.');
+  html+=row('WARN Act &mdash; Mass Layoff Notice', hc>=100?'yes':'no', '100+ employees', hc>=100?'60 days advance notice required for plant closing or mass layoff affecting 50+ employees. Failure results in 60 days back pay and benefits.':'Under WARN threshold.');
+  html+=row('EEO-1 Reporting', hc>=100?'yes':'no', '100+ employees', hc>=100?'Annual EEO-1 Component 1 report required. Filing window set annually by EEOC — typically spring. See Tool 13.':'Under threshold.');
+  html+=row('FLSA &mdash; Wage &amp; Hour', 'yes', 'No minimum', 'Applies to all employers with employees. Minimum wage, overtime, and exempt/non-exempt classification requirements. See Tool 07.');
+  if(state==='TX'||state===''){
+    html+=row('Texas Payday Law', 'yes', 'All TX employers', 'Governs pay timing, final pay rules, and unlawful deductions. Enforced by Texas Workforce Commission. See Tool 07.');
+    html+=row('TCHR &mdash; Texas Civil Rights Division', hc>=15?'yes':'no', '15+ employees', hc>=15?'Texas state analog to Title VII. Filed with TCHR, dual-file with EEOC available.':'Under threshold for TCHR.');
+  }
+  html+='</tbody></table>';
+  html+='<p style="font-size:11px;color:var(--text-light);margin-top:8px">Based on reported headcount of '+hc+' ('+fte+' FTE). Multi-state employees may trigger additional state law obligations in their state of residence — consult counsel for each state where remote employees work.</p>';
+  document.getElementById('applicabilityOutput').innerHTML=html;
+
+  // Gap analysis
+  var gaps=[];
+  if(hc>=50&&!profile.levFMLA) gaps.push({s:'High',t:'FMLA policy required',d:'Organization meets the 50-employee threshold for FMLA coverage but has not indicated an FMLA policy is in place. A written FMLA policy and posted notice (WH-1420) are required. See Tool 09.'});
+  if(hc>=15&&!profile.benWC) gaps.push({s:'High',t:'Workers compensation coverage',d:'Texas does not require workers compensation, but non-subscriber status creates significant tort liability exposure. Verify current coverage or document the non-subscriber election.'});
+  if(hc>=20&&profile.benH&&!profile.levFMLA) gaps.push({s:'Moderate',t:'COBRA administration process',d:'Group health plan with 20+ employees requires COBRA administration. Confirm COBRA notices and qualifying event tracking processes are in place with your benefits broker.'});
+  if(hc>=15&&!profile.wcSt) gaps.push({s:'Moderate',t:'EPLI coverage not indicated',d:'Employment Practices Liability Insurance is not confirmed in the profile. At 15+ employees, EPLI is a material risk management gap.'});
+  if(profile.wic>0&&!profile['icPay']) gaps.push({s:'Moderate',t:'Independent contractor classification review',d:'The organization uses independent contractors. Confirm each contractor engagement meets IRS and DOL classification standards. Misclassification is one of the most common — and expensive — compliance failures.'});
+  if(profile.rStates&&profile.rStates.trim()) gaps.push({s:'Moderate',t:'Multi-state compliance review needed',d:'Remote employees in other states ('+profile.rStates+') trigger income tax withholding, unemployment insurance, workers comp, and potentially paid leave obligations in each state. Confirm with counsel or payroll provider.'});
+  if(!profile.boardChair&&profile.entityType==='501c3') gaps.push({s:'Low',t:'Board chair not recorded',d:'501(c)(3) organizations should have active board governance. Record the board chair in the profile to populate relevant compliance references.'});
+
+  if(!gaps.length){
+    document.getElementById('gapOutput').innerHTML='<div class="al al-i"><span class="al-ic">&#10003;</span><span>No major compliance gaps detected based on profile configuration. Update the profile as the organization grows or benefits change — thresholds and obligations shift with headcount milestones.</span></div>';
+    return;
+  }
+  var gapHtml='';
+  for(var i=0;i<gaps.length;i++){
+    var g=gaps[i];
+    var cls=g.s==='High'?'al-d':g.s==='Moderate'?'al-w':'al-i';
+    gapHtml+='<div class="al '+cls+'"><span class="al-ic">'+(g.s==='High'?'&#9888;':'&#9651;')+'</span><span><strong>'+g.s+': '+g.t+'</strong> &mdash; '+g.d+'</span></div>';
+  }
+  document.getElementById('gapOutput').innerHTML=gapHtml;
+}
+
+document.addEventListener('DOMContentLoaded',function(){ restoreData(); animateCards(); });
+</script>
+</body>
+</html>

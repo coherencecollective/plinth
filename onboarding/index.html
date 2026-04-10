@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Plinth · Onboarding</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--green:#1b4436;--green-light:#235a47;--green-deep:#122e24;--mauve:#916179;--sand:#D2BB9F;--gold:#D99E32;--pale:#cccf8e;--crimson:#A42F30;--beige:#F5EDE4;--white:#fff;--off-white:#faf8f5;--text-dark:#1a1a1a;--text-mid:#444;--text-light:#777;--border:#e0d8cf;--shadow:0 2px 16px rgba(27,68,54,0.08);--shadow-md:0 6px 28px rgba(27,68,54,0.13);--radius:4px;--radius-md:8px;--radius-lg:12px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Jost',sans-serif;font-weight:300;font-size:14px;color:var(--text-dark);background:var(--off-white);min-height:100vh;}
+nav{position:sticky;top:0;z-index:100;background:var(--green);padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,0.2);}
+.nav-left{display:flex;align-items:center;gap:14px;}
+.back-btn{display:inline-flex;align-items:center;gap:5px;font-family:'Jost',sans-serif;font-size:11px;font-weight:300;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.5);padding:5px 10px;border:1px solid rgba(245,237,228,0.15);border-radius:var(--radius);background:none;cursor:pointer;transition:all 0.2s;}
+.back-btn:hover{color:var(--beige);}
+.nav-sep{width:1px;height:18px;background:rgba(255,255,255,0.15);}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:17px;color:var(--beige);}
+.nav-brand span{color:var(--gold);}
+.nav-sub{font-size:12px;font-weight:300;color:rgba(245,237,228,0.45);}
+.nav-right{display:flex;gap:7px;align-items:center;}
+.nbtn{font-family:'Jost',sans-serif;font-weight:300;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:5px 13px;border-radius:var(--radius);cursor:pointer;border:none;transition:all 0.2s;white-space:nowrap;}
+.nbtn-ghost{background:transparent;color:var(--sand);border:1px solid rgba(210,187,159,0.3);}
+.nbtn-ghost:hover{background:rgba(210,187,159,0.1);color:var(--beige);}
+.nbtn-gold{background:var(--gold);color:var(--green-deep);font-weight:400;}
+.sflash{font-size:11px;color:var(--pale);margin-right:4px;opacity:0;transition:opacity 0.3s;}
+.sflash.on{opacity:1;}
+.tabs{background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;display:flex;overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{font-size:11px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:13px 18px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.2s;}
+.tab:hover{color:var(--green);}
+.tab.active{color:var(--green);border-bottom-color:var(--green);}
+.hero{background:linear-gradient(150deg,var(--green-deep) 0%,var(--green) 55%,var(--green-light) 100%);padding:44px 28px 38px;position:relative;overflow:hidden;}
+.hero-inner{max-width:1060px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+.hero-eye{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--pale);margin-bottom:10px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:36px;color:var(--white);line-height:1.05;margin-bottom:8px;}
+.hero-title em{font-style:italic;color:var(--sand);}
+.hero-desc{font-size:12.5px;font-weight:300;color:rgba(245,237,228,0.65);max-width:500px;line-height:1.75;}
+.hero-meta{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-md);padding:14px 20px;text-align:right;flex-shrink:0;}
+.hero-meta-lbl{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,237,228,0.4);margin-bottom:4px;}
+.hero-meta-val{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--white);}
+.main{max-width:1060px;margin:0 auto;padding:32px 28px 80px;display:grid;grid-template-columns:1fr 280px;gap:24px;align-items:start;}
+.main.wide{grid-template-columns:1fr;}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;opacity:0;transform:translateY(10px);transition:opacity 0.35s,transform 0.35s;}
+.card.vis{opacity:1;transform:translateY(0);}
+.card-hdr{padding:16px 22px 13px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.05));display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:16px;color:var(--green);}
+.card-desc{font-size:11px;color:var(--text-light);margin-top:2px;line-height:1.5;}
+.card-body{padding:20px 22px;}
+.fg{display:grid;gap:14px;}
+.g2{grid-template-columns:1fr 1fr;}
+.g3{grid-template-columns:1fr 1fr 1fr;}
+.c2{grid-column:span 2;}
+.c3{grid-column:span 3;}
+.f label{display:block;font-size:11px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-mid);margin-bottom:5px;}
+input[type="text"],input[type="date"],select,textarea{width:100%;font-family:'Jost',sans-serif;font-weight:300;font-size:13px;color:var(--text-dark);background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:8px 11px;outline:none;transition:border-color 0.2s;appearance:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(27,68,54,0.07);}
+textarea{resize:vertical;min-height:72px;line-height:1.7;}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23777' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer;}
+.fhint{font-size:10.5px;color:var(--text-light);margin-top:4px;line-height:1.5;}
+.div{height:1px;background:var(--border);margin:16px 0;}
+.div-lbl{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);margin:-14px 0 12px;display:flex;align-items:center;gap:8px;}
+.div-lbl::before,.div-lbl::after{content:'';flex:1;height:1px;background:var(--border);}
+.al{border-radius:var(--radius);padding:9px 12px;font-size:12px;line-height:1.6;margin-bottom:10px;display:flex;gap:8px;align-items:flex-start;}
+.al-ic{font-size:13px;flex-shrink:0;margin-top:1px;}
+.al-i{background:rgba(27,68,54,0.05);border-left:3px solid var(--pale);color:var(--text-mid);}
+.al-w{background:rgba(217,158,50,0.07);border-left:3px solid var(--gold);color:var(--text-mid);}
+.al-c{background:rgba(145,97,121,0.07);border-left:3px solid var(--mauve);color:var(--text-mid);}
+/* CHECKLIST */
+.checklist-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(224,216,207,0.45);}
+.checklist-item:last-child{border-bottom:none;}
+.cl-check{width:18px;height:18px;border:2px solid var(--border);border-radius:3px;flex-shrink:0;cursor:pointer;transition:all 0.15s;margin-top:1px;display:flex;align-items:center;justify-content:center;}
+.cl-check.done{background:var(--green);border-color:var(--green);color:white;font-size:10px;}
+.cl-check:hover{border-color:var(--green);}
+.cl-content{flex:1;}
+.cl-title{font-size:12.5px;color:var(--text-dark);line-height:1.5;}
+.cl-meta{font-size:10.5px;color:var(--text-light);margin-top:2px;}
+.cl-deadline{font-size:10px;color:var(--crimson);margin-top:2px;font-weight:400;}
+.cl-badge{font-size:9.5px;padding:1px 7px;border-radius:8px;margin-left:6px;}
+.cb-day1{background:rgba(164,47,48,0.08);color:var(--crimson);}
+.cb-week1{background:rgba(217,158,50,0.1);color:#8a6010;}
+.cb-30{background:rgba(27,68,54,0.07);color:var(--green);}
+.cb-60{background:rgba(145,97,121,0.08);color:var(--mauve);}
+.cb-90{background:rgba(204,207,142,0.2);color:#5a6020;}
+/* SIDEBAR */
+.sidebar{position:sticky;top:76px;}
+.sb-panel{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow);margin-bottom:14px;}
+.sbph{background:linear-gradient(135deg,var(--green-deep),var(--green));padding:13px 16px;}
+.sbpt{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:15px;color:var(--white);margin-bottom:2px;}
+.sbps{font-size:10.5px;color:rgba(245,237,228,0.55);}
+.sbpb{padding:14px 16px;}
+.stat-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(224,216,207,0.4);font-size:12px;}
+.stat-row:last-child{border-bottom:none;}
+.stat-lbl{color:var(--text-light);}
+.stat-val{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--green);}
+/* GOAL SETTING */
+.goal-row{display:grid;grid-template-columns:80px 1fr 120px;gap:12px;align-items:start;padding:10px 0;border-bottom:1px solid rgba(224,216,207,0.4);}
+.goal-row:last-child{border-bottom:none;}
+.goal-phase{font-size:10px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-light);padding-top:9px;}
+footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:center;justify-content:space-between;}
+.fb{font-family:'Cormorant Garamond',serif;font-size:13px;color:rgba(245,237,228,0.4);}
+.fb span{color:var(--sand);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.fu{animation:fadeUp 0.4s ease both;}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-left">
+    <button class="back-btn" onclick="window.location.href='/'">&#8592; All Tools</button>
+    <div class="nav-sep"></div>
+    <div class="nav-brand">Pl<span>in</span>th</div>
+    <div class="nav-sub">&nbsp;·&nbsp; Onboarding</div>
+  </div>
+  <div class="nav-right">
+    <span class="sflash" id="sflash">Saved</span>
+    <button class="nbtn nbtn-ghost" onclick="saveData()">Save</button>
+    <button class="nbtn nbtn-gold" onclick="openNewHire()">+ New Hire</button>
+  </div>
+</nav>
+<div class="tabs">
+  <div class="tab active" onclick="showTab('setup')" id="tab-setup">New Hire Setup</div>
+  <div class="tab" onclick="showTab('checklist')" id="tab-checklist">Onboarding Checklist</div>
+  <div class="tab" onclick="showTab('goals')" id="tab-goals">30 / 60 / 90 Goals</div>
+  <div class="tab" onclick="showTab('orientation')" id="tab-orientation">Orientation Agenda</div>
+  <div class="tab" onclick="showTab('announcement')" id="tab-announcement">Announcement &amp; Path</div>
+  <div class="tab" onclick="showTab('access')" id="tab-access">System Access</div>
+  <div class="tab" onclick="showTab('guide')" id="tab-guide">Integration Guide</div>
+</div>
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eye">Plinth · Tool 06</div>
+      <div class="hero-title">Onboarding &amp; <em>New Hire Integration</em></div>
+      <div class="hero-desc">From signed offer to fully operational. Structured onboarding ensures every new hire gets what they need — before, on, and after Day 1 — and that nothing falls through the gap between recruiting and the first real week of work.</div>
+    </div>
+    <div class="hero-meta">
+      <div class="hero-meta-lbl">Active Onboards</div>
+      <div class="hero-meta-val" id="heroCount">0</div>
+      <div class="hero-meta-lbl" style="margin-top:6px">Client</div>
+      <div class="hero-meta-val" id="heroClient" style="font-size:13px">No client loaded</div>
+    </div>
+  </div>
+</div>
+
+<!-- SETUP TAB -->
+<div id="view-setup" class="main">
+<div>
+  <div class="card fu">
+    <div class="card-hdr"><div><div class="card-title">New Hire Information</div><div class="card-desc">Populates the checklist, goal template, and access provisioning form.</div></div></div>
+    <div class="card-body">
+      <div class="fg g2">
+        <div class="f"><label>First Name</label><input type="text" id="nhFirst" placeholder="First name" oninput="saveData()"></div>
+        <div class="f"><label>Last Name</label><input type="text" id="nhLast" placeholder="Last name" oninput="saveData()"></div>
+        <div class="f"><label>Preferred Name</label><input type="text" id="nhPreferred" placeholder="Name to use in communications and announcements" oninput="saveData()"></div>
+        <div class="f"><label>Position Title</label><input type="text" id="nhTitle" placeholder="As offered" oninput="saveData()"></div>
+        <div class="f"><label>Department</label><input type="text" id="nhDept" placeholder="e.g., Programs, Operations" oninput="saveData()"></div>
+        <div class="f"><label>FLSA Classification</label>
+          <select id="nhFLSA" onchange="saveData()">
+            <option value="">Select</option>
+            <option value="exempt">Exempt — salaried, not overtime eligible</option>
+            <option value="nonexempt">Nonexempt — overtime eligible, timekeeping required</option>
+          </select>
+        </div>
+        <div class="f"><label>Start Date</label><input type="date" id="nhStart" onchange="saveData();calcDates();checkAccessUrgency()"></div>
+        <div class="f"><label>Supervisor Name &amp; Title</label><input type="text" id="nhSupervisor" placeholder="Direct supervisor" oninput="saveData()"></div>
+        <div class="f"><label>Work Location</label><input type="text" id="nhLocation" placeholder="e.g., Dallas, TX — Hybrid" oninput="saveData()"></div>
+        <div class="f"><label>Employment Type</label>
+          <select id="nhEmpType" onchange="saveData()">
+            <option value="">Select type</option>
+            <option value="ft">Full-time</option>
+            <option value="pt">Part-time</option>
+            <option value="contract">Contract</option>
+          </select>
+        </div>
+        <div class="f c2"><label>Onboarding Buddy / Point of Contact</label><input type="text" id="nhBuddy" placeholder="Person assigned to support the new hire during onboarding" oninput="saveData()"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card fu" style="animation-delay:0.07s">
+    <div class="card-hdr"><div><div class="card-title">Pre-Start Preparation</div><div class="card-desc">Actions required before the new hire's first day.</div></div></div>
+    <div class="card-body">
+      <div id="preStartList"></div>
+    </div>
+  </div>
+</div>
+<div class="sidebar">
+  <div class="sb-panel">
+    <div class="sbph"><div class="sbpt">Onboarding Timeline</div><div class="sbps">Key dates</div></div>
+    <div class="sbpb">
+      <div id="accessUrgencyAlert"></div>
+      <div class="stat-row"><span class="stat-lbl">Start Date</span><span class="stat-val" id="sideStart" style="font-size:12px">Not set</span></div>
+      <div class="stat-row"><span class="stat-lbl">Day 3 (I-9 Section 2)</span><span class="stat-val" id="sideDay3" style="font-size:12px">—</span></div>
+      <div class="stat-row"><span class="stat-lbl" id="sideDay20Label">Day 20 (New Hire Report)</span><span class="stat-val" id="sideDay20" style="font-size:12px">—</span></div>
+      <div class="stat-row"><span class="stat-lbl">30-Day Check-in</span><span class="stat-val" id="sideDay30" style="font-size:12px">—</span></div>
+      <div class="stat-row"><span class="stat-lbl">60-Day Check-in</span><span class="stat-val" id="sideDay60" style="font-size:12px">—</span></div>
+      <div class="stat-row"><span class="stat-lbl">90-Day Review</span><span class="stat-val" id="sideDay90" style="font-size:12px">—</span></div>
+    </div>
+  </div>
+  <div class="sb-panel">
+    <div class="sbph"><div class="sbpt">Checklist Progress</div></div>
+    <div class="sbpb">
+      <div class="stat-row"><span class="stat-lbl">Day 1 Items</span><span class="stat-val" id="progDay1">0 / 0</span></div>
+      <div class="stat-row"><span class="stat-lbl">Week 1 Items</span><span class="stat-val" id="progWeek1">0 / 0</span></div>
+      <div class="stat-row"><span class="stat-lbl">30-Day Items</span><span class="stat-val" id="prog30">0 / 0</span></div>
+      <div class="stat-row"><span class="stat-lbl">60-Day Items</span><span class="stat-val" id="prog60">0 / 0</span></div>
+      <div class="stat-row"><span class="stat-lbl">90-Day Items</span><span class="stat-val" id="prog90">0 / 0</span></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- CHECKLIST TAB -->
+<div id="view-checklist" class="main wide" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr"><div><div class="card-title">Onboarding Checklist</div><div class="card-desc">Check off items as they are completed. Progress saves automatically.</div></div></div>
+    <div class="card-body" id="checklistBody"></div>
+  </div>
+</div>
+
+<!-- GOALS TAB -->
+<div id="view-goals" class="main wide" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr"><div><div class="card-title">30 / 60 / 90 Day Goals</div><div class="card-desc">Set clear expectations for each phase. Share with new hire and supervisor before Day 1.</div></div>
+      <button onclick="exportGoals()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Print / PDF</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-i" style="margin-bottom:16px"><span class="al-ic">ℹ</span><span>30-day goals focus on orientation and learning. 60-day goals introduce independent contribution. 90-day goals establish full operational effectiveness. Goals should be specific, measurable, and agreed upon in advance — not evaluated retroactively.</span></div>
+      <div id="goalsContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ORIENTATION AGENDA TAB -->
+<div id="view-orientation" class="main wide" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Day 1 Orientation Agenda</div><div class="card-desc">A structured first day is not logistics — it is a statement about organizational competence and care. Generate a customized agenda and share it with the new hire, their supervisor, and their onboarding buddy before the start date.</div></div>
+      <div style="display:flex;gap:8px">
+        <button onclick="exportOrientation()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Print / PDF</button>
+      </div>
+    </div>
+    <div class="card-body" id="orientationBody"></div>
+  </div>
+</div>
+
+<!-- ANNOUNCEMENT & PATH TAB -->
+<div id="view-announcement" class="main wide" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">New Hire Announcement</div><div class="card-desc">Generate a team announcement that introduces the new hire with context — not just a name and title. People join organizations, but they stay for the people they work with.</div></div>
+      <button onclick="exportAnnouncement()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Print / PDF</button>
+    </div>
+    <div class="card-body">
+      <div class="fg g2" style="margin-bottom:20px">
+        <div class="f"><label>Professional Background (2–3 sentences)</label>
+          <textarea id="annBackground" placeholder="Where are they coming from? What have they done? What makes them qualified and interesting for this role?" rows="3" oninput="saveData()"></textarea>
+        </div>
+        <div class="f"><label>What They Will Own / Lead</label>
+          <textarea id="annScope" placeholder="What will they be responsible for? What work will they be leading that the team should know about?" rows="3" oninput="saveData()"></textarea>
+        </div>
+        <div class="f"><label>Something Personal (optional but recommended)</label>
+          <textarea id="annPersonal" placeholder="Where are they from? What do they care about outside of work? This is what makes them a person, not just a hire." rows="2" oninput="saveData()"></textarea>
+        </div>
+        <div class="f"><label>Who to Contact For...</label>
+          <textarea id="annContact" placeholder="What questions or needs should teammates bring to this person starting Day 1? Set expectations for their scope immediately." rows="2" oninput="saveData()"></textarea>
+        </div>
+      </div>
+      <div class="div"></div>
+      <div class="div-lbl">Role-Specific Onboarding Path</div>
+      <div class="al al-i" style="margin-bottom:14px"><span class="al-ic">ℹ</span><span>Onboarding an individual contributor is fundamentally different from onboarding a manager or an executive. The learning priorities, the relationship map, and the timeline for independent contribution all differ. Use the path below as a starting framework and adapt to the specific role.</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+        <div style="border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden">
+          <div style="background:linear-gradient(135deg,var(--green-deep),var(--green));padding:12px 16px">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--white)">Individual Contributor</div>
+            <div style="font-size:10px;color:rgba(245,237,228,0.55);margin-top:2px">Program staff, analysts, coordinators</div>
+          </div>
+          <div style="padding:14px 16px">
+            <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:8px">Days 1–30</div>
+            <div style="font-size:11.5px;color:var(--text-mid);line-height:1.75">Learn the systems, meet the stakeholders, understand the context. Shadow existing team members on key workflows. First 30 days should have zero deliverables that matter.</div>
+            <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin:10px 0 8px">Days 31–60</div>
+            <div style="font-size:11.5px;color:var(--text-mid);line-height:1.75">Begin independent contribution on lower-stakes tasks. Supervisor reviews all work and provides detailed feedback. Building technical competence and relationship credibility simultaneously.</div>
+            <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin:10px 0 8px">Days 61–90</div>
+            <div style="font-size:11.5px;color:var(--text-mid);line-height:1.75">Producing work at the standard expected of the role. Trusted to manage their own workflows. Feedback moves from corrective to developmental.</div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden">
+          <div style="background:linear-gradient(135deg,#5a3a4a,var(--mauve));padding:12px 16px">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--white)">Manager</div>
+            <div style="font-size:10px;color:rgba(245,237,228,0.55);margin-top:2px">Team leads, program managers, directors</div>
+          </div>
+          <div style="padding:14px 16px">
+            <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:8px">Days 1–30</div>
+            <div style="font-size:11.5px;color:var(--text-mid);line-height:1.75">Listen before leading. Meet every direct report 1:1 within the first two weeks. Ask more than advising. Do not reorganize, restructure, or introduce new expectations until context is established.</div>
+            <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin:10px 0 8px">Days 31–60</div>
+            <div style="font-size:11.5px;color:var(--text-mid);line-height:1.75">Diagnose the team: What is working? What is not? What are the dynamics? Where are the skill gaps? Begin setting clear expectations. Share preliminary observations with supervisor.</div>
+            <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin:10px 0 8px">Days 61–90</div>
+            <div style="font-size:11.5px;color:var(--text-mid);line-height:1.75">Present a team assessment and 6-month plan to supervisor. Begin active performance management. Cross-functional relationships established.</div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden">
+          <div style="background:linear-gradient(135deg,#3a2a1a,#6a4a20);padding:12px 16px">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--white)">Executive / Director+</div>
+            <div style="font-size:10px;color:rgba(245,237,228,0.55);margin-top:2px">VPs, C-suite, Executive Directors</div>
+          </div>
+          <div style="padding:14px 16px">
+            <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:8px">Days 1–30</div>
+            <div style="font-size:11.5px;color:var(--text-mid);line-height:1.75">Stakeholder mapping and relationship investment. Meet board members, key funders, major partners, and all direct reports. Listen to the organization's stories about itself — the narrative always contains the diagnosis.</div>
+            <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin:10px 0 8px">Days 31–60</div>
+            <div style="font-size:11.5px;color:var(--text-mid);line-height:1.75">Internal assessment: financial health, operational gaps, team strengths and liabilities, strategic coherence, cultural patterns. Begin identifying the 2–3 priorities that will define the first year.</div>
+            <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin:10px 0 8px">Days 61–90</div>
+            <div style="font-size:11.5px;color:var(--text-mid);line-height:1.75">Present a 90-day findings document to the board. Introduce a 12-month strategic framework. Demonstrate coherent leadership voice. Be visible — internally and externally.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ACCESS TAB -->
+<div id="view-access" class="main wide" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr"><div><div class="card-title">System Access &amp; Equipment Provisioning</div><div class="card-desc">Track every account, credential, and piece of equipment that needs to be ready before Day 1.</div></div>
+      <button onclick="exportAccessSheet()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Print / PDF</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-w" style="margin-bottom:14px"><span class="al-ic">△</span><span>System access provisioning is the most common onboarding failure point. A new hire who cannot access email or tools on Day 1 signals organizational dysfunction — not just inconvenience. Complete this checklist at least 5 business days before the start date. For executive hires, allow 10 business days.</span></div>
+      <div class="fg g2" style="margin-bottom:20px">
+        <div class="f"><label>Email Account</label>
+          <select id="accEmail" onchange="saveData();checkAccessUrgency()"><option value="">Select</option><option value="needed">Needs to be created</option><option value="inprogress">In progress</option><option value="done">Completed</option><option value="na">Not applicable</option></select>
+        </div>
+        <div class="f"><label>Work Device / Computer</label>
+          <select id="accDevice" onchange="saveData();checkAccessUrgency()"><option value="">Select</option><option value="provide">Organization provides — needs to be ordered</option><option value="ordered">Ordered — arriving before start date</option><option value="byod">BYOD policy — employee uses personal device</option><option value="done">Device ready</option></select>
+        </div>
+        <div class="f"><label>HR / Payroll System Access</label>
+          <select id="accHR" onchange="saveData()"><option value="">Select</option><option value="needed">Needs to be set up</option><option value="inprogress">In progress</option><option value="done">Completed</option></select>
+        </div>
+        <div class="f"><label>Project Management / Collaboration Tools</label>
+          <select id="accPM" onchange="saveData()"><option value="">Select</option><option value="needed">Needs to be set up</option><option value="inprogress">In progress</option><option value="done">Completed</option></select>
+        </div>
+        <div class="f"><label>Video Conferencing (Zoom, Teams, Meet)</label>
+          <select id="accVideo" onchange="saveData()"><option value="">Select</option><option value="needed">Needs to be set up</option><option value="done">Completed</option><option value="na">Not applicable</option></select>
+        </div>
+        <div class="f"><label>Expense Management System</label>
+          <select id="accExpense" onchange="saveData()"><option value="">Select</option><option value="needed">Needs to be set up</option><option value="done">Completed</option><option value="na">Not applicable</option></select>
+        </div>
+        <div class="f"><label>Document Signing (DocuSign, Adobe Sign)</label>
+          <select id="accDocSign" onchange="saveData()"><option value="">Select</option><option value="needed">Needs to be set up</option><option value="done">Completed</option><option value="na">Not applicable</option></select>
+        </div>
+        <div class="f"><label>Learning Management System (LMS)</label>
+          <select id="accLMS" onchange="saveData()"><option value="">Select</option><option value="needed">Needs to be set up</option><option value="done">Completed</option><option value="na">Not applicable</option></select>
+        </div>
+        <div class="f"><label>CRM / Donor / Constituent Database</label>
+          <select id="accCRM" onchange="saveData()"><option value="">Select</option><option value="needed">Needs to be set up</option><option value="inprogress">In progress</option><option value="done">Completed</option><option value="na">Not applicable</option></select>
+        </div>
+        <div class="f"><label>Physical Access / Key Card / Badge</label>
+          <select id="accPhysical" onchange="saveData()"><option value="">Select</option><option value="needed">Needed</option><option value="done">Ready</option><option value="na">Remote — not applicable</option></select>
+        </div>
+        <div class="f"><label>Business Cards</label>
+          <select id="accCards" onchange="saveData()"><option value="">Select</option><option value="order">Order needed</option><option value="done">Ordered / Ready</option><option value="na">Not applicable</option></select>
+        </div>
+        <div class="f c2"><label>Additional Systems, Databases, or Tools Required</label>
+          <textarea id="accOther" placeholder="List any additional software, shared drives, grant portals, program databases, or tools that require access provisioning. Include the name of the system and who needs to grant access." oninput="saveData()"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INTEGRATION GUIDE TAB -->
+<div id="view-guide" class="main wide" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div>
+        <div class="card-title">New Hire Integration Guide</div>
+        <div class="card-desc">A complete, print-ready onboarding document — cover page, Day 1 agenda, 30/60/90 plan, system access checklist, and team announcement. Distribute to the new hire, supervisor, and onboarding buddy before the start date.</div>
+      </div>
+      <button onclick="exportIntegrationGuide()" style="padding:8px 18px;background:var(--gold);color:var(--green-deep);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;font-weight:400;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Generate Integration Guide</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-i" style="margin-bottom:20px"><span class="al-ic">ℹ</span><span>This guide compiles everything entered across all tabs into a single, formatted document. Complete the New Hire Setup and Goals tabs before generating. The guide is designed to be printed and handed to three people: the new hire, their supervisor, and their onboarding buddy.</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+        <div style="padding:16px 18px;border:1px solid var(--border);border-radius:var(--radius-md);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.04))">
+          <div style="font-size:10px;font-weight:400;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);margin-bottom:8px">Included in Guide</div>
+          <div style="font-size:12px;color:var(--text-mid);line-height:2">&#10003; Cover page with org and hire details<br>&#10003; Pre-start preparation checklist<br>&#10003; Day 1 orientation agenda<br>&#10003; 30 / 60 / 90 day plan with success criteria<br>&#10003; System access provisioning status<br>&#10003; Team announcement draft</div>
+        </div>
+        <div style="padding:16px 18px;border:1px solid var(--border);border-radius:var(--radius-md);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.04))">
+          <div style="font-size:10px;font-weight:400;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);margin-bottom:8px">Recommended Distribution</div>
+          <div style="font-size:12px;color:var(--text-mid);line-height:2"><strong>New hire:</strong> Full guide<br><strong>Supervisor:</strong> Full guide<br><strong>Buddy:</strong> Day 1 agenda + system access<br><strong>IT / Ops:</strong> System access page only<br><strong>File:</strong> Retain full guide in personnel file</div>
+        </div>
+        <div style="padding:16px 18px;border:1px solid var(--border);border-radius:var(--radius-md);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.04))">
+          <div style="font-size:10px;font-weight:400;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);margin-bottom:8px">Timing</div>
+          <div style="font-size:12px;color:var(--text-mid);line-height:2">Generate and distribute at least 3 business days before the start date. Send the new hire their copy with a personal note from the supervisor. Do not send a guide without a human touch attached to it.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="fb">The Coherence Collective &nbsp;·&nbsp; <span>Plinth</span></div>
+  <div style="display:flex;gap:16px;align-items:center">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.35)">Jump to</span>
+      <select onchange="if(this.value)window.location.href=this.value" style="font-family:'Jost',sans-serif;font-weight:300;font-size:11px;background:rgba(255,255,255,0.06);color:rgba(245,237,228,0.6);border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:4px 24px 4px 8px;cursor:pointer;outline:none;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(245,237,228,0.4)' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 7px center">
+        <option value="/org-profile/">01 &middot; Org Profile</option>
+        <option value="/handbook/">02 &middot; Handbook</option>
+        <option value="/job-architecture/">03 &middot; Job Architecture</option>
+        <option value="/compensation/">04 &middot; Compensation</option>
+        <option value="/offer-hiring/">05 &middot; Offer &amp; Hiring</option>
+        <option value="/onboarding/" selected>06 &middot; Onboarding</option>
+        <option value="/pay-practices/">07 &middot; Pay Practices</option>
+        <option value="/benefits/">08 &middot; Benefits Administration</option>
+        <option value="/leave/">09 &middot; Leave Management</option>
+        <option value="/performance/">10 &middot; Performance Management</option>
+        <option value="/er-investigation/">11 &middot; ER &amp; Investigation</option>
+        <option value="/separation/">12 &middot; Separation</option>
+        <option value="/compliance-calendar/">13 &middot; Compliance Calendar</option>
+        <option value="/manager-toolkit/">14 &middot; Manager Toolkit</option>
+        <option value="/analytics/">15 &middot; Analytics</option>
+      </select>
+    </div>
+    <span style="color:rgba(245,237,228,0.15)">|</span>
+    <a href="/offer-hiring/" style="font-size:11px;color:rgba(245,237,228,0.4);text-decoration:none" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">&larr; Tool 05</a>
+    <span style="color:rgba(245,237,228,0.15)">|</span>
+    <a href="/pay-practices/" style="font-size:11px;color:rgba(245,237,228,0.4);text-decoration:none" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">Tool 07 &rarr;</a>
+  </div>
+</footer>
+
+<script>
+let profile={}, data={ hires:[], checks:{}, goals:{}, access:{} };
+
+const CHECKLIST = [
+  // DAY 1
+  { id:'c01', phase:'day1', title:'Complete Form I-9 Section 1 (employee)', meta:'Employee must complete on their first day of work for pay. Cannot be completed before Day 1. Retain for 3 years from hire date or 1 year after termination, whichever is later.', deadline:'Day 1 — no exceptions' },
+  { id:'c02', phase:'day1', title:'Verify I-9 documents and complete Section 2 (employer)', meta:'Employer must examine original documents in person and complete Section 2 within 3 business days of the hire date. Copies are not acceptable for verification.', deadline:'By end of Day 3' },
+  { id:'c03', phase:'day1', title:'Collect completed Form W-4 (federal withholding)', meta:'Federal income tax withholding election. If the employee works remotely from a state other than the primary work state, confirm whether that state requires a separate withholding form.', deadline:'Day 1' },
+  { id:'c04', phase:'day1', title:'Deliver workers\' compensation coverage notice', meta:'Provide written notice of workers\' comp coverage, insurer or TPA name, and how to report a work-related injury. Post required notice in a conspicuous location. Texas non-subscribers must deliver a separate written notice to employees.', deadline:'Day 1' },
+  { id:'c05', phase:'day1', title:'Confirm all system access is functional', meta:'Test email, software, shared drives, and collaboration tools before the new hire arrives. A new hire who cannot access systems on Day 1 creates a negative first impression and productivity loss.', deadline:'Day 1 — provision at least 5 business days prior' },
+  { id:'c06', phase:'day1', title:'Provide and review Employee Handbook', meta:'Employee signs acknowledgment of receipt. Retain signed copy in the personnel file. If the handbook is not finalized, document this and deliver the acknowledgment when available.', deadline:'Day 1' },
+  { id:'c07', phase:'day1', title:'Conduct new hire orientation', meta:'Cover mission, values, org structure, key contacts, communication norms, and workspace or virtual environment tour. Do not default to paperwork — orientation should feel like an investment in the person.', deadline:'Day 1' },
+  // WEEK 1
+  { id:'c08', phase:'week1', title:'Initiate E-Verify (if applicable)', meta:'Required for federal contractors, many grant-funded positions, and participating employers. Initiate within 3 business days of hire. Check funding agreements and applicable executive orders to determine if required.', deadline:'Within 3 business days of hire if applicable' },
+  { id:'c09', phase:'week1', title:'State new hire reporting submitted', meta:'All employers must report new hires to their state\'s agency within 20 calendar days of hire. Failure to report is a statutory violation subject to penalty. Confirm the reporting portal for your state.', deadline:'Within 20 calendar days of hire' },
+  { id:'c10', phase:'week1', title:'Collect emergency contact and personal information form', meta:'Name, relationship, and phone number for at least one emergency contact. Mailing address. Any additional information required by your payroll or benefits system. Retain in personnel file.', deadline:'Week 1' },
+  { id:'c11', phase:'week1', title:'Direct deposit authorization collected', meta:'Written employee authorization required. If not collected, default to paper check until authorization is received. Do not set up direct deposit without written consent.', deadline:'Before first payroll cycle' },
+  { id:'c12', phase:'week1', title:'Confirm payroll system entry is complete', meta:'Verify name, FLSA classification, pay rate, pay frequency, department coding, and cost center are correctly entered in the payroll system before the first pay cycle runs.', deadline:'Before first payroll cycle' },
+  { id:'c13', phase:'week1', title:'Benefits enrollment initiated', meta:'Health, dental, and vision insurance elections must typically be made within 30 days of hire. Retirement plan enrollment per plan document terms. Document all elections and waivers.', deadline:'Within 30 days of hire' },
+  { id:'c14', phase:'week1', title:'Confirm federal and state labor law postings are current', meta:'Review that all required postings are displayed: FLSA, FMLA (if 50+ employees), EEOC, NLRA, OSHA, USERRA, and applicable state posters. Update at every new hire as a standing practice.', deadline:'Week 1' },
+  { id:'c15', phase:'week1', title:'Execute company property and equipment receipt (if applicable)', meta:'If any equipment — laptop, phone, badge, keys, vehicle — is issued, employee signs a receipt form. Note condition, return requirements, and any applicable use policies.', deadline:'Upon issuance of any property' },
+  { id:'c16', phase:'week1', title:'Execute confidentiality agreement (if applicable)', meta:'If the role has access to sensitive organizational, client, funder, or beneficiary data, a confidentiality or non-disclosure agreement should be signed at or before the start date. Retain in personnel file.', deadline:'Before or on start date if applicable' },
+  { id:'c17', phase:'week1', title:'Introduce to team and key stakeholders', meta:'Formal introductions to team, cross-functional partners, and external contacts as applicable. Do not leave this to chance — a structured introduction plan signals how the organization values people.', deadline:'Week 1' },
+  { id:'c18', phase:'week1', title:'Review 30/60/90-day goals with new hire', meta:'Share and discuss the goal framework before end of first week. Mutual clarity on expectations from the outset prevents ambiguity later. Goals should be agreed upon — not assigned.', deadline:'Week 1' },
+  { id:'c19', phase:'week1', title:'Schedule first 1:1 with supervisor and establish check-in cadence', meta:'Set the recurring check-in rhythm before the first week is over. Onboarding period check-ins should be more frequent than the standard cadence — weekly at minimum for the first 60 days.', deadline:'Week 1' },
+  // 30 DAYS
+  { id:'c20', phase:'30', title:'30-Day check-in meeting', meta:'Structured conversation reviewing progress on Day 1–30 goals. Address any concerns or gaps in resources, access, or integration. Document outcomes.', deadline:'Day 30' },
+  { id:'c21', phase:'30', title:'Confirm all system access is complete and functional', meta:'Verify that no access requests are still pending. Gaps at 30 days indicate a systems or process failure — escalate and resolve immediately.', deadline:'Day 30' },
+  { id:'c22', phase:'30', title:'Personnel file audit', meta:'Confirm I-9, W-4, handbook acknowledgment, emergency contact form, direct deposit authorization, property receipt, and benefits enrollment documentation are all on file and complete.', deadline:'Day 30' },
+  // 60 DAYS
+  { id:'c23', phase:'60', title:'60-Day check-in meeting', meta:'Review progress on Days 31–60 goals. Identify any performance or integration concerns early — 60 days is the right time to surface and address them before they compound.', deadline:'Day 60' },
+  { id:'c24', phase:'60', title:'Confirm benefits enrollment is finalized', meta:'Verify all benefit elections are processed and the employee understands their coverage. Confirm retirement plan enrollment if a waiting period applied.', deadline:'Day 60' },
+  // 90 DAYS
+  { id:'c25', phase:'90', title:'90-Day performance review', meta:'Formal evaluation against the 90-day goal framework. Document outcomes in writing. Establish ongoing performance expectations and the standard review cadence going forward.', deadline:'Day 90' },
+  { id:'c26', phase:'90', title:'Transition to standard performance management cycle', meta:'Move from onboarding monitoring to the regular feedback and review cadence used for all employees. Confirm expectations are clear and documented. Link to Tool 10 — Performance Management.', deadline:'Day 90' },
+];
+
+document.addEventListener('DOMContentLoaded',()=>{
+  try{profile=JSON.parse(localStorage.getItem('plinth_op')||'{}');}catch(e){}
+  try{const d=JSON.parse(localStorage.getItem('plinth_onboarding')||'{}');if(d.hires)Object.assign(data,d);}catch(e){}
+  document.getElementById('heroClient').textContent=profile.legalName||'No client loaded';
+  restoreForm();
+  calcDates();
+  checkAccessUrgency();
+  renderPreStart();
+  renderChecklist();
+  renderGoals();
+  animateCards();
+});
+
+function restoreForm(){
+  const h=data.hires[0]||{};
+  ['nhFirst','nhLast','nhPreferred','nhTitle','nhDept','nhStart','nhSupervisor','nhLocation','nhBuddy','annBackground','annScope','annPersonal','annContact'].forEach(id=>{
+    const el=document.getElementById(id);if(el&&h[id])el.value=h[id];
+  });
+  if(h.nhEmpType)document.getElementById('nhEmpType').value=h.nhEmpType;
+  if(h.nhFLSA)document.getElementById('nhFLSA').value=h.nhFLSA;
+  ['accEmail','accDevice','accHR','accPM','accPhysical','accCards','accVideo','accExpense','accDocSign','accLMS','accCRM'].forEach(id=>{
+    const el=document.getElementById(id);if(el&&data.access[id])el.value=data.access[id];
+  });
+  if(data.access.accOther)document.getElementById('accOther').value=data.access.accOther;
+}
+
+function saveData(){
+  const h={};
+  ['nhFirst','nhLast','nhPreferred','nhTitle','nhDept','nhStart','nhSupervisor','nhLocation','nhBuddy','nhEmpType','nhFLSA'].forEach(id=>{
+    const el=document.getElementById(id);if(el)h[id]=el.value;
+  });
+  ['annBackground','annScope','annPersonal','annContact'].forEach(id=>{
+    const el=document.getElementById(id);if(el)h[id]=el.value;
+  });
+  data.hires=[h];
+  ['accEmail','accDevice','accHR','accPM','accPhysical','accCards','accVideo','accExpense','accDocSign','accLMS','accCRM','accOther'].forEach(id=>{
+    const el=document.getElementById(id);if(el)data.access[id]=el.value;
+  });
+  localStorage.setItem('plinth_onboarding',JSON.stringify(data));
+  const fl=document.getElementById('sflash');fl.classList.add('on');setTimeout(()=>fl.classList.remove('on'),1800);
+  const ct=data.hires.filter(h=>h.nhFirst).length;
+  document.getElementById('heroCount').textContent=ct;
+}
+
+function calcDates(){
+  const startVal=document.getElementById('nhStart')?.value;
+  if(!startVal){['sideStart','sideDay3','sideDay20','sideDay30','sideDay60','sideDay90'].forEach(id=>{document.getElementById(id).textContent='—';});return;}
+  const start=new Date(startVal+'T12:00:00');
+  const fmt=d=>d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  const add=n=>{const d=new Date(start);d.setDate(d.getDate()+n);return d;};
+  document.getElementById('sideStart').textContent=fmt(start);
+  document.getElementById('sideDay3').textContent=fmt(add(3));
+  document.getElementById('sideDay20').textContent=fmt(add(20));
+  document.getElementById('sideDay30').textContent=fmt(add(30));
+  document.getElementById('sideDay60').textContent=fmt(add(60));
+  document.getElementById('sideDay90').textContent=fmt(add(90));
+}
+
+function checkAccessUrgency(){
+  const startVal=document.getElementById('nhStart')?.value;
+  const alertEl=document.getElementById('accessUrgencyAlert');
+  if(!alertEl) return;
+  if(!startVal){ alertEl.innerHTML=''; return; }
+  const start=new Date(startVal+'T12:00:00');
+  const today=new Date(); today.setHours(0,0,0,0);
+  const daysUntil=Math.ceil((start-today)/(1000*60*60*24));
+  const emailDone=(data.access.accEmail==='done');
+  const deviceDone=(data.access.accDevice==='done'||data.access.accDevice==='byod');
+  if(daysUntil<=5 && daysUntil>=0 && (!emailDone||!deviceDone)){
+    alertEl.innerHTML=`<div style="background:rgba(164,47,48,0.08);border-left:3px solid var(--crimson);border-radius:var(--radius);padding:8px 10px;font-size:11px;color:var(--crimson);margin-bottom:10px;line-height:1.5"><strong>Access not provisioned.</strong> Start date is ${daysUntil===0?'today':`in ${daysUntil} day${daysUntil===1?'':'s'}`}. Email or device setup is not marked complete. Go to the System Access tab immediately.</div>`;
+  } else {
+    alertEl.innerHTML='';
+  }
+}
+
+function renderPreStart(){
+  const items=[
+    'Send welcome email with start date, time, location, and first-day logistics — include what to bring, where to park or log in, and who to ask for',
+    'Prepare workspace or remote setup instructions and share with the new hire before their first day',
+    'Order equipment and request all system access — allow a minimum of 5 business days; 10 for executive hires',
+    'Assign onboarding buddy and notify them in writing of their responsibilities and time commitment',
+    'Prepare and distribute Day 1 orientation agenda to supervisor, buddy, and any presenters at least 3 business days before start',
+    'Confirm I-9 acceptable documents list is ready and accessible for Day 1',
+    'Schedule 30/60/90-day check-in meetings before the start date — do not leave these to be scheduled later',
+    'Prepare new hire announcement and distribute to relevant staff and stakeholders the day before start or morning of Day 1',
+    'Confirm FLSA classification is set correctly in the payroll system before the first pay cycle',
+  ];
+  document.getElementById('preStartList').innerHTML=items.map((item,i)=>`
+    <div class="checklist-item">
+      <div class="cl-check ${data.checks['pre'+i]?'done':''}" onclick="toggleCheck('pre'+i,this)"><span>${data.checks['pre'+i]?'✓':''}</span></div>
+      <div class="cl-content"><div class="cl-title">${item}</div></div>
+    </div>`).join('');
+}
+
+function renderChecklist(){
+  const phases=[
+    {key:'day1',label:'Day 1 — Required',cls:'cb-day1'},
+    {key:'week1',label:'Week 1',cls:'cb-week1'},
+    {key:'30',label:'30 Days',cls:'cb-30'},
+    {key:'60',label:'60 Days',cls:'cb-60'},
+    {key:'90',label:'90 Days',cls:'cb-90'},
+  ];
+  let html='';
+  phases.forEach(p=>{
+    const items=CHECKLIST.filter(c=>c.phase===p.key);
+    const done=items.filter(c=>data.checks[c.id]).length;
+    html+=`<div style="margin-bottom:20px"><div style="font-size:10px;font-weight:400;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between"><span>${p.label}</span><span>${done}/${items.length} complete</span></div>`;
+    items.forEach(item=>{
+      html+=`<div class="checklist-item">
+        <div class="cl-check ${data.checks[item.id]?'done':''}" onclick="toggleCheck('${item.id}',this)">${data.checks[item.id]?'✓':''}</div>
+        <div class="cl-content">
+          <div class="cl-title">${item.title} <span class="cl-badge ${p.cls}">${p.label}</span></div>
+          <div class="cl-meta">${item.meta}</div>
+          ${item.deadline?`<div class="cl-deadline">${item.deadline}</div>`:''}
+        </div>
+      </div>`;
+    });
+    html+=`</div>`;
+  });
+  document.getElementById('checklistBody').innerHTML=html;
+  updateProgress();
+}
+
+function toggleCheck(id,el){
+  data.checks[id]=!data.checks[id];
+  el.classList.toggle('done',data.checks[id]);
+  el.innerHTML=data.checks[id]?'✓':'';
+  saveData();
+  updateProgress();
+}
+
+function updateProgress(){
+  const phases=[{key:'day1',id:'progDay1'},{key:'week1',id:'progWeek1'},{key:'30',id:'prog30'},{key:'60',id:'prog60'},{key:'90',id:'prog90'}];
+  phases.forEach(p=>{
+    const items=CHECKLIST.filter(c=>c.phase===p.key);
+    const done=items.filter(c=>data.checks[c.id]).length;
+    const el=document.getElementById(p.id);if(el)el.textContent=`${done} / ${items.length}`;
+  });
+}
+
+function renderGoals(){
+  const phases=[
+    {key:'30',label:'First 30 Days',desc:'Learn the organization, role, relationships, and context. No deliverables that matter — only orientation and foundation.'},
+    {key:'60',label:'Days 31–60',desc:'Begin independent contribution on lower-stakes work. Establish working rhythms and cross-functional relationships.'},
+    {key:'90',label:'Days 61–90',desc:'Operate at full effectiveness. Demonstrate measurable impact against the 90-day framework.'}
+  ];
+  let html='';
+  phases.forEach(p=>{
+    const saved=data.goals[p.key]||[];
+    // Ensure at least 3 goal slots
+    while(saved.length<3) saved.push({text:'',success:'',owner:''});
+    html+=`<div style="margin-bottom:28px">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--green);margin-bottom:2px">${p.label}</div>
+      <div style="font-size:11px;color:var(--text-light);margin-bottom:12px">${p.desc}</div>
+      <div style="display:grid;grid-template-columns:22px 1fr 1fr 140px;gap:8px;margin-bottom:5px">
+        <div></div>
+        <div style="font-size:10px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-light)">Goal</div>
+        <div style="font-size:10px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-light)">Success looks like</div>
+        <div style="font-size:10px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-light)">Owner</div>
+      </div>`;
+    saved.forEach((g,i)=>{
+      html+=`<div style="display:grid;grid-template-columns:22px 1fr 1fr 140px;gap:8px;margin-bottom:8px;align-items:start">
+        <div style="width:20px;height:20px;border-radius:50%;background:rgba(27,68,54,0.08);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green);flex-shrink:0;margin-top:9px">${i+1}</div>
+        <input type="text" placeholder="Define a specific, measurable goal..." value="${g.text||''}" oninput="saveGoal('${p.key}',${i},'text',this.value)">
+        <input type="text" placeholder="What does done look like?" value="${g.success||''}" oninput="saveGoal('${p.key}',${i},'success',this.value)">
+        <input type="text" placeholder="Supervisor / Employee" value="${g.owner||''}" oninput="saveGoal('${p.key}',${i},'owner',this.value)">
+      </div>`;
+    });
+    html+=`<button onclick="addGoal('${p.key}')" style="font-size:11px;color:var(--green);background:none;border:1px solid rgba(27,68,54,0.2);border-radius:var(--radius);padding:5px 12px;cursor:pointer;font-family:'Jost',sans-serif;margin-top:4px">+ Add Goal</button>`;
+    html+=`</div>`;
+  });
+  document.getElementById('goalsContent').innerHTML=html;
+}
+
+function saveGoal(phase,idx,field,val){
+  if(!data.goals[phase]) data.goals[phase]=[];
+  while(data.goals[phase].length<=idx) data.goals[phase].push({text:'',success:'',owner:''});
+  data.goals[phase][idx][field]=val;
+  saveData();
+}
+
+function addGoal(phase){
+  if(!data.goals[phase]) data.goals[phase]=[];
+  data.goals[phase].push({text:'',success:'',owner:''});
+  saveData();
+  renderGoals();
+}
+
+function openNewHire(){showTab('setup');}
+
+function showTab(tab){
+  ['setup','checklist','goals','orientation','announcement','access','guide'].forEach(t=>{
+    const v=document.getElementById('view-'+t);
+    if(v)v.style.display=t===tab?(t==='setup'?'grid':'block'):'none';
+    const el=document.getElementById('tab-'+t);if(el)el.classList.toggle('active',t===tab);
+  });
+  if(tab==='checklist')renderChecklist();
+  if(tab==='goals')renderGoals();
+  if(tab==='orientation')renderOrientation();
+}
+
+function renderOrientation(){
+  const body = document.getElementById('orientationBody');
+  if(!body) return;
+  const morning = [
+    ['8:30 AM','Welcome arrival — supervisor or buddy meets new hire at entrance or virtual lobby. Do not make them wait or figure out where to go on their own.'],
+    ['8:45 AM','Workspace setup — desk, equipment check, and full tour of the physical or virtual environment. Every login confirmed working before this block ends.'],
+    ['9:15 AM','I-9 completion and Day 1 employment paperwork (W-4, direct deposit authorization, emergency contact form).'],
+    ['10:00 AM','Welcome conversation with supervisor — this is not a work meeting. Context about the team, culture, what the supervisor cares about, and what a strong first 90 days looks like.'],
+    ['10:45 AM','Break — unstructured time. Let them breathe.'],
+    ['11:00 AM','Org overview and mission context — delivered by the ED, CEO, or most senior available leader. This is not the handbook. It is the story of why this work matters.'],
+    ['12:00 PM','Lunch with supervisor or a small team group — not a working lunch.'],
+  ];
+  const afternoon = [
+    ['1:00 PM','Benefits enrollment review — walkthrough of options, deadlines, and how to elect or waive coverage. Do not hand them a packet and leave.'],
+    ['1:45 PM','Systems and tools orientation with buddy — login walkthrough for every tool. Every account should already be provisioned before this moment.'],
+    ['2:30 PM','Handbook review and policy acknowledgment — not a verbal lecture. Allow time to read; be present to answer questions. Collect signed acknowledgment.'],
+    ['3:00 PM','Team introductions — individual 15-minute conversations with key teammates, not a group meeting. Group introductions produce performance anxiety, not connection.'],
+    ['4:00 PM','30/60/90 goal review with supervisor — share and discuss the goal framework. New hire should leave Day 1 knowing exactly what success looks like.'],
+    ['4:30 PM','End-of-day check-in with supervisor — how was today? What was missing? What do you need? This conversation sets the tone for every check-in that follows.'],
+  ];
+  const week1 = [
+    ['Relationships first','Schedule 30-minute listening conversations with 5–7 key people across the organization within the first two weeks. The purpose is to listen, not to introduce. Ask: What should I know? What are the unwritten rules? What has been tried before?'],
+    ['Context before contribution','Resist the urge to assign meaningful deliverables in Week 1. The new hire needs organizational context before they can contribute well. Premature assignment produces mediocre work and embeds the wrong habits from the start.'],
+    ['Document the informal','What is the unwritten culture? How does this team actually communicate? What does leadership value in practice versus in principle? Week 1 is the only time a new hire sees the organization with fresh eyes — ask them to write down what they observe.'],
+  ];
+  const agendaRow = ([time,item]) => `
+    <div style="display:flex;gap:12px;padding:9px 0;border-bottom:1px solid rgba(224,216,207,0.35)">
+      <div style="font-size:11px;font-weight:400;color:var(--text-light);width:72px;flex-shrink:0;padding-top:2px">${time}</div>
+      <div style="font-size:12px;color:var(--text-mid);line-height:1.65">${item}</div>
+    </div>`;
+  body.innerHTML = `
+    <div class="al al-i" style="margin-bottom:16px"><span class="al-ic">ℹ</span><span>Research consistently shows that structured onboarding programs improve new hire retention by 82% and productivity by over 70%. The first day sets the emotional baseline for how a new hire thinks about their decision to join. Most organizations waste it on paperwork and waiting.</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:20px">
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--green);margin-bottom:10px">Morning Block</div>
+        ${morning.map(agendaRow).join('')}
+      </div>
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--green);margin-bottom:10px">Afternoon Block</div>
+        ${afternoon.map(agendaRow).join('')}
+      </div>
+    </div>
+    <div class="div"></div>
+    <div class="div-lbl">Week 1 Priorities</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+      ${week1.map(([title,desc])=>`
+      <div style="padding:14px 16px;border:1px solid var(--border);border-radius:var(--radius-md);background:rgba(27,68,54,0.02)">
+        <div style="font-size:12px;font-weight:400;color:var(--green);margin-bottom:6px">${title}</div>
+        <div style="font-size:11.5px;color:var(--text-mid);line-height:1.7">${desc}</div>
+      </div>`).join('')}
+    </div>`;
+}
+
+function exportOrientation(){
+  const h=data.hires[0]||{};
+  const orgName=profile.legalName||'Organization';
+  const name=(h.nhFirst||'[Name]')+' '+(h.nhLast||'');
+  const startFmt=h.nhStart?new Date(h.nhStart+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}):h.nhStart;
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Day 1 Orientation — ${name}</title>
+  <style>body{font-family:Georgia,serif;max-width:700px;margin:0 auto;padding:48px 40px;font-size:10.5pt;line-height:1.8;color:#1a1a1a;}
+  h1{font-size:20pt;font-weight:400;color:#1b4436;}h2{font-size:12pt;font-weight:600;color:#1b4436;margin:20px 0 8px;border-bottom:1px solid #e0d8cf;padding-bottom:5px;}
+  .time-row{display:flex;gap:16px;padding:7px 0;border-bottom:1px solid #e0d8cf;font-size:10pt;}.time{color:#777;min-width:70px;flex-shrink:0;}
+  .meta{background:#f5f0ea;padding:12px 16px;border-radius:4px;margin:16px 0;font-size:9.5pt;color:#555;line-height:1.8;}
+  @page{size:letter;margin:1in;}</style></head><body>
+  <h1>${orgName}</h1>
+  <p style="font-size:12pt;color:#555;margin-bottom:4px">Day 1 Orientation Agenda</p>
+  <p style="font-size:9pt;color:#777;margin-bottom:20px">${startFmt||'[Start Date]'}</p>
+  <div class="meta">
+    <strong>New Team Member:</strong> ${name}<br>
+    <strong>Position:</strong> ${h.nhTitle||'[Position]'}<br>
+    <strong>Supervisor:</strong> ${h.nhSupervisor||'[Supervisor]'}<br>
+    <strong>Onboarding Buddy:</strong> ${h.nhBuddy||'[Buddy]'}
+  </div>
+  <h2>Morning</h2>
+  ${[['8:30 AM','Welcome — supervisor or buddy meets at entrance or virtual welcome'],['8:45 AM','Workspace setup and equipment walkthrough'],['9:15 AM','I-9 completion and employment paperwork'],['10:00 AM','Welcome conversation with supervisor — context, culture, what the first 90 days looks like'],['10:45 AM','Break'],['11:00 AM','Org overview and mission context — delivered by senior leadership'],['12:00 PM','Lunch with supervisor or small team group']].map(r=>`<div class="time-row"><div class="time">${r[0]}</div><div>${r[1]}</div></div>`).join('')}
+  <h2>Afternoon</h2>
+  ${[['1:00 PM','Benefits enrollment review — options, deadlines, how to elect'],['1:45 PM','Systems and tools orientation with buddy'],['2:30 PM','Handbook review and policy acknowledgment'],['3:00 PM','Individual team introductions (15 minutes each)'],['4:00 PM','30/60/90 goal review with supervisor'],['4:30 PM','End-of-day check-in — how was today? What do you need?']].map(r=>`<div class="time-row"><div class="time">${r[0]}</div><div>${r[1]}</div></div>`).join('')}
+  <p style="font-size:8pt;color:#999;margin-top:32px;border-top:1px solid #e0d8cf;padding-top:10px">Prepared with support from The Coherence Collective, LLC via Plinth.</p>
+  </body></html>`;
+  const win=window.open('','_blank');win.document.write(html);win.document.close();
+}
+
+function exportAnnouncement(){
+  const h=data.hires[0]||{};
+  const orgName=profile.legalName||'Organization';
+  const displayName=(h.nhPreferred||h.nhFirst||'[Name]')+' '+(h.nhLast||'');
+  const bg=document.getElementById('annBackground')?.value||'';
+  const scope=document.getElementById('annScope')?.value||'';
+  const personal=document.getElementById('annPersonal')?.value||'';
+  const contact=document.getElementById('annContact')?.value||'';
+  const startFmt=h.nhStart?new Date(h.nhStart+'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric'}):h.nhStart;
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>New Team Member — ${displayName}</title>
+  <style>body{font-family:Georgia,serif;max-width:620px;margin:0 auto;padding:48px 40px;font-size:11pt;line-height:1.85;color:#1a1a1a;}
+  h1{font-size:18pt;font-weight:400;color:#1b4436;}p{margin:0 0 14px;}strong{font-weight:600;}
+  .divider{height:1px;background:#e0d8cf;margin:20px 0;}
+  @page{size:letter;margin:1in;}</style></head><body>
+  <h1>Please welcome ${displayName}.</h1>
+  <div class="divider"></div>
+  ${bg?`<p>${bg}</p>`:''}
+  ${scope?`<p>${displayName} joins us as <strong>${h.nhTitle||'[Title]'}</strong> and will be responsible for ${scope}</p>`:''}
+  ${personal?`<p>${personal}</p>`:''}
+  ${startFmt?`<p>${displayName} starts ${startFmt}. Please take a moment to introduce yourself — we want every new team member to feel the depth of this culture from Day 1.</p>`:''}
+  ${contact?`<p><em>For ${contact}, ${displayName} is your point of contact.</em></p>`:''}
+  <div class="divider"></div>
+  <p style="font-size:9pt;color:#777">— ${h.nhSupervisor||'Leadership'}</p>
+  </body></html>`;
+  const win=window.open('','_blank');win.document.write(html);win.document.close();
+}
+
+function exportAccessSheet(){
+  const h=data.hires[0]||{};
+  const orgName=profile.legalName||'Organization';
+  const name=((h.nhPreferred||h.nhFirst)||'')+(h.nhLast?' '+h.nhLast:'');
+  const today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const startFmt=h.nhStart?new Date(h.nhStart+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}):'Not set';
+  const systems=[
+    {id:'accEmail',label:'Email Account'},
+    {id:'accDevice',label:'Work Device / Computer'},
+    {id:'accHR',label:'HR / Payroll System'},
+    {id:'accPM',label:'Project Management / Collaboration Tools'},
+    {id:'accVideo',label:'Video Conferencing'},
+    {id:'accExpense',label:'Expense Management System'},
+    {id:'accDocSign',label:'Document Signing'},
+    {id:'accLMS',label:'Learning Management System (LMS)'},
+    {id:'accCRM',label:'CRM / Donor Database'},
+    {id:'accPhysical',label:'Physical Access / Key Card'},
+    {id:'accCards',label:'Business Cards'},
+  ];
+  const statusLabel={needed:'Needs Setup',inprogress:'In Progress',done:'Completed',na:'Not Applicable',provide:'Order Needed',ordered:'Ordered',byod:'BYOD',order:'Order Needed','':"Not Set"};
+  const statusColor={needed:'#A42F30',inprogress:'#8a6010',done:'#1b4436',na:'#777',provide:'#A42F30',ordered:'#8a6010',byod:'#555',order:'#A42F30','':"#777"};
+  const other=data.access.accOther||'';
+  const rows=systems.map(s=>{
+    const val=data.access[s.id]||'';
+    return `<tr><td style="padding:7px 12px;border-bottom:1px solid #f0ebe4;font-size:10pt">${s.label}</td><td style="padding:7px 12px;border-bottom:1px solid #f0ebe4;font-size:10pt;font-weight:${val==='done'?'600':'400'};color:${statusColor[val]||'#1a1a1a'}">${statusLabel[val]||val||'—'}</td></tr>`;
+  }).join('');
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>System Access — ${name}</title>
+  <style>body{font-family:Georgia,serif;max-width:680px;margin:0 auto;padding:48px 40px;color:#1a1a1a;font-size:10.5pt;line-height:1.75;}
+  h1{font-size:18pt;font-weight:400;color:#1b4436;}h2{font-size:12pt;color:#1b4436;border-bottom:1px solid #e0d8cf;padding-bottom:5px;margin:24px 0 10px;}
+  table{width:100%;border-collapse:collapse;}th{font-size:9pt;font-weight:600;color:#1b4436;text-align:left;padding:8px 12px;background:#f5f0ea;border-bottom:2px solid #e0d8cf;}
+  @page{size:letter;margin:1in;}</style></head><body>
+  <h1>${orgName}</h1>
+  <p style="color:#555;margin-bottom:4px">System Access &amp; Equipment Provisioning Checklist</p>
+  <p style="font-size:9pt;color:#777;margin-bottom:24px">New Hire: ${name||'[Name]'} &nbsp;|&nbsp; ${h.nhTitle||''} &nbsp;|&nbsp; Start Date: ${startFmt} &nbsp;|&nbsp; Prepared: ${today}</p>
+  <p style="font-size:9pt;color:#A42F30;font-weight:600;margin-bottom:16px">All items marked "Needs Setup" or "In Progress" must be completed at least 5 business days before the start date.</p>
+  <table><thead><tr><th style="width:60%">System / Resource</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table>
+  ${other?`<h2>Additional Systems Required</h2><p>${other}</p>`:''}
+  <p style="font-size:8pt;color:#999;margin-top:36px;border-top:1px solid #e0d8cf;padding-top:10px">Prepared with Plinth by The Coherence Collective, LLC</p>
+  </body></html>`;
+  const win=window.open('','_blank');win.document.write(html);win.document.close();
+}
+
+function exportIntegrationGuide(){
+  const h=data.hires[0]||{};
+  const orgName=profile.legalName||'Organization';
+  const firstName=h.nhPreferred||h.nhFirst||'[Name]';
+  const fullName=firstName+(h.nhLast?' '+h.nhLast:'');
+  const today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const startFmt=h.nhStart?new Date(h.nhStart+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}):'Not set';
+  const flsaLabel={exempt:'Exempt (Salaried)',nonexempt:'Nonexempt (Overtime Eligible)'}[h.nhFLSA]||h.nhFLSA||'Not specified';
+
+  // ── PRE-START CHECKLIST ───────────────────────────────────────────────
+  const preItems=['Send welcome email with start date, time, location, and first-day logistics','Prepare workspace or remote setup instructions','Order equipment and request all system access (5+ business days)','Assign onboarding buddy and notify them of responsibilities','Prepare and distribute Day 1 orientation agenda','Ensure I-9 documents list is ready for Day 1','Schedule 30/60/90-day check-in meetings','Prepare and send new hire announcement','Confirm FLSA classification in payroll system'];
+  let preRows='';
+  preItems.forEach(function(item,i){
+    var checked=data.checks['pre'+i];
+    var boxStyle='display:inline-block;width:14px;height:14px;border:1.5px solid '+(checked?'#1b4436':'#ccc')+';border-radius:2px;margin-right:8px;vertical-align:middle;background:'+(checked?'#1b4436':'transparent')+';color:white;font-size:9px;text-align:center;line-height:14px';
+    preRows+='<tr><td style="padding:6px 10px;border-bottom:1px solid #f0ebe4;font-size:9.5pt"><span style="'+boxStyle+'">'+(checked?'&#10003;':'')+'</span>'+item+'</td></tr>';
+  });
+
+  // ── DAY 1 AGENDA ─────────────────────────────────────────────────────
+  const morning=[['8:30 AM','Welcome arrival — supervisor or buddy meets new hire at entrance or virtual lobby'],['8:45 AM','Workspace setup — equipment check, environment tour, all logins confirmed working'],['9:15 AM','I-9 completion and Day 1 paperwork (W-4, direct deposit, emergency contact form)'],['10:00 AM','Welcome conversation with supervisor — context about team, culture, and what a strong first 90 days looks like'],['10:45 AM','Break — unstructured time'],['11:00 AM','Org overview and mission context — delivered by senior leadership. The story, not the handbook.'],['12:00 PM','Lunch with supervisor or small team group — not a working lunch']];
+  const afternoon=[['1:00 PM','Benefits enrollment review — options, deadlines, and how to elect or waive'],['1:45 PM','Systems and tools orientation with buddy — every account should already be provisioned'],['2:30 PM','Handbook review and policy acknowledgment — allow time to read; collect signed receipt'],['3:00 PM','Team introductions — individual 15-minute conversations with key teammates'],['4:00 PM','30/60/90 goal review with supervisor — share and align before end of Day 1'],['4:30 PM','End-of-day check-in — how was today? What was missing? What do you need?']];
+  let morningRows='', afternoonRows='';
+  morning.forEach(function(r){ morningRows+='<tr><td style="padding:6px 10px;border-bottom:1px solid #f0ebe4;font-size:9pt;color:#777;width:80px;vertical-align:top">'+r[0]+'</td><td style="padding:6px 10px;border-bottom:1px solid #f0ebe4;font-size:9.5pt">'+r[1]+'</td></tr>'; });
+  afternoon.forEach(function(r){ afternoonRows+='<tr><td style="padding:6px 10px;border-bottom:1px solid #f0ebe4;font-size:9pt;color:#777;width:80px;vertical-align:top">'+r[0]+'</td><td style="padding:6px 10px;border-bottom:1px solid #f0ebe4;font-size:9.5pt">'+r[1]+'</td></tr>'; });
+
+  // ── 30/60/90 GOALS ───────────────────────────────────────────────────
+  const phases=[{key:'30',label:'First 30 Days'},{key:'60',label:'Days 31\u201360'},{key:'90',label:'Days 61\u201390'}];
+  let goalHtml='';
+  phases.forEach(function(p){
+    var goals=(data.goals[p.key]||[]).filter(function(g){return g.text&&g.text.trim();});
+    goalHtml+='<tr><td colspan="3" style="padding:10px 10px 4px;font-size:10pt;font-weight:600;color:#1b4436;background:#f9f6f2">'+p.label+'</td></tr>';
+    if(goals.length){
+      goals.forEach(function(g,i){
+        goalHtml+='<tr><td style="padding:6px 10px;border-bottom:1px solid #f0ebe4;font-size:9.5pt;vertical-align:top;color:#777;width:20px">'+(i+1)+'</td>';
+        goalHtml+='<td style="padding:6px 10px;border-bottom:1px solid #f0ebe4;font-size:9.5pt">'+g.text+'</td>';
+        goalHtml+='<td style="padding:6px 10px;border-bottom:1px solid #f0ebe4;font-size:9pt;color:#777;font-style:italic">'+(g.success||'')+'</td></tr>';
+      });
+    } else {
+      goalHtml+='<tr><td colspan="3" style="padding:6px 10px;border-bottom:1px solid #f0ebe4;font-size:9pt;color:#aaa;font-style:italic">No goals entered for this phase.</td></tr>';
+    }
+  });
+
+  // ── SYSTEM ACCESS ────────────────────────────────────────────────────
+  const systems=[{id:'accEmail',label:'Email Account'},{id:'accDevice',label:'Work Device'},{id:'accHR',label:'HR / Payroll System'},{id:'accPM',label:'Project Management Tools'},{id:'accVideo',label:'Video Conferencing'},{id:'accExpense',label:'Expense System'},{id:'accDocSign',label:'Document Signing'},{id:'accLMS',label:'LMS'},{id:'accCRM',label:'CRM / Donor Database'},{id:'accPhysical',label:'Physical Access'},{id:'accCards',label:'Business Cards'}];
+  const sLabel={needed:'Needs Setup',inprogress:'In Progress',done:'Completed',na:'N/A',provide:'Order Needed',ordered:'Ordered',byod:'BYOD',order:'Order Needed','':"—"};
+  const sColor={needed:'#A42F30',inprogress:'#8a6010',done:'#1b4436',na:'#999',provide:'#A42F30',ordered:'#8a6010',byod:'#555',order:'#A42F30','':"#999"};
+  let accessRows='';
+  systems.forEach(function(s){
+    var v=data.access[s.id]||'';
+    var weight=v==='done'?'600':'400';
+    var color=sColor[v]||'#1a1a1a';
+    accessRows+='<tr><td style="padding:5px 10px;border-bottom:1px solid #f0ebe4;font-size:9.5pt">'+s.label+'</td><td style="padding:5px 10px;border-bottom:1px solid #f0ebe4;font-size:9.5pt;color:'+color+';font-weight:'+weight+'">'+(sLabel[v]||v||'—')+'</td></tr>';
+  });
+  var accessExtra=data.access.accOther?'<p style="font-size:9.5pt;margin-top:12px"><strong>Additional systems:</strong> '+data.access.accOther+'</p>':'';
+
+  // ── ANNOUNCEMENT ─────────────────────────────────────────────────────
+  var bg=h.annBackground||'';
+  var scope=h.annScope||'';
+  var personal=h.annPersonal||'';
+  var annHtml='';
+  if(bg) annHtml+='<p style="margin:0 0 10px;font-size:10pt">'+bg+'</p>';
+  if(scope) annHtml+='<p style="margin:0 0 10px;font-size:10pt">'+fullName+' joins as <strong>'+(h.nhTitle||'')+'</strong> and will be responsible for '+scope+'</p>';
+  if(personal) annHtml+='<p style="margin:0 0 10px;font-size:10pt">'+personal+'</p>';
+  var annSection=annHtml?'<div class="section page-break"><h2>Team Announcement Draft</h2>'+annHtml+'</div>':'';
+
+  // ── ASSEMBLE ─────────────────────────────────────────────────────────
+  var coverRole=(h.nhTitle||'')+(h.nhDept?' &nbsp;|&nbsp; '+h.nhDept:'');
+
+  const html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Integration Guide \u2014 '+fullName+'</title>'
+    +'<style>'
+    +'*{box-sizing:border-box;}'
+    +'body{font-family:Georgia,serif;color:#1a1a1a;margin:0;padding:0;font-size:10.5pt;line-height:1.7;}'
+    +'.cover{background:#1b4436;min-height:100vh;display:flex;flex-direction:column;padding:80px 72px;}'
+    +'.cover-eye{font-family:Arial,sans-serif;font-size:9pt;letter-spacing:0.2em;text-transform:uppercase;color:rgba(204,207,142,0.8);margin-bottom:24px;}'
+    +'.cover-org{font-size:28pt;font-weight:400;color:#fff;margin-bottom:8px;}'
+    +'.cover-title{font-size:18pt;font-weight:300;color:rgba(245,237,228,0.7);margin-bottom:48px;}'
+    +'.cover-name{font-size:36pt;font-weight:700;color:#fff;margin-bottom:6px;line-height:1.1;}'
+    +'.cover-role{font-size:14pt;font-weight:300;color:#D2BB9F;margin-bottom:40px;}'
+    +'.cover-meta{border-top:1px solid rgba(255,255,255,0.15);padding-top:24px;display:flex;gap:40px;}'
+    +'.cover-meta-item{font-size:9pt;color:rgba(245,237,228,0.5);}'
+    +'.cover-meta-val{font-size:11pt;color:#fff;margin-top:2px;}'
+    +'.cover-spacer{flex:1;}'
+    +'.cover-footer{font-size:8pt;color:rgba(245,237,228,0.3);font-family:Arial,sans-serif;letter-spacing:0.08em;margin-top:48px;}'
+    +'.content{max-width:680px;margin:0 auto;padding:56px 40px 64px;}'
+    +'h2{font-size:12pt;font-weight:600;color:#1b4436;border-bottom:2px solid #1b4436;padding-bottom:5px;margin:0 0 12px;}'
+    +'table{width:100%;border-collapse:collapse;}'
+    +'th{font-size:9pt;font-weight:600;background:#f5f0ea;color:#1b4436;text-align:left;padding:7px 10px;border-bottom:2px solid #e0d8cf;}'
+    +'.section{margin-bottom:32px;}'
+    +'.page-break{page-break-before:always;}'
+    +'@page{size:letter;margin:0.75in;}'
+    +'@media print{.page-break{page-break-before:always;}}'
+    +'</style></head><body>'
+
+    +'<div class="cover">'
+    +'<div class="cover-eye">New Hire Integration Guide</div>'
+    +'<div class="cover-org">'+orgName+'</div>'
+    +'<div class="cover-title">Prepared for</div>'
+    +'<div class="cover-name">'+fullName+'</div>'
+    +'<div class="cover-role">'+coverRole+'</div>'
+    +'<div class="cover-meta">'
+    +'<div class="cover-meta-item">Start Date<div class="cover-meta-val">'+startFmt+'</div></div>'
+    +'<div class="cover-meta-item">Supervisor<div class="cover-meta-val">'+(h.nhSupervisor||'&mdash;')+'</div></div>'
+    +'<div class="cover-meta-item">Work Location<div class="cover-meta-val">'+(h.nhLocation||'&mdash;')+'</div></div>'
+    +'<div class="cover-meta-item">FLSA<div class="cover-meta-val">'+flsaLabel+'</div></div>'
+    +'</div>'
+    +'<div class="cover-spacer"></div>'
+    +'<div class="cover-footer">Prepared '+today+' &nbsp;|&nbsp; The Coherence Collective, LLC via Plinth &nbsp;|&nbsp; Confidential</div>'
+    +'</div>'
+
+    +'<div class="content">'
+
+    +'<div class="section">'
+    +'<h2>Pre-Start Preparation Checklist</h2>'
+    +'<table><tbody>'+preRows+'</tbody></table>'
+    +'</div>'
+
+    +'<div class="section page-break">'
+    +'<h2>Day 1 Orientation Agenda</h2>'
+    +'<p style="font-size:9.5pt;color:#555;margin-bottom:10px">Supervisor: '+(h.nhSupervisor||'&mdash;')+' &nbsp;|&nbsp; Onboarding Buddy: '+(h.nhBuddy||'&mdash;')+'</p>'
+    +'<p style="font-size:9.5pt;font-weight:600;color:#1b4436;margin-bottom:6px">Morning</p>'
+    +'<table><tbody>'+morningRows+'</tbody></table>'
+    +'<p style="font-size:9.5pt;font-weight:600;color:#1b4436;margin:14px 0 6px">Afternoon</p>'
+    +'<table><tbody>'+afternoonRows+'</tbody></table>'
+    +'</div>'
+
+    +'<div class="section page-break">'
+    +'<h2>30 / 60 / 90 Day Plan</h2>'
+    +'<table><thead><tr><th style="width:20px"></th><th>Goal</th><th>Success Looks Like</th></tr></thead><tbody>'+goalHtml+'</tbody></table>'
+    +'</div>'
+
+    +'<div class="section page-break">'
+    +'<h2>System Access &amp; Equipment Status</h2>'
+    +'<p style="font-size:9pt;color:#A42F30;margin-bottom:10px">Items marked Needs Setup or In Progress must be completed at least 5 business days before the start date.</p>'
+    +'<table><thead><tr><th>System</th><th>Status</th></tr></thead><tbody>'+accessRows+'</tbody></table>'
+    +accessExtra
+    +'</div>'
+
+    +annSection
+
+    +'<p style="font-size:8pt;color:#aaa;margin-top:48px;padding-top:12px;border-top:1px solid #e0d8cf;text-align:center">Prepared with Plinth by The Coherence Collective, LLC &nbsp;|&nbsp; Confidential &nbsp;|&nbsp; '+today+'</p>'
+    +'</div>'
+    +'</body></html>';
+
+  const win=window.open('','_blank');
+  win.document.write(html);
+  win.document.close();
+}
+
+function animateCards(){
+  const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');});},{threshold:0.04});
+  document.querySelectorAll('.card').forEach(c=>obs.observe(c));
+}
+
+function exportGoals(){
+  const h=data.hires[0]||{};
+  const orgName=profile.legalName||'Organization';
+  const name=((h.nhPreferred||h.nhFirst)||'')+' '+(h.nhLast||'');
+  const phases=[{key:'30',label:'First 30 Days'},{key:'60',label:'Days 31–60'},{key:'90',label:'Days 61–90'}];
+  let goalRows='';
+  phases.forEach(p=>{
+    const goals=(data.goals[p.key]||[]).filter(g=>g.text&&g.text.trim());
+    goalRows+=`<div style="margin-bottom:24px"><h3 style="font-size:12pt;color:#1b4436;margin-bottom:8px;border-bottom:1px solid #e0d8cf;padding-bottom:4px">${p.label}</h3>`;
+    if(goals.length){
+      goals.forEach((g,i)=>{
+        goalRows+=`<div style="padding:8px 0;border-bottom:1px solid #f0ebe4">
+          <div style="font-size:10.5pt;color:#1a1a1a">${i+1}. ${g.text}</div>
+          ${g.success?`<div style="font-size:9.5pt;color:#777;margin-top:3px">Success looks like: ${g.success}</div>`:''}
+          ${g.owner?`<div style="font-size:9.5pt;color:#777;margin-top:2px">Owner: ${g.owner}</div>`:''}
+        </div>`;
+      });
+    } else goalRows+='<div style="font-size:10pt;color:#777;font-style:italic">No goals entered for this phase.</div>';
+    goalRows+='</div>';
+  });
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Onboarding Plan — ${name}</title>
+  <style>body{font-family:Georgia,serif;max-width:680px;margin:0 auto;padding:48px 40px;color:#1a1a1a;line-height:1.75;}h1{font-size:20pt;font-weight:400;color:#1b4436;}@page{size:letter;margin:1in;}</style>
+  </head><body>
+  <h1>${orgName}</h1>
+  <p style="color:#555;font-size:11pt;margin-bottom:4px">New Hire Onboarding Plan</p>
+  <p style="color:#777;font-size:9pt;margin-bottom:28px">${name.trim()} &nbsp;|&nbsp; ${h.nhTitle||''} &nbsp;|&nbsp; Start Date: ${h.nhStart||'TBD'} &nbsp;|&nbsp; FLSA: ${h.nhFLSA?({exempt:'Exempt',nonexempt:'Nonexempt'}[h.nhFLSA]||h.nhFLSA):'Not specified'}</p>
+  <h2 style="font-size:14pt;font-weight:600;color:#1b4436;border-bottom:1px solid #e0d8cf;padding-bottom:6px;margin-bottom:16px">30 / 60 / 90 Day Plan</h2>
+  ${goalRows}
+  <p style="font-size:8pt;color:#999;margin-top:36px;border-top:1px solid #e0d8cf;padding-top:10px">Prepared with Plinth by The Coherence Collective, LLC</p>
+  </body></html>`;
+  const win=window.open('','_blank');win.document.write(html);win.document.close();
+}
+
+</script>
+</body>
+</html>

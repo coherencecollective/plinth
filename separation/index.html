@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Plinth · Separation</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--green:#1b4436;--green-light:#235a47;--green-deep:#122e24;--mauve:#916179;--sand:#D2BB9F;--gold:#D99E32;--pale:#cccf8e;--crimson:#A42F30;--beige:#F5EDE4;--white:#fff;--off-white:#faf8f5;--text-dark:#1a1a1a;--text-mid:#444;--text-light:#777;--border:#e0d8cf;--shadow:0 2px 16px rgba(27,68,54,0.08);--radius:4px;--radius-md:8px;--radius-lg:12px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Jost',sans-serif;font-weight:300;font-size:14px;color:var(--text-dark);background:var(--off-white);min-height:100vh;}
+nav{position:sticky;top:0;z-index:100;background:var(--green);padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,0.2);}
+.nav-left{display:flex;align-items:center;gap:14px;}
+.back-btn{display:inline-flex;align-items:center;gap:5px;font-family:'Jost',sans-serif;font-size:11px;font-weight:300;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.5);padding:5px 10px;border:1px solid rgba(245,237,228,0.15);border-radius:var(--radius);background:none;cursor:pointer;transition:all 0.2s;}
+.back-btn:hover{color:var(--beige);}
+.nav-sep{width:1px;height:18px;background:rgba(255,255,255,0.15);}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:17px;color:var(--beige);}
+.nav-brand span{color:var(--gold);}
+.nav-sub{font-size:12px;font-weight:300;color:rgba(245,237,228,0.45);}
+.nav-right{display:flex;gap:7px;align-items:center;}
+.nbtn{font-family:'Jost',sans-serif;font-weight:300;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:5px 13px;border-radius:var(--radius);cursor:pointer;border:none;transition:all 0.2s;}
+.nbtn-ghost{background:transparent;color:var(--sand);border:1px solid rgba(210,187,159,0.3);}
+.nbtn-ghost:hover{background:rgba(210,187,159,0.1);color:var(--beige);}
+.nbtn-gold{background:var(--gold);color:var(--green-deep);font-weight:400;}
+.sflash{font-size:11px;color:var(--pale);margin-right:4px;opacity:0;transition:opacity 0.3s;}
+.sflash.on{opacity:1;}
+.tabs{background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;display:flex;overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{font-size:11px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:13px 18px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.2s;}
+.tab:hover{color:var(--green);}
+.tab.active{color:var(--green);border-bottom-color:var(--green);}
+.hero{background:linear-gradient(150deg,var(--green-deep) 0%,var(--green) 55%,var(--green-light) 100%);padding:44px 28px 38px;position:relative;overflow:hidden;}
+.hero-inner{max-width:1060px;margin:0 auto;}
+.hero-eye{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--pale);margin-bottom:10px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:36px;color:var(--white);line-height:1.05;margin-bottom:8px;}
+.hero-title em{font-style:italic;color:var(--sand);}
+.hero-desc{font-size:12.5px;font-weight:300;color:rgba(245,237,228,0.65);max-width:600px;line-height:1.75;}
+.main{max-width:1060px;margin:0 auto;padding:32px 28px 80px;}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;opacity:0;transform:translateY(10px);transition:opacity 0.35s,transform 0.35s;}
+.card.vis{opacity:1;transform:translateY(0);}
+.card-hdr{padding:16px 22px 13px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.05));display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:16px;color:var(--green);}
+.card-desc{font-size:11px;color:var(--text-light);margin-top:2px;line-height:1.5;}
+.card-body{padding:20px 22px;}
+.fg{display:grid;gap:14px;}
+.g2{grid-template-columns:1fr 1fr;}
+.g3{grid-template-columns:1fr 1fr 1fr;}
+.c2{grid-column:span 2;}
+.c3{grid-column:span 3;}
+.f label{display:block;font-size:11px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-mid);margin-bottom:5px;}
+input[type="text"],input[type="number"],input[type="date"],select,textarea{width:100%;font-family:'Jost',sans-serif;font-weight:300;font-size:13px;color:var(--text-dark);background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:8px 11px;outline:none;transition:border-color 0.2s;appearance:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(27,68,54,0.07);}
+textarea{resize:vertical;min-height:72px;line-height:1.7;}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23777' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer;}
+.fhint{font-size:10.5px;color:var(--text-light);margin-top:4px;line-height:1.5;}
+.div{height:1px;background:var(--border);margin:16px 0;}
+.div-lbl{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);margin:-14px 0 12px;display:flex;align-items:center;gap:8px;}
+.div-lbl::before,.div-lbl::after{content:'';flex:1;height:1px;background:var(--border);}
+.al{border-radius:var(--radius);padding:9px 12px;font-size:12px;line-height:1.6;margin-bottom:10px;display:flex;gap:8px;align-items:flex-start;}
+.al-ic{font-size:13px;flex-shrink:0;margin-top:1px;}
+.al-i{background:rgba(27,68,54,0.05);border-left:3px solid var(--pale);color:var(--text-mid);}
+.al-w{background:rgba(217,158,50,0.07);border-left:3px solid var(--gold);color:var(--text-mid);}
+.al-c{background:rgba(145,97,121,0.07);border-left:3px solid var(--mauve);color:var(--text-mid);}
+.al-d{background:rgba(164,47,48,0.06);border-left:3px solid var(--crimson);color:var(--text-mid);}
+.ref-table{width:100%;border-collapse:collapse;}
+.ref-table th{font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:8px 12px;text-align:left;border-bottom:2px solid var(--border);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.04));}
+.ref-table td{padding:9px 12px;border-bottom:1px solid rgba(224,216,207,0.5);font-size:12px;font-weight:300;vertical-align:top;}
+.ref-table tr:last-child td{border-bottom:none;}
+.ref-table tr:hover td{background:rgba(27,68,54,0.015);}
+.ref-table td:first-child{font-weight:400;}
+.form-section{margin-bottom:24px;}
+.form-section-title{font-size:10px;font-weight:400;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:center;justify-content:space-between;}
+.fb{font-family:'Cormorant Garamond',serif;font-size:13px;color:rgba(245,237,228,0.4);}
+.fb span{color:var(--sand);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.fu{animation:fadeUp 0.4s ease both;}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-left">
+    <button class="back-btn" onclick="window.location.href='/'">&#8592; All Tools</button>
+    <div class="nav-sep"></div>
+    <div class="nav-brand">Pl<span>in</span>th</div>
+    <div class="nav-sub">&nbsp;·&nbsp; Separation</div>
+  </div>
+  <div class="nav-right">
+    <span class="sflash" id="sflash">Saved</span>
+    <button class="nbtn nbtn-ghost" onclick="saveData()">Save</button>
+  </div>
+</nav>
+<div class="tabs">
+  <div class="tab active" onclick="showTab('voluntary')" id="tab-voluntary">Voluntary Resignation</div>
+  <div class="tab" onclick="showTab('involuntary')" id="tab-involuntary">Involuntary Termination</div>
+  <div class="tab" onclick="showTab('rif')" id="tab-rif">Reduction in Force</div>
+  <div class="tab" onclick="showTab('checklist')" id="tab-checklist">Separation Checklist</div>
+  <div class="tab" onclick="showTab('reference')" id="tab-reference">Reference Policy</div>
+  <div class="tab" onclick="showTab('unemployment')" id="tab-unemployment">Unemployment Response</div>
+  <div class="tab" onclick="showTab('seplog')" id="tab-seplog">Separation Log</div>
+</div>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eye">Plinth · Tool 12</div>
+    <div class="hero-title">Separation &amp; <em>Offboarding</em></div>
+    <div class="hero-desc">Voluntary resignation, involuntary termination, and reduction-in-force workflows. Final pay, COBRA, exit documentation, and the post-separation compliance checklist.</div>
+  </div>
+</div>
+
+<div id="view-voluntary" class="main">
+  <div class="card fu">
+    <div class="card-hdr"><div><div class="card-title">Voluntary Resignation</div><div class="card-desc">Process and documentation for employee-initiated separations.</div></div><button onclick="exportSepDocs()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">Export Separation Memo</button></div>
+    <div class="card-body">
+      <div class="fg g2">
+        <div class="f"><label>Employee Name</label><input type="text" id="volEmpName" placeholder="Full name" oninput="saveData()"></div>
+        <div class="f"><label>Position</label><input type="text" id="volPosition" placeholder="Title" oninput="saveData()"></div>
+        <div class="f"><label>Resignation Date (notice given)</label><input type="date" id="volResignDate" onchange="saveData()"></div>
+        <div class="f"><label>Last Day of Employment</label><input type="date" id="volLastDay" onchange="saveData()"></div>
+        <div class="f"><label>Notice Period</label><input type="text" id="volNotice" placeholder="e.g., 2 weeks" oninput="saveData()"></div>
+        <div class="f"><label>Exit Interview Scheduled</label>
+          <select id="volExitInt" onchange="saveData()"><option value="">Select</option><option value="yes">Yes</option><option value="declined">Employee declined</option><option value="pending">Pending scheduling</option></select>
+        </div>
+        <div class="f c2"><label>Reason for Departure (if provided)</label><textarea id="volReason" placeholder="Document the stated reason. This information is valuable for retention analysis and is not shared publicly." oninput="saveData()"></textarea></div>
+      </div>
+      <div class="div"></div>
+      <div class="al al-i"><span class="al-ic">ℹ</span><span>Texas does not require employees to give notice. If the employee gives 2 weeks notice and you ask them to leave immediately, the separation becomes employer-initiated and final pay rules change — you must pay within 6 calendar days rather than at the next regular payday. Consider this before sending someone home early after they resign.</span></div>
+    </div>
+  </div>
+</div>
+<div id="view-involuntary" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr"><div><div class="card-title">Involuntary Termination</div><div class="card-desc">Documentation and process for employer-initiated separations.</div></div></div>
+    <div class="card-body">
+      <div class="al al-c" style="margin-bottom:14px"><span class="al-ic">⚖</span><span>Before terminating any employee, review the termination decision for consistency with prior practice, protected class risk, and whether the reason is documented. The conversation confirming termination should be brief, direct, and not argumentative. The decision has been made — the meeting is to communicate it, not debate it.</span></div>
+      <div class="fg g2">
+        <div class="f"><label>Employee Name</label><input type="text" id="invEmpName" placeholder="Full name" oninput="saveData()"></div>
+        <div class="f"><label>Position</label><input type="text" id="invPosition" placeholder="Title" oninput="saveData()"></div>
+        <div class="f"><label>Termination Date</label><input type="date" id="invTermDate" onchange="saveData()"></div>
+        <div class="f"><label>Primary Reason</label>
+          <select id="invReason" onchange="saveData()"><option value="">Select</option><option value="performance">Performance — documented deficiencies</option><option value="conduct">Conduct — policy violation(s)</option><option value="attendance">Attendance — documented pattern</option><option value="position-eliminated">Position eliminated</option><option value="end-of-contract">End of contract / grant period</option><option value="other">Other (document below)</option></select>
+        </div>
+        <div class="f"><label>Documentation on File</label>
+          <select id="invDocs" onchange="saveData()"><option value="">Select</option><option value="yes-complete">Yes — complete documentation trail</option><option value="yes-partial">Yes — partial documentation</option><option value="no">No — this is the first formal action</option></select>
+        </div>
+        <div class="f"><label>Severance Offered</label>
+          <select id="invSeverance" onchange="saveData()"><option value="">Select</option><option value="yes">Yes (detail below)</option><option value="no">No</option></select>
+        </div>
+        <div class="f c2"><label>Detail / Notes</label><textarea id="invNotes" placeholder="Reason details, severance terms, OWBPA considerations for employees 40+, any claims waiver..." oninput="saveData()"></textarea></div>
+      </div>
+      <div class="div"></div>
+      <div class="al al-w"><span class="al-ic">△</span><span>For employees age 40 or older, the Older Workers Benefit Protection Act (OWBPA) governs any severance agreement that includes a waiver of ADEA (age discrimination) claims. Waivers must be written in plain language, reference the ADEA specifically, advise consulting counsel, provide 21 days to consider and 7 days to revoke. OWBPA waivers must be reviewed by employment counsel.</span></div>
+    </div>
+  </div>
+</div>
+<div id="view-rif" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Reduction in Force (RIF)</div><div class="card-desc">Layoff planning, selection criteria documentation, and WARN Act considerations.</div></div>
+      <button onclick="window.print()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Print / PDF</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-w" style="margin-bottom:14px"><span class="al-ic">△</span><span>A RIF requires careful pre-planning to minimize legal exposure. The selection criteria must be documented before decisions are made. Once the list is built, conduct an adverse impact analysis — if the RIF disproportionately affects employees in a protected class, that is a significant legal risk regardless of whether the intent was discriminatory.</span></div>
+      <table class="ref-table">
+        <thead><tr><th>Consideration</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>WARN Act (Federal)</td><td>Applies to employers with 100+ employees. Requires 60 days advance notice for plant closings or mass layoffs (50+ employees at a single site, or 33% of workforce). Failure to provide notice results in 60 days back pay and benefits.</td></tr>
+          <tr><td>Texas Mini-WARN</td><td>Texas does not have a state WARN Act. Federal WARN applies.</td></tr>
+          <tr><td>Selection Criteria</td><td>Must be documented before selection. Common criteria: skills inventory match to future needs, performance ratings, seniority, position elimination. Cannot use subjective factors without documented basis.</td></tr>
+          <tr><td>Adverse Impact Analysis</td><td>Before finalizing the RIF list, analyze the demographics of those selected vs. the workforce. If the RIF has a disparate impact on a protected group, review and document the business justification before proceeding.</td></tr>
+          <tr><td>OWBPA (40+ employees)</td><td>For group separations involving employees 40+, additional notice requirements apply including 45 days to consider a severance agreement and information about the class of employees selected and not selected.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div id="view-checklist" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr"><div><div class="card-title">Separation Checklist</div><div class="card-desc">Actions required for every separation regardless of type.</div></div></div>
+    <div class="card-body" id="sepChecklistBody">
+    </div>
+  </div>
+</div>
+<div id="view-reference" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Reference Policy Framework</div><div class="card-desc">What the organization says — and does not say — when contacted about a former employee.</div></div>
+      <button onclick="window.print()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Print / PDF</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-c" style="margin-bottom:14px"><span class="al-ic">⚖</span><span>Reference practices are one of the most legally underestimated areas of HR. Providing negative references that cannot be substantiated, or inconsistently providing references for some employees and not others, creates defamation and discrimination exposure. A clear, consistent reference policy protects the organization and creates a defensible practice.</span></div>
+      <div class="div"></div>
+      <div class="div-lbl">Standard Reference Policy (Recommended)</div>
+      <div style="background:rgba(27,68,54,0.04);border-left:3px solid var(--pale);padding:16px 18px;border-radius:0 var(--radius-md) var(--radius-md) 0;margin-bottom:16px">
+        <div style="font-size:12.5px;color:var(--text-mid);line-height:1.8">All reference requests for former employees should be directed to HR. The organization's standard practice is to confirm: (1) dates of employment, (2) position(s) held, and (3) whether the individual is eligible for rehire. HR does not provide information beyond these three elements unless the former employee has provided written authorization for expanded disclosure.</div>
+      </div>
+      <div class="div"></div>
+      <div class="div-lbl">Why This Policy Protects the Organization</div>
+      <table class="ref-table" style="margin-bottom:16px">
+        <thead><tr><th>Risk</th><th>How the Policy Addresses It</th></tr></thead>
+        <tbody>
+          <tr><td>Defamation</td><td>By limiting disclosure to verifiable factual information (dates, title, rehire status), the organization eliminates the primary basis for defamation claims — statements of opinion or unverified negative characterizations.</td></tr>
+          <tr><td>Discrimination</td><td>Applying the same policy to all former employees regardless of race, gender, age, disability, or the reason for separation prevents discriminatory reference practices — including giving positive verbal references for some employees but not others.</td></tr>
+          <tr><td>Inconsistency</td><td>When managers give informal references without authorization, the organization loses control of what is said. A no-exception routing policy closes this gap.</td></tr>
+          <tr><td>Negligent referral</td><td>If the organization provides a positive reference for a former employee who had documented safety or conduct issues, and the new employer or their clients are harmed, the organization may face negligent referral liability. The standard policy creates a firewall.</td></tr>
+        </tbody>
+      </table>
+      <div class="div"></div>
+      <div class="div-lbl">When an Employee Requests Expanded References</div>
+      <div style="font-size:12.5px;color:var(--text-mid);line-height:1.8;margin-bottom:14px">If a former employee requests a more detailed reference, require a written authorization form signed by the employee specifying: (1) who may be contacted, (2) what information may be shared, and (3) the duration of the authorization. Keep the signed form on file. Even with authorization, limit statements to factual information that can be substantiated by documentation.</div>
+      <div class="div"></div>
+      <div class="div-lbl">Rehire Eligibility Designation</div>
+      <table class="ref-table">
+        <thead><tr><th>Designation</th><th>Meaning</th><th>When to Use</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--green)">Eligible for Rehire</td><td>No documented performance, conduct, or integrity concerns that would preclude rehiring</td><td>Voluntary resignations in good standing; ends of contracts; RIF separations without cause</td></tr>
+          <tr><td style="color:#8a6010">Eligible for Rehire with Review</td><td>Prior employment issues that would warrant evaluation before any rehire decision is made</td><td>Performance concerns that were documented but not sufficient for termination; minor policy violations</td></tr>
+          <tr><td style="color:var(--crimson)">Not Eligible for Rehire</td><td>Documented conduct, integrity, or performance issues that would preclude rehiring</td><td>Terminations for cause, policy violations, misconduct, or dishonesty. Must be documented and consistent — not applied inconsistently across protected classes.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="view-unemployment" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Unemployment Insurance Response</div><div class="card-desc">How to respond to Texas Workforce Commission claims and protect the organization's unemployment insurance rate.</div></div>
+      <button onclick="window.print()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Print / PDF</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-i" style="margin-bottom:14px"><span class="al-ic">ℹ</span><span>Texas employers pay unemployment insurance taxes based on their experience rating — the history of claims paid against their account. Every claim paid increases the employer's UI tax rate for subsequent years. Responding promptly and accurately to TWC claims is both a financial and a legal obligation.</span></div>
+      <div class="div"></div>
+      <div class="div-lbl">The TWC Claims Process</div>
+      <table class="ref-table" style="margin-bottom:16px">
+        <thead><tr><th>Step</th><th>Timeline</th><th>What the Employer Must Do</th></tr></thead>
+        <tbody>
+          <tr><td>Initial Claim Filed</td><td>Former employee files after separation</td><td>No immediate action required; wait for TWC notice</td></tr>
+          <tr><td>TWC Claim Notice Sent to Employer</td><td>Within days of claim filing</td><td>Respond within the deadline stated on the notice — typically 14 days. Missing this deadline means the claim will likely be approved by default regardless of merit.</td></tr>
+          <tr><td>Employer Response</td><td>Within the notice deadline</td><td>Provide: reason for separation in the employer's own words, all relevant facts, and copies of any documentation (warnings, PIP, investigation report, attendance records). Be factual and objective — not emotional.</td></tr>
+          <tr><td>TWC Determination</td><td>After reviewing both sides</td><td>If the determination is adverse, the employer has 14 days to appeal. An appeal hearing before a TWC hearing officer follows.</td></tr>
+          <tr><td>Appeal Hearing</td><td>Typically 4–8 weeks after filing</td><td>Prepare documentation and, if applicable, witnesses. Hearings are conducted by phone. Legal representation is permitted but not required. Documentation is the primary evidence.</td></tr>
+        </tbody>
+      </table>
+      <div class="div"></div>
+      <div class="div-lbl">Grounds for Contesting a Claim</div>
+      <table class="ref-table" style="margin-bottom:16px">
+        <thead><tr><th>Separation Reason</th><th>Eligible for Benefits?</th><th>Employer Response Strategy</th></tr></thead>
+        <tbody>
+          <tr><td>Voluntary resignation — employee's choice</td><td>Generally no, unless employee left for "good cause connected to the work"</td><td>Document that the resignation was voluntary and uncoerced. Provide any resignation letter or email. If employee claims constructive discharge, prepare to rebut.</td></tr>
+          <tr><td>Termination for misconduct</td><td>No — misconduct disqualifies</td><td>Provide specific, documented facts. TWC defines misconduct as a deliberate violation of the employer's reasonable rules or standards. Poor performance alone is generally not misconduct — distinguish clearly.</td></tr>
+          <tr><td>Termination for poor performance</td><td>Generally yes — performance is not misconduct</td><td>The employer may still respond to provide the record, but contesting a pure performance termination is usually not successful and not recommended unless there is a misconduct element.</td></tr>
+          <tr><td>Reduction in Force / Position eliminated</td><td>Yes — no fault of employee</td><td>Do not contest. Respond confirming the RIF, stating the business reason, and noting that the employee performed satisfactorily. Contesting a legitimate RIF claim damages employee relations and rarely succeeds.</td></tr>
+          <tr><td>End of contract / temporary assignment</td><td>Yes — lack of work</td><td>Respond confirming the contract end date and nature of the assignment. Do not contest if the end was predetermined and unrelated to conduct.</td></tr>
+        </tbody>
+      </table>
+      <div class="al al-w"><span class="al-ic">△</span><span>The most common employer mistake in unemployment proceedings is providing opinions, characterizations, or undocumented allegations in response to a TWC claim. The TWC hearing officer has seen every version of "they were a bad employee." What they respond to is documentation. If the conduct was documented, the employer will likely prevail. If it was not, the claim will likely be approved — and that is the correct outcome.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- SEPARATION LOG TAB -->
+<div id="view-seplog" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Separation Log</div><div class="card-desc">Cumulative record of all employee separations. Each entry is a separate record. Retain for 7 years post-separation.</div></div>
+      <button onclick="openSepLogModal()" style="padding:6px 14px;background:var(--gold);color:var(--green-deep);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;font-weight:400;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">+ Add Entry</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-i" style="margin-bottom:14px"><span class="al-ic">ℹ</span><span>A complete separation log supports adverse impact analysis, unemployment defense, and pattern identification. Consistent documentation across all separations — not just terminations for cause — protects the organization. If only certain types of separations are documented, the inconsistency itself becomes a liability.</span></div>
+      <div id="sepLogContent">
+        <div style="padding:24px;text-align:center;color:var(--text-light);font-size:12px;background:rgba(27,68,54,0.02);border-radius:var(--radius-md);border:1px dashed var(--border)">No separations logged yet. Add the first entry using the button above.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SEPARATION LOG MODAL -->
+<div id="sepLogModal" style="position:fixed;inset:0;z-index:200;background:rgba(18,46,36,0.65);backdrop-filter:blur(4px);display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;">
+  <div style="background:var(--white);border-radius:var(--radius-lg);max-width:640px;width:100%;box-shadow:0 16px 64px rgba(0,0,0,0.25);margin:auto;">
+    <div style="background:linear-gradient(135deg,var(--green-deep),var(--green));padding:20px 26px;border-radius:var(--radius-lg) var(--radius-lg) 0 0;display:flex;justify-content:space-between;align-items:flex-start;">
+      <div id="sepLogModalTitle" style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--white)">New Separation Entry</div>
+      <button onclick="closeSepLogModal()" style="background:none;border:none;color:rgba(245,237,228,0.5);font-size:20px;cursor:pointer;line-height:1;">×</button>
+    </div>
+    <div style="padding:22px 26px;">
+      <div class="fg g3">
+        <div class="f"><label>Employee Name</label><input type="text" id="slEmp" placeholder="Full name"></div>
+        <div class="f"><label>Position</label><input type="text" id="slPosition" placeholder="Title at separation"></div>
+        <div class="f"><label>Department</label><input type="text" id="slDept" placeholder="Department or team"></div>
+        <div class="f"><label>Last Day of Employment</label><input type="date" id="slLastDay"></div>
+        <div class="f"><label>Separation Type</label>
+          <select id="slType"><option value="Voluntary Resignation">Voluntary Resignation</option><option value="Involuntary — Performance">Involuntary — Performance</option><option value="Involuntary — Conduct">Involuntary — Conduct</option><option value="Involuntary — Attendance">Involuntary — Attendance</option><option value="Reduction in Force">Reduction in Force</option><option value="End of Contract">End of Contract</option><option value="Mutual Agreement">Mutual Agreement</option><option value="Retirement">Retirement</option><option value="Other">Other</option></select>
+        </div>
+        <div class="f"><label>Rehire Eligibility</label>
+          <select id="slRehire"><option value="Eligible">Eligible for Rehire</option><option value="Eligible with Review">Eligible with Review</option><option value="Not Eligible">Not Eligible for Rehire</option></select>
+        </div>
+        <div class="f"><label>Final Pay Issued</label>
+          <select id="slFinalPay"><option value="Yes — on time">Yes — on time</option><option value="Yes — pending">Pending — date set</option><option value="No — issue">No — issue to resolve</option></select>
+        </div>
+        <div class="f"><label>COBRA Notified</label>
+          <select id="slCobra"><option value="N/A — not applicable">N/A — not applicable</option><option value="Yes — notified">Yes — notified</option><option value="Pending">Pending</option></select>
+        </div>
+        <div class="f"><label>Exit Interview</label>
+          <select id="slExit"><option value="Completed">Completed</option><option value="Declined">Declined by employee</option><option value="N/A — involuntary">N/A — involuntary separation</option><option value="Pending">Pending</option></select>
+        </div>
+        <div class="c3 f"><label>Notes</label><textarea id="slNotes" placeholder="Key context, stated reason for departure, outstanding items, or flags for HR follow-up..." rows="3"></textarea></div>
+      </div>
+    </div>
+    <div style="padding:14px 26px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:space-between;align-items:center;">
+      <div style="font-size:11px;color:var(--text-light)">Export generates a separation memo for the personnel file.</div>
+      <div style="display:flex;gap:10px;">
+        <button onclick="closeSepLogModal()" style="padding:8px 18px;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:12px;font-weight:300;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--text-mid);">Cancel</button>
+        <button onclick="saveSepLogEntry()" style="padding:8px 18px;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:12px;font-weight:300;cursor:pointer;border:none;background:linear-gradient(135deg,var(--green),var(--green-light));color:var(--white);">Save Entry</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="fb">The Coherence Collective &nbsp;·&nbsp; <span>Plinth</span></div>
+  <div style="display:flex;gap:16px;align-items:center">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.35)">Jump to</span>
+      <select onchange="if(this.value)window.location.href=this.value" style="font-family:'Jost',sans-serif;font-weight:300;font-size:11px;background:rgba(255,255,255,0.06);color:rgba(245,237,228,0.6);border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:4px 24px 4px 8px;cursor:pointer;outline:none;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(245,237,228,0.4)' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 7px center">
+        <option value="/org-profile/">01 &middot; Org Profile</option>
+        <option value="/handbook/">02 &middot; Handbook</option>
+        <option value="/job-architecture/">03 &middot; Job Architecture</option>
+        <option value="/compensation/">04 &middot; Compensation</option>
+        <option value="/offer-hiring/">05 &middot; Offer &amp; Hiring</option>
+        <option value="/onboarding/">06 &middot; Onboarding</option>
+        <option value="/pay-practices/">07 &middot; Pay Practices</option>
+        <option value="/benefits/">08 &middot; Benefits Administration</option>
+        <option value="/leave/">09 &middot; Leave Management</option>
+        <option value="/performance/">10 &middot; Performance Management</option>
+        <option value="/er-investigation/">11 &middot; ER &amp; Investigation</option>
+        <option value="/separation/" selected>12 &middot; Separation</option>
+        <option value="/compliance-calendar/">13 &middot; Compliance Calendar</option>
+        <option value="/manager-toolkit/">14 &middot; Manager Toolkit</option>
+        <option value="/analytics/">15 &middot; Analytics</option>
+      </select>
+    </div>
+    <span style="color:rgba(245,237,228,0.15)">|</span>
+    <a href="/er-investigation/" style="font-size:11px;color:rgba(245,237,228,0.4);text-decoration:none" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">&larr; Tool 11</a>
+    <span style="color:rgba(245,237,228,0.15)">|</span>
+    <a href="/compliance-calendar/" style="font-size:11px;color:rgba(245,237,228,0.4);text-decoration:none" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">Tool 13 &rarr;</a>
+  </div>
+</footer>
+<script>
+const ALL_TABS_SEP = ['voluntary','involuntary','rif','checklist','reference','unemployment','seplog'];
+let profile = {};
+try{ profile = JSON.parse(localStorage.getItem('plinth_op')||'{}'); }catch(e){}
+
+const VOL_FIELDS  = ['volEmpName','volPosition','volResignDate','volLastDay','volNotice','volExitInt','volReason'];
+const INV_FIELDS  = ['invEmpName','invPosition','invTermDate','invReason','invDocs','invSeverance','invNotes'];
+
+let sepData = { vol:{}, inv:{}, sepLog:[] };
+
+function saveData(){
+  VOL_FIELDS.forEach(function(id){ var el=document.getElementById(id); if(el) sepData.vol[id]=el.value; });
+  INV_FIELDS.forEach(function(id){ var el=document.getElementById(id); if(el) sepData.inv[id]=el.value; });
+  localStorage.setItem('plinth_sep', JSON.stringify(sepData));
+  var fl=document.getElementById('sflash'); fl.classList.add('on'); setTimeout(function(){fl.classList.remove('on');},1800);
+}
+
+function showTab(tab){
+  ALL_TABS_SEP.forEach(function(t){
+    var v=document.getElementById('view-'+t); if(v) v.style.display=t===tab?'block':'none';
+    var el=document.getElementById('tab-'+t); if(el) el.classList.toggle('active',t===tab);
+  });
+  if(tab==='checklist') renderSepChecklist();
+  if(tab==='seplog') renderSepLog();
+}
+
+function restoreData(){
+  try{
+    var d = JSON.parse(localStorage.getItem('plinth_sep')||'{}');
+    if(d.vol){ Object.assign(sepData.vol,d.vol); VOL_FIELDS.forEach(function(id){ var el=document.getElementById(id); if(el&&d.vol[id]!==undefined) el.value=d.vol[id]; }); }
+    if(d.inv){ Object.assign(sepData.inv,d.inv); INV_FIELDS.forEach(function(id){ var el=document.getElementById(id); if(el&&d.inv[id]!==undefined) el.value=d.inv[id]; }); }
+    if(d.sepLog) sepData.sepLog=d.sepLog;
+  }catch(e){}
+}
+
+function animateCards(){
+  var obs=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('vis'); }); },{threshold:0.04});
+  document.querySelectorAll('.card').forEach(function(c){obs.observe(c);});
+}
+
+// ── SEPARATION CHECKLIST ──────────────────────────────────────────────────────
+var SEP_ITEMS = [
+  {id:'s1',title:'Calculate and prepare final pay',detail:'Involuntary: within 6 calendar days. Voluntary: next regular payday. Include all earned wages and any accrued PTO if policy requires payout.'},
+  {id:'s2',title:'Deliver final pay',detail:'Preferred method: direct deposit or hand-deliver. Do not mail unless employee requests or cannot be reached.'},
+  {id:'s3',title:'Collect all organizational property',detail:'Keys, access cards, equipment, credit cards, client files, and confidential materials. Provide a signed receipt for each item returned.'},
+  {id:'s4',title:'Revoke system access',detail:'Email, HR system, payroll, project management tools, physical access, and cloud services. Complete on the last day — or immediately upon termination for involuntary separations.'},
+  {id:'s5',title:'COBRA notice (if applicable)',detail:'If the organization sponsors a group health plan with 20+ employees, initiate COBRA notification within 30 days of the qualifying event.'},
+  {id:'s6',title:'Texas unemployment notice',detail:'Texas employers must provide separated employees with information about how to apply for unemployment benefits. TWC Form C-1 or equivalent notice.'},
+  {id:'s7',title:'Update payroll and HR systems',detail:'Process termination date, final pay, and benefits termination in all systems. Notify payroll provider immediately.'},
+  {id:'s8',title:'Retain personnel file',detail:'Do not destroy. Retain for 7 years post-separation. Keep investigation files and medical files in separate, confidential locations.'},
+  {id:'s9',title:'Conduct exit interview (voluntary separations)',detail:'Collect feedback on culture, management, compensation, and reason for leaving. Store responses confidentially and use for retention analysis.'},
+  {id:'s10',title:'Reassign workload and notify team',detail:'Plan how work will be covered before the last day. Communicate to the team without sharing the circumstances of the separation.'},
+];
+
+var sepChecks = {};
+try{ sepChecks = JSON.parse(localStorage.getItem('plinth_sep_checks')||'{}'); }catch(e){}
+
+function renderSepChecklist(){
+  var el=document.getElementById('sepChecklistBody'); if(!el) return;
+  var html='';
+  for(var i=0;i<SEP_ITEMS.length;i++){
+    var item=SEP_ITEMS[i];
+    var chk=sepChecks[item.id];
+    html+='<div style="display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(224,216,207,0.4)">';
+    html+='<div style="width:18px;height:18px;border:2px solid '+(chk?'var(--green)':'var(--border)')+';border-radius:3px;flex-shrink:0;cursor:pointer;transition:all 0.15s;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:10px;'+(chk?'background:var(--green);color:white':'')+'" onclick="toggleSepCheck(\''+item.id+'\',this)">'+(chk?'&#10003;':'')+'</div>';
+    html+='<div><div style="font-size:12px;color:var(--text-dark);margin-bottom:3px">'+item.title+'</div><div style="font-size:11px;color:var(--text-light);line-height:1.6">'+item.detail+'</div></div>';
+    html+='</div>';
+  }
+  el.innerHTML=html;
+}
+
+function toggleSepCheck(id,el){
+  sepChecks[id]=!sepChecks[id];
+  el.style.background=sepChecks[id]?'var(--green)':'';
+  el.style.borderColor=sepChecks[id]?'var(--green)':'var(--border)';
+  el.style.color=sepChecks[id]?'white':'';
+  el.innerHTML=sepChecks[id]?'&#10003;':'';
+  localStorage.setItem('plinth_sep_checks',JSON.stringify(sepChecks));
+}
+
+// ── EXPORT SEPARATION MEMO ────────────────────────────────────────────────────
+function exportSepDocs(){
+  var org=(profile&&profile.legalName)?profile.legalName:'Organization';
+  var today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  var volEmp=document.getElementById('volEmpName')?document.getElementById('volEmpName').value:'';
+  var invEmp=document.getElementById('invEmpName')?document.getElementById('invEmpName').value:'';
+  var emp=volEmp||invEmp||'[Employee Name]';
+  var posId=volEmp?'volPosition':'invPosition';
+  var pos=document.getElementById(posId)?document.getElementById(posId).value||'[Position]':'[Position]';
+  var lastDayId=volEmp?'volLastDay':'invTermDate';
+  var lastDay=document.getElementById(lastDayId)?document.getElementById(lastDayId).value:'';
+  var lastDayFmt=lastDay?new Date(lastDay+'T12:00:00').toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}):'[Date]';
+  var sepType=volEmp?'Voluntary Resignation':'Involuntary Termination';
+  var reasonEl=document.getElementById('invReason');
+  var reason=reasonEl?reasonEl.value:'';
+  var reasonLabels={'performance':'Performance','conduct':'Conduct — policy violation','attendance':'Attendance','position-eliminated':'Position eliminated','end-of-contract':'End of contract'};
+  var reasonLabel=reasonLabels[reason]||reason;
+  var finalPayNote=volEmp?'Due on the next regular payday following the last day of employment (Texas Payday Law).':'Due within 6 calendar days of the last day of employment (Texas Payday Law — involuntary separation).';
+
+  var _pbTitle='Separation Memo — '+emp;
+  var _pbFile='separation-memo-'+emp.replace(/\s+/g,'-').toLowerCase()+'.html';
+  var _pbType='Separation Memo';
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Separation Memo</title>';
+  html+='<style>body{font-family:Georgia,serif;max-width:700px;margin:0 auto;padding:48px 40px;font-size:10.5pt;line-height:1.8;color:#1a1a1a;}';
+  html+='h1{font-size:18pt;font-weight:400;color:#1b4436;}h2{font-size:12pt;font-weight:600;color:#1a1a1a;margin:20px 0 8px;border-bottom:1px solid #e0d8cf;padding-bottom:5px;}';
+  html+='.meta{background:#f5f0ea;padding:14px 18px;border-radius:4px;margin:20px 0;font-size:9.5pt;line-height:2;}';
+  html+='.confidential{font-size:8pt;color:#A42F30;border:1px solid #A42F30;padding:4px 10px;display:inline-block;margin-bottom:20px;letter-spacing:0.08em;text-transform:uppercase;}';
+  html+='p{margin:0 0 12px;}@page{size:letter;margin:1in;}</style></head><body>';
+  html+='<div class="confidential">Confidential &mdash; Personnel Record</div>';
+  html+='<h1>'+org+'</h1>';
+  html+='<p style="font-size:12pt;color:#555;margin-bottom:24px">Separation Documentation &nbsp;|&nbsp; '+today+'</p>';
+  html+='<div class="meta"><strong>Employee:</strong> '+emp+'<br><strong>Position:</strong> '+pos+'<br><strong>Separation Type:</strong> '+sepType+'<br><strong>Last Day of Employment:</strong> '+lastDayFmt+'<br>'+(reason?'<strong>Reason:</strong> '+reasonLabel+'<br>':'')+'</div>';
+  html+='<h2>Final Pay</h2><p>'+finalPayNote+'</p>';
+  html+='<h2>Property &amp; Access</h2><p>All organizational property must be returned and system access revoked on or before the last day of employment. A property receipt should be signed at the time of return.</p>';
+  html+='<h2>Benefits Continuation</h2><p>COBRA notification will be sent within 30 days if the organization sponsors a qualifying group health plan with 20 or more employees. Employees may elect COBRA continuation coverage for up to 18 months at their own expense.</p>';
+  html+='<h2>Records Retention</h2><p>Personnel file and all employment records will be retained for a minimum of 7 years following the last date of employment in accordance with applicable law and organizational policy.</p>';
+  html+='<p style="font-size:8pt;color:#999;margin-top:36px;border-top:1px solid #e0d8cf;padding-top:10px">Generated via Plinth by The Coherence Collective, LLC. This document is for internal HR use and should be filed in the personnel record.</p>';
+  html+='</body></html>';
+
+  var _pbC='<style>'+'\n    .pb{position:fixed;top:0;left:0;right:0;z-index:9999;background:#1b4436;padding:10px 28px;display:flex;gap:10px;align-items:center;box-shadow:0 2px 12px rgba(0,0,0,0.3);}\n    .pb-title{font-family:Georgia,serif;font-size:11pt;color:rgba(245,237,228,0.75);flex:1;font-weight:400;}\n    .pb-btn{font-family:Arial,sans-serif;font-size:8.5pt;padding:7px 16px;border:none;border-radius:3px;cursor:pointer;letter-spacing:0.04em;font-weight:500;}\n    .pb-gold{background:#D99E32;color:#122e24;}\n    .pb-ghost{background:rgba(255,255,255,0.09);color:rgba(245,237,228,0.82);border:1px solid rgba(255,255,255,0.14);}\n    .pb-spacer{height:52px;}\n    @media print{.pb,.pb-spacer{display:none!important;}}'+'</style>';
+  var _pbH='<div class="pb"><span class="pb-title">'+_pbTitle+'</span>'
+    +'<button class="pb-btn pb-gold" onclick="window.print()">&#8681; Print / Save as PDF</button>'
+    +'<button class="pb-btn pb-ghost" onclick="plDl()">&#8659; Download</button>'
+    +'<button class="pb-btn pb-ghost" onclick="plSave()">&#9729; Save to Plinth</button>'
+    +'<button class="pb-btn pb-ghost" onclick="window.close()" style="margin-left:4px">&#10005;</button>'
+    +'</div><div class="pb-spacer"></div>';
+  html=html.replace('<body>','<body>'+_pbH);
+  html=html.replace('</style>\\n  </head>',_pbC+'</style>\\n  </head>');
+  var _pbJS='<scr'+'ipt>'
+    +'function plDl(){var blob=new Blob([document.documentElement.outerHTML],{type:"text/html"});var url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download=_pbFile;a.click();setTimeout(function(){URL.revokeObjectURL(url);},1200);}'
+    +'function plSave(){var d=[];try{d=JSON.parse(localStorage.getItem("plinth_docs")||"[]");}catch(e){}d.push({id:"doc_"+Date.now(),title:_pbTitle,type:_pbType,date:new Date().toISOString()});localStorage.setItem("plinth_docs",JSON.stringify(d));var b=document.querySelectorAll(".pb-ghost");if(b[1]){b[1].textContent="\u2713 Saved to Plinth";b[1].style.background="rgba(27,68,54,0.5)";}}'
+    +'</s'+'cript>';
+  html+=_pbJS;
+  var win=window.open('','_blank'); win.document.write(html); win.document.close();
+}
+
+// ── SEPARATION LOG ────────────────────────────────────────────────────────────
+var editingSepIdx = null;
+
+function openSepLogModal(idx){
+  editingSepIdx = (idx!==undefined&&idx!==null) ? idx : null;
+  var entry = editingSepIdx!==null ? sepData.sepLog[editingSepIdx] : null;
+  ['slEmp','slPosition','slDept','slNotes'].forEach(function(f){ var el=document.getElementById(f); if(el) el.value=entry?entry[f]||'':''; });
+  var slLastDay=document.getElementById('slLastDay'); if(slLastDay) slLastDay.value=entry?entry.slLastDay||'':'';
+  ['slType','slRehire','slFinalPay','slCobra','slExit'].forEach(function(f){
+    var el=document.getElementById(f);
+    if(el) el.value=entry?entry[f]||el.options[0].value:el.options[0].value;
+  });
+  if(!entry){ var d=document.getElementById('slLastDay'); if(d) d.value=''; }
+  document.getElementById('sepLogModalTitle').textContent = editingSepIdx!==null ? 'Edit Separation Entry' : 'New Separation Entry';
+  document.getElementById('sepLogModal').style.display='flex';
+}
+
+function closeSepLogModal(){ document.getElementById('sepLogModal').style.display='none'; }
+
+function saveSepLogEntry(){
+  var emp=document.getElementById('slEmp').value.trim();
+  if(!emp){ document.getElementById('slEmp').focus(); return; }
+  var entry={
+    slEmp:emp, slPosition:document.getElementById('slPosition').value,
+    slDept:document.getElementById('slDept').value,
+    slLastDay:document.getElementById('slLastDay').value,
+    slType:document.getElementById('slType').value,
+    slRehire:document.getElementById('slRehire').value,
+    slFinalPay:document.getElementById('slFinalPay').value,
+    slCobra:document.getElementById('slCobra').value,
+    slExit:document.getElementById('slExit').value,
+    slNotes:document.getElementById('slNotes').value
+  };
+  if(editingSepIdx!==null) sepData.sepLog[editingSepIdx]=entry;
+  else sepData.sepLog.push(entry);
+  closeSepLogModal();
+  localStorage.setItem('plinth_sep', JSON.stringify(sepData));
+  renderSepLog();
+}
+
+function deleteSepEntry(idx){
+  if(!confirm('Delete this separation record?')) return;
+  sepData.sepLog.splice(idx,1);
+  localStorage.setItem('plinth_sep', JSON.stringify(sepData));
+  renderSepLog();
+}
+
+function exportSepEntry(idx){
+  var entry=sepData.sepLog[idx]; if(!entry) return;
+  var org=(profile&&profile.legalName)?profile.legalName:'Organization';
+  var today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  var lastDayFmt=entry.slLastDay?new Date(entry.slLastDay+'T12:00:00').toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}):'[Date]';
+  var isVol=entry.slType==='Voluntary Resignation'||entry.slType==='Retirement'||entry.slType==='Mutual Agreement';
+  var finalPayNote=isVol?'Due on the next regular payday following the last day of employment (Texas Payday Law).':'Due within 6 calendar days of the last day of employment (Texas Payday Law — involuntary separation).';
+  var _pbTitle='Separation Memo — '+entry.slEmp;
+  var _pbFile='sep-'+entry.slEmp.replace(/\s+/g,'-').toLowerCase()+'.html';
+  var _pbType='Separation Memo';
+    var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Separation Memo</title>';
+  html+='<style>body{font-family:Georgia,serif;max-width:700px;margin:0 auto;padding:48px 40px;font-size:10.5pt;line-height:1.8;color:#1a1a1a;}h1{font-size:18pt;font-weight:400;color:#1b4436;}.meta{background:#f5f0ea;padding:14px 18px;border-radius:4px;margin:20px 0;font-size:9.5pt;line-height:2;}.confidential{font-size:8pt;color:#A42F30;border:1px solid #A42F30;padding:4px 10px;display:inline-block;margin-bottom:20px;letter-spacing:0.08em;text-transform:uppercase;}h2{font-size:12pt;font-weight:600;color:#1a1a1a;margin:20px 0 8px;border-bottom:1px solid #e0d8cf;padding-bottom:5px;}p{margin:0 0 12px;}@page{size:letter;margin:1in;}</style></head><body>';
+  html+='<div class="confidential">Confidential &mdash; Personnel Record</div>';
+  html+='<h1>'+org+'</h1><p style="font-size:12pt;color:#555;margin-bottom:24px">Separation Documentation &nbsp;|&nbsp; '+today+'</p>';
+  html+='<div class="meta"><strong>Employee:</strong> '+entry.slEmp+'<br><strong>Position:</strong> '+(entry.slPosition||'[Position]')+'<br>'+(entry.slDept?'<strong>Department:</strong> '+entry.slDept+'<br>':'')+'<strong>Separation Type:</strong> '+entry.slType+'<br><strong>Last Day:</strong> '+lastDayFmt+'<br><strong>Rehire Eligibility:</strong> '+entry.slRehire+'</div>';
+  html+='<h2>Final Pay</h2><p>'+finalPayNote+'</p>';
+  html+='<h2>Property &amp; Access</h2><p>All organizational property must be returned and system access revoked on or before the last day of employment.</p>';
+  html+='<h2>Benefits Continuation</h2><p>COBRA notification will be sent within 30 days if applicable. Employees may elect continuation coverage for up to 18 months.</p>';
+  if(entry.slNotes) html+='<h2>Notes</h2><p style="white-space:pre-wrap">'+entry.slNotes+'</p>';
+  html+='<p style="font-size:8pt;color:#999;margin-top:36px;border-top:1px solid #e0d8cf;padding-top:10px">Generated via Plinth by The Coherence Collective, LLC.</p>';
+  html+='</body></html>';
+
+  var _pbC='<style>'+'\n    .pb{position:fixed;top:0;left:0;right:0;z-index:9999;background:#1b4436;padding:10px 28px;display:flex;gap:10px;align-items:center;box-shadow:0 2px 12px rgba(0,0,0,0.3);}\n    .pb-title{font-family:Georgia,serif;font-size:11pt;color:rgba(245,237,228,0.75);flex:1;font-weight:400;}\n    .pb-btn{font-family:Arial,sans-serif;font-size:8.5pt;padding:7px 16px;border:none;border-radius:3px;cursor:pointer;letter-spacing:0.04em;font-weight:500;}\n    .pb-gold{background:#D99E32;color:#122e24;}\n    .pb-ghost{background:rgba(255,255,255,0.09);color:rgba(245,237,228,0.82);border:1px solid rgba(255,255,255,0.14);}\n    .pb-spacer{height:52px;}\n    @media print{.pb,.pb-spacer{display:none!important;}}'+'</style>';
+  var _pbH='<div class="pb"><span class="pb-title">'+_pbTitle+'</span>'
+    +'<button class="pb-btn pb-gold" onclick="window.print()">&#8681; Print / Save as PDF</button>'
+    +'<button class="pb-btn pb-ghost" onclick="plDl()">&#8659; Download</button>'
+    +'<button class="pb-btn pb-ghost" onclick="plSave()">&#9729; Save to Plinth</button>'
+    +'<button class="pb-btn pb-ghost" onclick="window.close()" style="margin-left:4px">&#10005;</button>'
+    +'</div><div class="pb-spacer"></div>';
+  html=html.replace('<body>','<body>'+_pbH);
+  html=html.replace('</style>\\n  </head>',_pbC+'</style>\\n  </head>');
+  var _pbJS='<scr'+'ipt>'
+    +'function plDl(){var blob=new Blob([document.documentElement.outerHTML],{type:"text/html"});var url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download=_pbFile;a.click();setTimeout(function(){URL.revokeObjectURL(url);},1200);}'
+    +'function plSave(){var d=[];try{d=JSON.parse(localStorage.getItem("plinth_docs")||"[]");}catch(e){}d.push({id:"doc_"+Date.now(),title:_pbTitle,type:_pbType,date:new Date().toISOString()});localStorage.setItem("plinth_docs",JSON.stringify(d));var b=document.querySelectorAll(".pb-ghost");if(b[1]){b[1].textContent="\u2713 Saved to Plinth";b[1].style.background="rgba(27,68,54,0.5)";}}'
+    +'</s'+'cript>';
+  html+=_pbJS;
+  var win=window.open('','_blank'); win.document.write(html); win.document.close();
+}
+
+function renderSepLog(){
+  var c=document.getElementById('sepLogContent'); if(!c) return;
+  if(!sepData.sepLog.length){
+    c.innerHTML='<div style="padding:24px;text-align:center;color:var(--text-light);font-size:12px;background:rgba(27,68,54,0.02);border-radius:var(--radius-md);border:1px dashed var(--border)">No separations logged yet. Add the first entry using the button above.</div>';
+    return;
+  }
+  var typeColor={'Voluntary Resignation':'var(--green)','Reduction in Force':'var(--mauve)','Involuntary — Performance':'var(--crimson)','Involuntary — Conduct':'var(--crimson)','Involuntary — Attendance':'var(--crimson)'};
+  var rehireColor={'Eligible':'var(--green)','Eligible with Review':'#8a6010','Not Eligible':'var(--crimson)'};
+  var html='<table class="ref-table"><thead><tr><th>Employee</th><th>Position</th><th>Last Day</th><th>Separation Type</th><th>Rehire</th><th>Final Pay</th><th style="width:110px"></th></tr></thead><tbody>';
+  for(var i=0;i<sepData.sepLog.length;i++){
+    var e=sepData.sepLog[i];
+    var lastD=e.slLastDay?new Date(e.slLastDay+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'--';
+    var tc=typeColor[e.slType]||'var(--text-mid)';
+    var rc=rehireColor[e.slRehire]||'var(--text-light)';
+    html+='<tr>';
+    html+='<td style="font-weight:400">'+e.slEmp+'</td>';
+    html+='<td>'+(e.slPosition||'--')+'</td>';
+    html+='<td style="white-space:nowrap">'+lastD+'</td>';
+    html+='<td style="font-size:11px;color:'+tc+'">'+(e.slType||'--')+'</td>';
+    html+='<td style="font-size:11px;color:'+rc+'">'+(e.slRehire||'--')+'</td>';
+    html+='<td style="font-size:11px">'+(e.slFinalPay||'--')+'</td>';
+    html+='<td><div style="display:flex;gap:6px">';
+    html+='<button onclick="openSepLogModal('+i+')" style="font-size:10px;color:var(--green);background:none;border:none;cursor:pointer;font-family:Jost,sans-serif">Edit</button>';
+    html+='<button onclick="exportSepEntry('+i+')" style="font-size:10px;color:var(--gold);background:none;border:none;cursor:pointer;font-family:Jost,sans-serif">Export</button>';
+    html+='<button onclick="deleteSepEntry('+i+')" style="font-size:10px;color:var(--text-light);background:none;border:none;cursor:pointer">Del</button>';
+    html+='</div></td>';
+    html+='</tr>';
+  }
+  html+='</tbody></table>';
+  c.innerHTML=html;
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  restoreData();
+  renderSepChecklist();
+  animateCards();
+});
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeSepLogModal(); });
+</script>
+</body>
+</html>

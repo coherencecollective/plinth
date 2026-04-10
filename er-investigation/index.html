@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Plinth · ER & Investigation</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--green:#1b4436;--green-light:#235a47;--green-deep:#122e24;--mauve:#916179;--sand:#D2BB9F;--gold:#D99E32;--pale:#cccf8e;--crimson:#A42F30;--beige:#F5EDE4;--white:#fff;--off-white:#faf8f5;--text-dark:#1a1a1a;--text-mid:#444;--text-light:#777;--border:#e0d8cf;--shadow:0 2px 16px rgba(27,68,54,0.08);--radius:4px;--radius-md:8px;--radius-lg:12px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Jost',sans-serif;font-weight:300;font-size:14px;color:var(--text-dark);background:var(--off-white);min-height:100vh;}
+nav{position:sticky;top:0;z-index:100;background:var(--green);padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,0.2);}
+.nav-left{display:flex;align-items:center;gap:14px;}
+.back-btn{display:inline-flex;align-items:center;gap:5px;font-family:'Jost',sans-serif;font-size:11px;font-weight:300;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.5);padding:5px 10px;border:1px solid rgba(245,237,228,0.15);border-radius:var(--radius);background:none;cursor:pointer;transition:all 0.2s;}
+.back-btn:hover{color:var(--beige);}
+.nav-sep{width:1px;height:18px;background:rgba(255,255,255,0.15);}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:17px;color:var(--beige);}
+.nav-brand span{color:var(--gold);}
+.nav-sub{font-size:12px;font-weight:300;color:rgba(245,237,228,0.45);}
+.nav-right{display:flex;gap:7px;align-items:center;}
+.nbtn{font-family:'Jost',sans-serif;font-weight:300;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:5px 13px;border-radius:var(--radius);cursor:pointer;border:none;transition:all 0.2s;}
+.nbtn-ghost{background:transparent;color:var(--sand);border:1px solid rgba(210,187,159,0.3);}
+.nbtn-ghost:hover{background:rgba(210,187,159,0.1);color:var(--beige);}
+.nbtn-gold{background:var(--gold);color:var(--green-deep);font-weight:400;}
+.sflash{font-size:11px;color:var(--pale);margin-right:4px;opacity:0;transition:opacity 0.3s;}
+.sflash.on{opacity:1;}
+.tabs{background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;display:flex;overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{font-size:11px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:13px 18px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.2s;}
+.tab:hover{color:var(--green);}
+.tab.active{color:var(--green);border-bottom-color:var(--green);}
+.hero{background:linear-gradient(150deg,var(--green-deep) 0%,var(--green) 55%,var(--green-light) 100%);padding:44px 28px 38px;position:relative;overflow:hidden;}
+.hero-inner{max-width:1060px;margin:0 auto;}
+.hero-eye{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--pale);margin-bottom:10px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:36px;color:var(--white);line-height:1.05;margin-bottom:8px;}
+.hero-title em{font-style:italic;color:var(--sand);}
+.hero-desc{font-size:12.5px;font-weight:300;color:rgba(245,237,228,0.65);max-width:600px;line-height:1.75;}
+.main{max-width:1060px;margin:0 auto;padding:32px 28px 80px;}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;opacity:0;transform:translateY(10px);transition:opacity 0.35s,transform 0.35s;}
+.card.vis{opacity:1;transform:translateY(0);}
+.card-hdr{padding:16px 22px 13px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.05));display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:16px;color:var(--green);}
+.card-desc{font-size:11px;color:var(--text-light);margin-top:2px;line-height:1.5;}
+.card-body{padding:20px 22px;}
+.fg{display:grid;gap:14px;}
+.g2{grid-template-columns:1fr 1fr;}
+.g3{grid-template-columns:1fr 1fr 1fr;}
+.c2{grid-column:span 2;}
+.c3{grid-column:span 3;}
+.f label{display:block;font-size:11px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-mid);margin-bottom:5px;}
+input[type="text"],input[type="number"],input[type="date"],select,textarea{width:100%;font-family:'Jost',sans-serif;font-weight:300;font-size:13px;color:var(--text-dark);background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:8px 11px;outline:none;transition:border-color 0.2s;appearance:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(27,68,54,0.07);}
+textarea{resize:vertical;min-height:72px;line-height:1.7;}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23777' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer;}
+.fhint{font-size:10.5px;color:var(--text-light);margin-top:4px;line-height:1.5;}
+.div{height:1px;background:var(--border);margin:16px 0;}
+.div-lbl{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);margin:-14px 0 12px;display:flex;align-items:center;gap:8px;}
+.div-lbl::before,.div-lbl::after{content:'';flex:1;height:1px;background:var(--border);}
+.al{border-radius:var(--radius);padding:9px 12px;font-size:12px;line-height:1.6;margin-bottom:10px;display:flex;gap:8px;align-items:flex-start;}
+.al-ic{font-size:13px;flex-shrink:0;margin-top:1px;}
+.al-i{background:rgba(27,68,54,0.05);border-left:3px solid var(--pale);color:var(--text-mid);}
+.al-w{background:rgba(217,158,50,0.07);border-left:3px solid var(--gold);color:var(--text-mid);}
+.al-c{background:rgba(145,97,121,0.07);border-left:3px solid var(--mauve);color:var(--text-mid);}
+.al-d{background:rgba(164,47,48,0.06);border-left:3px solid var(--crimson);color:var(--text-mid);}
+.ref-table{width:100%;border-collapse:collapse;}
+.ref-table th{font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:8px 12px;text-align:left;border-bottom:2px solid var(--border);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.04));}
+.ref-table td{padding:9px 12px;border-bottom:1px solid rgba(224,216,207,0.5);font-size:12px;font-weight:300;vertical-align:top;}
+.ref-table tr:last-child td{border-bottom:none;}
+.ref-table tr:hover td{background:rgba(27,68,54,0.015);}
+.ref-table td:first-child{font-weight:400;}
+.form-section{margin-bottom:24px;}
+.form-section-title{font-size:10px;font-weight:400;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:center;justify-content:space-between;}
+.fb{font-family:'Cormorant Garamond',serif;font-size:13px;color:rgba(245,237,228,0.4);}
+.fb span{color:var(--sand);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.fu{animation:fadeUp 0.4s ease both;}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-left">
+    <button class="back-btn" onclick="window.location.href='/'">&#8592; All Tools</button>
+    <div class="nav-sep"></div>
+    <div class="nav-brand">Pl<span>in</span>th</div>
+    <div class="nav-sub">&nbsp;·&nbsp; ER & Investigation</div>
+  </div>
+  <div class="nav-right">
+    <span class="sflash" id="sflash">Saved</span>
+    <button class="nbtn nbtn-ghost" onclick="saveData()">Save</button>
+  </div>
+</nav>
+<div class="tabs">
+  <div class="tab active" onclick="showTab('framework')" id="tab-framework">ER Framework</div>
+  <div class="tab" onclick="showTab('investigation')" id="tab-investigation">Investigation Protocol</div>
+  <div class="tab" onclick="showTab('log')" id="tab-log">Incident Log</div>
+  <div class="tab" onclick="showTab('escalation')" id="tab-escalation">Escalation Guide</div>
+</div>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eye">Plinth · Tool 11</div>
+    <div class="hero-title">Employee Relations &amp; <em>Investigation</em></div>
+    <div class="hero-desc">Employee relations frameworks, workplace investigation protocols, documentation standards for complaints and incidents, and escalation guidance for high-risk situations.</div>
+  </div>
+</div>
+
+<div id="view-framework" class="main">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Employee Relations Framework</div><div class="card-desc">Principles, applicable law, and structures for managing employee relations issues consistently and lawfully.</div></div>
+      <button onclick="window.print()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Print / PDF</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-c" style="margin-bottom:14px"><span class="al-ic">⚖</span><span>Employee relations decisions carry legal risk. Every significant ER action — including disciplinary decisions, accommodation responses, leave approvals, and investigation outcomes — should be documented thoroughly and reviewed by HR or counsel before implementation. Inconsistent treatment across similarly situated employees is one of the most common bases for employment claims.</span></div>
+      <table class="ref-table" style="margin-bottom:0">
+        <thead><tr><th>Principle</th><th>Application</th></tr></thead>
+        <tbody>
+          <tr><td>Consistency</td><td>Similarly situated employees must be treated similarly. Document the basis for any differential treatment. If two employees commit the same violation and receive different consequences, the difference must be documented and justified by a relevant, non-protected factor.</td></tr>
+          <tr><td>Promptness</td><td>Complaints and incidents must be addressed promptly. Delay signals tolerance. EEOC guidance requires prompt and appropriate corrective action once harassment or discrimination is known or should have been known.</td></tr>
+          <tr><td>Proportionality</td><td>The response must fit the severity of the conduct. Progressive discipline is appropriate for performance and minor conduct issues. Serious misconduct may warrant immediate termination regardless of prior discipline history.</td></tr>
+          <tr><td>Confidentiality</td><td>Investigations and complaints must be kept confidential to the extent possible. That is not absolute — investigators need to interview witnesses. Information should be shared on a need-to-know basis only. Blanket confidentiality orders to employees raise NLRA concerns.</td></tr>
+          <tr><td>Non-Retaliation</td><td>Retaliation for reporting a complaint, cooperating in an investigation, or exercising a protected right is unlawful and often more legally dangerous than the underlying conduct. Document all post-complaint actions and scrutinize any adverse action against a complaining party.</td></tr>
+        </tbody>
+      </table>
+      <div class="div"></div>
+      <div class="div-lbl">Applicable Federal Employment Laws</div>
+      <div class="al al-i" style="margin-bottom:12px"><span class="al-ic">ℹ</span><span>Knowing which law governs the situation determines who enforces it, what remedies are available, and what the filing deadlines are. The wrong legal frame leads to wrong advice. These are the primary statutes governing ER situations for nonprofits operating in Texas.</span></div>
+      <table class="ref-table">
+        <thead><tr><th>Statute</th><th>What It Covers</th><th>Employer Size Threshold</th><th>Enforcement / Filing Deadline</th></tr></thead>
+        <tbody>
+          <tr><td>Title VII (Civil Rights Act)</td><td>Discrimination and harassment based on race, color, religion, sex, national origin. Includes pregnancy (PDA), sexual harassment, hostile work environment.</td><td>15+ employees</td><td>EEOC charge within 300 days (Texas — TCHR deferral). Right to sue required before federal court.</td></tr>
+          <tr><td>Bostock v. Clayton County (2020)</td><td>Title VII protects against discrimination on the basis of sexual orientation and gender identity. Not a separate statute — an interpretation of Title VII that is now settled law.</td><td>15+ employees (same as Title VII)</td><td>Same as Title VII</td></tr>
+          <tr><td>ADA — Americans with Disabilities Act</td><td>Disability discrimination, failure to accommodate, and direct threat. Covers physical and mental impairments that substantially limit a major life activity. Requires reasonable accommodation and interactive process.</td><td>15+ employees</td><td>EEOC charge within 300 days</td></tr>
+          <tr><td>ADEA — Age Discrimination in Employment Act</td><td>Discrimination against employees 40 and older. Applies to hiring, termination, compensation, and terms of employment. Waivers of ADEA claims require specific disclosure requirements (Older Workers Benefit Protection Act).</td><td>20+ employees</td><td>EEOC charge within 300 days</td></tr>
+          <tr><td>FMLA — Family and Medical Leave Act</td><td>Interference with FMLA leave rights and retaliation for taking FMLA leave. See Tool 09 for full FMLA reference.</td><td>50+ employees within 75 miles</td><td>DOL complaint or federal lawsuit within 2 years (3 years for willful violations)</td></tr>
+          <tr><td>FLSA — Fair Labor Standards Act</td><td>Wage and hour violations including misclassification, overtime, minimum wage, and retaliation for reporting FLSA violations. See Tool 07 for full FLSA reference.</td><td>No minimum for most provisions</td><td>DOL complaint or lawsuit within 2 years (3 years for willful)</td></tr>
+          <tr><td>42 U.S.C. § 1981</td><td>Race discrimination in contracts (including employment). Broader than Title VII — no employer size threshold, no EEOC filing requirement, longer statute of limitations. Often pled alongside Title VII in race claims.</td><td>No size threshold</td><td>Federal lawsuit within 4 years</td></tr>
+          <tr><td>Texas Labor Code — TCHR</td><td>State analog to Title VII and ADA. Filed with the Texas Civil Rights Division. Mirror federal protections in most respects. Allows claims in Texas state court.</td><td>15+ employees</td><td>TCHR charge within 300 days. Dual filing with EEOC available.</td></tr>
+          <tr><td>Texas Payday Law</td><td>Wage payment requirements, final pay, unlawful deductions, and retaliation for wage complaints. Enforced by the Texas Workforce Commission.</td><td>No minimum</td><td>TWC complaint within 180 days of final day of employment</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div id="view-investigation" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Investigation Protocol</div><div class="card-desc">Step-by-step framework for conducting a workplace investigation. Apply proportionality — the process scales to the severity of the allegation.</div></div>
+      <button onclick="window.print()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Print / PDF</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-w" style="margin-bottom:16px"><span class="al-ic">△</span><span>Not all complaints require a formal investigation. A complaint about a coworker's messy desk is different from a complaint about sexual harassment. The decision about whether and how to investigate should be proportional to the severity of the allegation and the legal exposure involved. When in doubt, investigate — the cost of under-investigating is almost always greater than the cost of over-investigating.</span></div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <div style="display:flex;gap:14px;padding:12px 14px;border-radius:var(--radius);background:rgba(27,68,54,0.03)">
+          <div style="width:24px;height:24px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:400;color:var(--white);flex-shrink:0;margin-top:1px">1</div>
+          <div><div style="font-size:12.5px;font-weight:400;color:var(--text-dark);margin-bottom:4px">Receive and document the complaint</div><div style="font-size:11.5px;color:var(--text-mid);line-height:1.65">Record the complaint in writing immediately — date received, reporter, alleged conduct, alleged actor, dates of conduct, witnesses mentioned. Do not evaluate credibility at this stage. Your obligation to investigate is triggered by receipt, not by your belief that the complaint is credible.</div></div>
+        </div>
+        <div style="display:flex;gap:14px;padding:12px 14px;border-radius:var(--radius)">
+          <div style="width:24px;height:24px;border-radius:50%;background:rgba(27,68,54,0.12);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:400;color:var(--green);flex-shrink:0;margin-top:1px">2</div>
+          <div><div style="font-size:12.5px;font-weight:400;color:var(--text-dark);margin-bottom:4px">Assess the need for immediate action</div><div style="font-size:11.5px;color:var(--text-mid);line-height:1.65">Determine whether the alleged actor needs to be placed on administrative leave or physically separated from the complainant. Err toward protecting the complainant. Administrative leave pending investigation is not discipline and should be communicated as such to the respondent.</div></div>
+        </div>
+        <div style="display:flex;gap:14px;padding:12px 14px;border-radius:var(--radius);background:rgba(27,68,54,0.03)">
+          <div style="width:24px;height:24px;border-radius:50%;background:rgba(27,68,54,0.12);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:400;color:var(--green);flex-shrink:0;margin-top:1px">3</div>
+          <div><div style="font-size:12.5px;font-weight:400;color:var(--text-dark);margin-bottom:4px">Plan the investigation</div><div style="font-size:11.5px;color:var(--text-mid);line-height:1.65">Identify scope: what allegations are being investigated, what questions need to be answered, what evidence exists. Identify witnesses. Determine interview order — complainant first, witnesses next, respondent last. Document the investigation plan before you begin interviewing.</div></div>
+        </div>
+        <div style="display:flex;gap:14px;padding:12px 14px;border-radius:var(--radius)">
+          <div style="width:24px;height:24px;border-radius:50%;background:rgba(27,68,54,0.12);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:400;color:var(--green);flex-shrink:0;margin-top:1px">4</div>
+          <div><div style="font-size:12.5px;font-weight:400;color:var(--text-dark);margin-bottom:4px">Conduct interviews</div><div style="font-size:11.5px;color:var(--text-mid);line-height:1.65">Interview the complainant first. Then key witnesses. Then the respondent. Each interview must be conducted privately. Take detailed contemporaneous notes. Do not share one party's statements with another during the investigation. After each interview, send a brief summary to the interviewee and ask them to confirm or correct it.</div></div>
+        </div>
+        <div style="display:flex;gap:14px;padding:12px 14px;border-radius:var(--radius);background:rgba(27,68,54,0.03)">
+          <div style="width:24px;height:24px;border-radius:50%;background:rgba(27,68,54,0.12);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:400;color:var(--green);flex-shrink:0;margin-top:1px">5</div>
+          <div><div style="font-size:12.5px;font-weight:400;color:var(--text-dark);margin-bottom:4px">Gather and review documentary evidence</div><div style="font-size:11.5px;color:var(--text-mid);line-height:1.65">Emails, text messages, calendar entries, performance records, prior complaints, security footage, attendance records — whatever is relevant. Preserve everything. Once litigation is threatened or filed, a litigation hold is required immediately to prevent spoliation claims.</div></div>
+        </div>
+        <div style="display:flex;gap:14px;padding:12px 14px;border-radius:var(--radius)">
+          <div style="width:24px;height:24px;border-radius:50%;background:rgba(27,68,54,0.12);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:400;color:var(--green);flex-shrink:0;margin-top:1px">6</div>
+          <div><div style="font-size:12.5px;font-weight:400;color:var(--text-dark);margin-bottom:4px">Analyze the evidence and make a finding</div><div style="font-size:11.5px;color:var(--text-mid);line-height:1.65">Apply the preponderance of the evidence standard — more likely than not. Document the finding: substantiated, unsubstantiated, or inconclusive. Base findings on the totality of evidence, not a single witness's credibility alone. Do not make credibility determinations based on demeanor.</div></div>
+        </div>
+        <div style="display:flex;gap:14px;padding:12px 14px;border-radius:var(--radius);background:rgba(27,68,54,0.03)">
+          <div style="width:24px;height:24px;border-radius:50%;background:rgba(27,68,54,0.12);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:400;color:var(--green);flex-shrink:0;margin-top:1px">7</div>
+          <div><div style="font-size:12.5px;font-weight:400;color:var(--text-dark);margin-bottom:4px">Determine and implement corrective action</div><div style="font-size:11.5px;color:var(--text-mid);line-height:1.65">If substantiated, corrective action must be proportional and prompt. If unsubstantiated, document that and close. Communicate the outcome to the complainant — without sharing the respondent's specific consequences. The complainant has a right to know the complaint was taken seriously and addressed.</div></div>
+        </div>
+        <div style="display:flex;gap:14px;padding:12px 14px;border-radius:var(--radius)">
+          <div style="width:24px;height:24px;border-radius:50%;background:rgba(27,68,54,0.12);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:400;color:var(--green);flex-shrink:0;margin-top:1px">8</div>
+          <div><div style="font-size:12.5px;font-weight:400;color:var(--text-dark);margin-bottom:4px">Document and close</div><div style="font-size:11.5px;color:var(--text-mid);line-height:1.65">Prepare a written investigation summary: complaint received, steps taken, evidence reviewed, finding, corrective action implemented. Retain all investigation documents in a confidential file separate from personnel files for the duration of employment plus a minimum of 3 years.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div id="view-log" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Incident &amp; Complaint Log</div><div class="card-desc">Confidential record of every complaint, incident, and investigation outcome. Each entry is a separate record. Store this file separately from personnel files.</div></div>
+      <button onclick="openIncidentModal()" style="padding:6px 14px;background:var(--gold);color:var(--green-deep);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;font-weight:400;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">+ New Incident</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-d" style="margin-bottom:14px"><span class="al-ic">⚠</span><span>Investigation files and complaint records must be stored in a confidential location completely separate from personnel files. Do not include investigation materials in the subject's personnel file. Retain for the duration of employment plus a minimum of 3 years, or longer if litigation is pending or threatened. When in doubt, retain.</span></div>
+      <div id="incidentLogContent">
+        <div style="padding:24px;text-align:center;color:var(--text-light);font-size:12px;background:rgba(27,68,54,0.02);border-radius:var(--radius-md);border:1px dashed var(--border)">No incidents logged. Add the first entry using the button above.</div>
+      </div>
+      <div class="div"></div>
+      <div class="div-lbl">Witness Interview Framework</div>
+      <div class="al al-i" style="margin-bottom:12px"><span class="al-ic">ℹ</span><span>Every witness interview follows the same structure. Take detailed notes during the interview. Do not share one witness's statements with another during the investigation. After each interview, send a brief summary to the interviewee and ask them to confirm or correct it — this creates a contemporaneous record.</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="padding:14px 16px;border:1px solid var(--border);border-radius:var(--radius-md)">
+          <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:7px">Opening Every Interview</div>
+          <div style="font-size:12px;color:var(--text-mid);line-height:1.7">"I am conducting a workplace investigation. I am interviewing several people. What we discuss should remain confidential — please do not discuss this with coworkers while the investigation is active. I will be taking notes. Do you have questions before we begin?"</div>
+        </div>
+        <div style="padding:14px 16px;border:1px solid var(--border);border-radius:var(--radius-md)">
+          <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:7px">Complainant Questions</div>
+          <div style="font-size:12px;color:var(--text-mid);line-height:1.7">Tell me what happened in your own words. / When and where did this occur? / Who else was present? / Has this happened before? / Did you report it to anyone? / How has this affected your work? / What outcome are you hoping for?</div>
+        </div>
+        <div style="padding:14px 16px;border:1px solid var(--border);border-radius:var(--radius-md)">
+          <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:7px">Respondent Questions</div>
+          <div style="font-size:12px;color:var(--text-mid);line-height:1.7">A concern has been raised and I am investigating. [Present allegation without naming complainant if possible.] Tell me your perspective. / Is there context I am missing? / Are there witnesses who could speak to this? / Is there anything else I should know?</div>
+        </div>
+        <div style="padding:14px 16px;border:1px solid var(--border);border-radius:var(--radius-md)">
+          <div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:7px">Closing Every Interview</div>
+          <div style="font-size:12px;color:var(--text-mid);line-height:1.7">"Here is what I noted from our conversation: [summarize]. Is that accurate? Anything to add or correct? Keep this confidential. Come to me if you think of anything else or if you experience any retaliation."</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INCIDENT MODAL -->
+<div id="incidentModal" style="position:fixed;inset:0;z-index:200;background:rgba(18,46,36,0.65);backdrop-filter:blur(4px);display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;">
+  <div style="background:var(--white);border-radius:var(--radius-lg);max-width:680px;width:100%;box-shadow:0 16px 64px rgba(0,0,0,0.25);margin:auto;">
+    <div style="background:linear-gradient(135deg,var(--green-deep),var(--green));padding:20px 26px;border-radius:var(--radius-lg) var(--radius-lg) 0 0;display:flex;justify-content:space-between;align-items:flex-start;">
+      <div id="incModalTitle" style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--white)">New Incident Record</div>
+      <button onclick="closeIncidentModal()" style="background:none;border:none;color:rgba(245,237,228,0.5);font-size:20px;cursor:pointer;line-height:1;">×</button>
+    </div>
+    <div style="padding:22px 26px;">
+      <div class="fg g2">
+        <div class="f"><label>Date Reported</label><input type="date" id="incDate"></div>
+        <div class="f"><label>How Received</label>
+          <select id="incMethod"><option value="">Select</option><option value="Direct report to manager">Direct report to manager</option><option value="Direct report to HR">Direct report to HR</option><option value="Anonymous hotline">Anonymous hotline</option><option value="Written complaint">Written complaint</option><option value="Third-party report">Third-party report</option></select>
+        </div>
+        <div class="f"><label>Issue Type</label>
+          <select id="incType"><option value="">Select</option><option value="Sexual Harassment">Sexual Harassment</option><option value="Harassment (non-sexual)">Harassment (non-sexual)</option><option value="Discrimination">Discrimination</option><option value="Retaliation">Retaliation</option><option value="Hostile Work Environment">Hostile Work Environment</option><option value="Workplace Conduct / Conflict">Workplace Conduct / Conflict</option><option value="Safety / Health Concern">Safety / Health Concern</option><option value="Theft / Fraud">Theft / Fraud</option><option value="Policy Violation">Policy Violation</option><option value="Other">Other</option></select>
+        </div>
+        <div class="f"><label>Protected Class Involved</label>
+          <select id="incProtected"><option value="">Select or N/A</option><option value="Race / Color / National Origin">Race / Color / National Origin</option><option value="Sex / Gender / Pregnancy">Sex / Gender / Pregnancy / PWFA</option><option value="Age (40+)">Age (40+)</option><option value="Disability">Disability</option><option value="Religion">Religion</option><option value="Sexual Orientation / Gender Identity">Sexual Orientation / Gender Identity</option><option value="Veteran Status">Veteran Status</option><option value="None identified">None identified</option></select>
+        </div>
+        <div class="f"><label>Complainant</label><input type="text" id="incComplainant" placeholder="Name or Anonymous"></div>
+        <div class="f"><label>Respondent (Alleged Actor)</label><input type="text" id="incRespondent" placeholder="Name and title"></div>
+        <div class="f"><label>Dates of Alleged Conduct</label><input type="text" id="incDates" placeholder="Date range of alleged conduct"></div>
+        <div class="f"><label>Witnesses Named</label><input type="text" id="incWitnesses" placeholder="Names of witnesses mentioned"></div>
+        <div class="f"><label>Immediate Safety Concern</label>
+          <select id="incSafety"><option value="No immediate safety concern">No immediate safety concern</option><option value="Yes — immediate action required">Yes — immediate action required</option></select>
+        </div>
+        <div class="f"><label>Immediate Action Taken</label><input type="text" id="incImmediate" placeholder="e.g., Parties separated; respondent on admin leave"></div>
+        <div class="f"><label>Investigation Status</label>
+          <select id="incStatus"><option value="Open — under investigation">Open — under investigation</option><option value="Closed — substantiated">Closed — substantiated</option><option value="Closed — unsubstantiated">Closed — unsubstantiated</option><option value="Closed — inconclusive">Closed — inconclusive</option><option value="Referred to counsel">Referred to counsel</option></select>
+        </div>
+        <div class="f"><label>Outcome / Action Taken</label><input type="text" id="incOutcome" placeholder="Brief summary of resolution and corrective action"></div>
+        <div class="c2 f"><label>Confidential Summary Notes</label><textarea id="incNotes" placeholder="Allegations received, investigation steps taken, evidence reviewed, findings, corrective action implemented..." rows="4"></textarea></div>
+      </div>
+    </div>
+    <div style="padding:14px 26px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;">
+      <button onclick="closeIncidentModal()" style="padding:8px 18px;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:12px;font-weight:300;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--text-mid);">Cancel</button>
+      <button onclick="saveIncidentEntry()" style="padding:8px 18px;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:12px;font-weight:300;cursor:pointer;border:none;background:linear-gradient(135deg,var(--green),var(--green-light));color:var(--white);">Save Record</button>
+    </div>
+  </div>
+</div>
+<div id="view-escalation" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr"><div><div class="card-title">Escalation Guide</div><div class="card-desc">When to escalate, who to involve, and when the situation requires outside counsel.</div></div></div>
+    <div class="card-body">
+      <table class="ref-table">
+        <thead><tr><th>Situation</th><th>Escalate To</th><th>Urgency</th></tr></thead>
+        <tbody>
+          <tr><td>Complaint involving senior leadership (Director, VP, ED, CEO)</td><td>Board Chair or designated board committee. Do not report up through the chain of command.</td><td>Immediate</td></tr>
+          <tr><td>Complaint alleging sexual harassment or assault</td><td>HR + employment counsel. Consider whether law enforcement notification is appropriate.</td><td>Same day</td></tr>
+          <tr><td>Workplace violence threat or incident</td><td>Law enforcement first. HR and leadership immediately after. Do not wait for HR approval to call 911.</td><td>Immediate — call 911 first</td></tr>
+          <tr><td>ADA accommodation request involving complex medical issues</td><td>Employment counsel before making a determination.</td><td>Within 5 business days of request</td></tr>
+          <tr><td>Retaliation allegation following a prior complaint</td><td>Employment counsel. Heightened legal risk — any adverse action against the complainant is presumptively suspect.</td><td>Same day</td></tr>
+          <tr><td>EEOC charge received</td><td>Employment counsel immediately. Do not respond to the EEOC without counsel.</td><td>Immediate — response deadlines are strict</td></tr>
+          <tr><td>Demand letter or lawsuit filed</td><td>Employment counsel same day. Preserve all relevant documents — litigation hold required immediately.</td><td>Same day — litigation hold</td></tr>
+          <tr><td>Complaint involving protected class + adverse action in same period</td><td>Employment counsel before taking any adverse action.</td><td>Before action is taken</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<footer>
+  <div class="fb">The Coherence Collective &nbsp;·&nbsp; <span>Plinth</span></div>
+  <div style="display:flex;gap:16px;align-items:center">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.35)">Jump to</span>
+      <select onchange="if(this.value)window.location.href=this.value" style="font-family:'Jost',sans-serif;font-weight:300;font-size:11px;background:rgba(255,255,255,0.06);color:rgba(245,237,228,0.6);border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:4px 24px 4px 8px;cursor:pointer;outline:none;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(245,237,228,0.4)' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 7px center">
+        <option value="/org-profile/">01 &middot; Org Profile</option>
+        <option value="/handbook/">02 &middot; Handbook</option>
+        <option value="/job-architecture/">03 &middot; Job Architecture</option>
+        <option value="/compensation/">04 &middot; Compensation</option>
+        <option value="/offer-hiring/">05 &middot; Offer &amp; Hiring</option>
+        <option value="/onboarding/">06 &middot; Onboarding</option>
+        <option value="/pay-practices/">07 &middot; Pay Practices</option>
+        <option value="/benefits/">08 &middot; Benefits Administration</option>
+        <option value="/leave/">09 &middot; Leave Management</option>
+        <option value="/performance/">10 &middot; Performance Management</option>
+        <option value="/er-investigation/" selected>11 &middot; ER &amp; Investigation</option>
+        <option value="/separation/">12 &middot; Separation</option>
+        <option value="/compliance-calendar/">13 &middot; Compliance Calendar</option>
+        <option value="/manager-toolkit/">14 &middot; Manager Toolkit</option>
+        <option value="/analytics/">15 &middot; Analytics</option>
+      </select>
+    </div>
+    <span style="color:rgba(245,237,228,0.15)">|</span>
+    <a href="/performance/" style="font-size:11px;color:rgba(245,237,228,0.4);text-decoration:none" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">&larr; Tool 10</a>
+    <span style="color:rgba(245,237,228,0.15)">|</span>
+    <a href="/separation/" style="font-size:11px;color:rgba(245,237,228,0.4);text-decoration:none" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">Tool 12 &rarr;</a>
+  </div>
+</footer>
+<script>
+const ALL_TABS_ER = ['framework','investigation','log','escalation'];
+let profile = {};
+try{ profile = JSON.parse(localStorage.getItem('plinth_op')||'{}'); }catch(e){}
+
+let erData = { incidents:[] };
+
+function saveData(){
+  localStorage.setItem('plinth_er', JSON.stringify(erData));
+  const fl=document.getElementById('sflash'); fl.classList.add('on'); setTimeout(()=>fl.classList.remove('on'),1800);
+}
+
+function showTab(tab){
+  ALL_TABS_ER.forEach(t=>{
+    const v=document.getElementById('view-'+t); if(v) v.style.display=t===tab?'block':'none';
+    const el=document.getElementById('tab-'+t); if(el) el.classList.toggle('active',t===tab);
+  });
+  if(tab==='log') renderIncidentLog();
+}
+
+function restoreData(){
+  try{
+    const d = JSON.parse(localStorage.getItem('plinth_er')||'{}');
+    if(d.incidents) erData.incidents = d.incidents;
+  }catch(e){}
+}
+
+function animateCards(){
+  const obs = new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('vis'); });
+  },{threshold:0.04});
+  document.querySelectorAll('.card').forEach(c=>obs.observe(c));
+}
+
+// ── INCIDENT LOG ──────────────────────────────────────────────────────────────
+var editingIncIdx = null;
+
+function openIncidentModal(idx){
+  editingIncIdx = (idx!==undefined&&idx!==null) ? idx : null;
+  var entry = editingIncIdx!==null ? erData.incidents[editingIncIdx] : null;
+  ['incDate','incDates','incComplainant','incRespondent','incWitnesses','incImmediate','incOutcome','incNotes'].forEach(function(f){
+    var el=document.getElementById(f); if(el) el.value=entry?entry[f]||'':'';
+  });
+  ['incMethod','incType','incProtected','incSafety','incStatus'].forEach(function(f){
+    var el=document.getElementById(f);
+    if(el) el.value=entry?entry[f]||'':
+      (f==='incSafety'?'No immediate safety concern':f==='incStatus'?'Open — under investigation':'');
+  });
+  if(!entry){ var d=document.getElementById('incDate'); if(d) d.value=new Date().toISOString().split('T')[0]; }
+  document.getElementById('incModalTitle').textContent = editingIncIdx!==null ? 'Edit Incident Record' : 'New Incident Record';
+  document.getElementById('incidentModal').style.display='flex';
+}
+
+function closeIncidentModal(){ document.getElementById('incidentModal').style.display='none'; }
+
+function saveIncidentEntry(){
+  var comp=document.getElementById('incComplainant').value.trim();
+  if(!comp){ document.getElementById('incComplainant').focus(); return; }
+  var entry={
+    incDate:document.getElementById('incDate').value,
+    incMethod:document.getElementById('incMethod').value,
+    incType:document.getElementById('incType').value,
+    incProtected:document.getElementById('incProtected').value,
+    incComplainant:comp,
+    incRespondent:document.getElementById('incRespondent').value,
+    incDates:document.getElementById('incDates').value,
+    incWitnesses:document.getElementById('incWitnesses').value,
+    incSafety:document.getElementById('incSafety').value,
+    incImmediate:document.getElementById('incImmediate').value,
+    incStatus:document.getElementById('incStatus').value,
+    incOutcome:document.getElementById('incOutcome').value,
+    incNotes:document.getElementById('incNotes').value
+  };
+  if(editingIncIdx!==null) erData.incidents[editingIncIdx]=entry;
+  else erData.incidents.push(entry);
+  closeIncidentModal();
+  localStorage.setItem('plinth_er', JSON.stringify(erData));
+  renderIncidentLog();
+}
+
+function deleteIncidentEntry(idx){
+  if(!confirm('Delete this incident record? This cannot be undone.')) return;
+  erData.incidents.splice(idx,1);
+  localStorage.setItem('plinth_er', JSON.stringify(erData));
+  renderIncidentLog();
+}
+
+function exportIncident(idx){
+  var e=erData.incidents[idx];
+  if(!e) return;
+  var org=(profile&&profile.legalName)?profile.legalName:'Organization';
+  var today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  var dateFmt=e.incDate?new Date(e.incDate+'T12:00:00').toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}):'[Date]';
+  var _pbTitle='Investigation Summary — '+e.incType;
+  var _pbFile='investigation-summary-'+Date.now()+'.html';
+  var _pbType='Investigation Summary';
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Investigation Summary</title>';
+  html+='<style>body{font-family:Georgia,serif;max-width:700px;margin:0 auto;padding:48px 40px;font-size:10.5pt;line-height:1.8;color:#1a1a1a;}';
+  html+='h1{font-size:18pt;font-weight:400;color:#1b4436;}h2{font-size:12pt;font-weight:600;color:#1a1a1a;margin:20px 0 8px;border-bottom:1px solid #e0d8cf;padding-bottom:5px;}';
+  html+='.meta{background:#f5f0ea;padding:14px 18px;border-radius:4px;margin:20px 0;font-size:9.5pt;line-height:2;}';
+  html+='.confidential{font-size:8pt;color:#A42F30;border:1px solid #A42F30;padding:4px 10px;display:inline-block;margin-bottom:20px;letter-spacing:0.08em;text-transform:uppercase;}';
+  html+='p{margin:0 0 12px;}@page{size:letter;margin:1in;}</style></head><body>';
+  html+='<div class="confidential">Confidential &mdash; Privileged &amp; Protected</div>';
+  html+='<h1>'+org+'</h1>';
+  html+='<p style="font-size:12pt;color:#555;margin-bottom:4px">Incident &amp; Investigation Summary</p>';
+  html+='<p style="font-size:9pt;color:#777;margin-bottom:20px">Prepared: '+today+' &nbsp;|&nbsp; The Coherence Collective, LLC</p>';
+  html+='<div class="meta"><strong>Date Reported:</strong> '+dateFmt+'<br><strong>Issue Type:</strong> '+(e.incType||'[Type]')+'<br><strong>Complainant:</strong> '+(e.incComplainant||'[Complainant]')+'<br><strong>Respondent:</strong> '+(e.incRespondent||'[Respondent]')+'<br><strong>Status:</strong> '+(e.incStatus||'[Status]')+'</div>';
+  if(e.incOutcome) html+='<h2>Outcome / Action Taken</h2><p>'+e.incOutcome+'</p>';
+  if(e.incNotes) html+='<h2>Summary Notes</h2><p style="white-space:pre-wrap">'+e.incNotes+'</p>';
+  html+='<h2>Retention Note</h2><p style="font-size:9.5pt;color:#555">This document is confidential and must be maintained separately from the employee personnel file. Retain for the duration of employment plus a minimum of 3 years. Do not disclose to the subject of the investigation or general management without legal counsel review.</p>';
+  html+='<p style="font-size:8pt;color:#999;margin-top:32px;border-top:1px solid #e0d8cf;padding-top:10px">Generated via Plinth by The Coherence Collective, LLC.</p>';
+  html+='</body></html>';
+
+  var _pbC='<style>'+'\n    .pb{position:fixed;top:0;left:0;right:0;z-index:9999;background:#1b4436;padding:10px 28px;display:flex;gap:10px;align-items:center;box-shadow:0 2px 12px rgba(0,0,0,0.3);}\n    .pb-title{font-family:Georgia,serif;font-size:11pt;color:rgba(245,237,228,0.75);flex:1;font-weight:400;}\n    .pb-btn{font-family:Arial,sans-serif;font-size:8.5pt;padding:7px 16px;border:none;border-radius:3px;cursor:pointer;letter-spacing:0.04em;font-weight:500;}\n    .pb-gold{background:#D99E32;color:#122e24;}\n    .pb-ghost{background:rgba(255,255,255,0.09);color:rgba(245,237,228,0.82);border:1px solid rgba(255,255,255,0.14);}\n    .pb-spacer{height:52px;}\n    @media print{.pb,.pb-spacer{display:none!important;}}'+'</style>';
+  var _pbH='<div class="pb"><span class="pb-title">'+_pbTitle+'</span>'
+    +'<button class="pb-btn pb-gold" onclick="window.print()">&#8681; Print / Save as PDF</button>'
+    +'<button class="pb-btn pb-ghost" onclick="plDl()">&#8659; Download</button>'
+    +'<button class="pb-btn pb-ghost" onclick="plSave()">&#9729; Save to Plinth</button>'
+    +'<button class="pb-btn pb-ghost" onclick="window.close()" style="margin-left:4px">&#10005;</button>'
+    +'</div><div class="pb-spacer"></div>';
+  html=html.replace('<body>','<body>'+_pbH);
+  html=html.replace('</style>\\n  </head>',_pbC+'</style>\\n  </head>');
+  var _pbJS='<scr'+'ipt>'
+    +'function plDl(){var blob=new Blob([document.documentElement.outerHTML],{type:"text/html"});var url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download=_pbFile;a.click();setTimeout(function(){URL.revokeObjectURL(url);},1200);}'
+    +'function plSave(){var d=[];try{d=JSON.parse(localStorage.getItem("plinth_docs")||"[]");}catch(e){}d.push({id:"doc_"+Date.now(),title:_pbTitle,type:_pbType,date:new Date().toISOString()});localStorage.setItem("plinth_docs",JSON.stringify(d));var b=document.querySelectorAll(".pb-ghost");if(b[1]){b[1].textContent="\u2713 Saved to Plinth";b[1].style.background="rgba(27,68,54,0.5)";}}'
+    +'</s'+'cript>';
+  html+=_pbJS;
+  var win=window.open('','_blank'); win.document.write(html); win.document.close();
+}
+
+function renderIncidentLog(){
+  var c=document.getElementById('incidentLogContent'); if(!c) return;
+  var entries=erData.incidents;
+  if(!entries.length){
+    c.innerHTML='<div style="padding:24px;text-align:center;color:var(--text-light);font-size:12px;background:rgba(27,68,54,0.02);border-radius:var(--radius-md);border:1px dashed var(--border)">No incidents logged. Add the first entry using the button above.</div>';
+    return;
+  }
+  var statusColor={'Open — under investigation':'var(--crimson)','Closed — substantiated':'var(--mauve)','Closed — unsubstantiated':'var(--green)','Closed — inconclusive':'#8a6010','Referred to counsel':'var(--text-light)'};
+  var html='<table class="ref-table"><thead><tr><th>Date</th><th>Type</th><th>Complainant</th><th>Respondent</th><th>Protected Class</th><th>Status</th><th style="width:110px"></th></tr></thead><tbody>';
+  for(var i=0;i<entries.length;i++){
+    var e=entries[i];
+    var dateD=e.incDate?new Date(e.incDate+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'--';
+    var sc=statusColor[e.incStatus]||'var(--text-light)';
+    html+='<tr>';
+    html+='<td style="white-space:nowrap">'+dateD+'</td>';
+    html+='<td style="font-weight:400">'+(e.incType||'--')+'</td>';
+    html+='<td>'+(e.incComplainant||'--')+'</td>';
+    html+='<td>'+(e.incRespondent||'--')+'</td>';
+    html+='<td style="font-size:11px">'+(e.incProtected&&e.incProtected!=='None identified'?e.incProtected:'--')+'</td>';
+    html+='<td style="font-size:11px;color:'+sc+'">'+(e.incStatus||'--')+'</td>';
+    html+='<td><div style="display:flex;gap:6px">';
+    html+='<button onclick="openIncidentModal('+i+')" style="font-size:10px;color:var(--green);background:none;border:none;cursor:pointer;font-family:Jost,sans-serif">Edit</button>';
+    html+='<button onclick="exportIncident('+i+')" style="font-size:10px;color:var(--gold);background:none;border:none;cursor:pointer;font-family:Jost,sans-serif">Export</button>';
+    html+='<button onclick="deleteIncidentEntry('+i+')" style="font-size:10px;color:var(--text-light);background:none;border:none;cursor:pointer">Del</button>';
+    html+='</div></td>';
+    html+='</tr>';
+  }
+  html+='</tbody></table>';
+  c.innerHTML=html;
+}
+
+document.addEventListener('DOMContentLoaded',function(){ restoreData(); animateCards(); });
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeIncidentModal(); });
+</script>
+</body>
+</html>

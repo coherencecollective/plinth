@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Plinth · Leave Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--green:#1b4436;--green-light:#235a47;--green-deep:#122e24;--mauve:#916179;--sand:#D2BB9F;--gold:#D99E32;--pale:#cccf8e;--crimson:#A42F30;--beige:#F5EDE4;--white:#fff;--off-white:#faf8f5;--text-dark:#1a1a1a;--text-mid:#444;--text-light:#777;--border:#e0d8cf;--shadow:0 2px 16px rgba(27,68,54,0.08);--radius:4px;--radius-md:8px;--radius-lg:12px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Jost,sans-serif;font-weight:300;font-size:14px;color:var(--text-dark);background:var(--off-white);min-height:100vh;}
+nav{position:sticky;top:0;z-index:100;background:var(--green);padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,0.2);}
+.nav-left{display:flex;align-items:center;gap:14px;}
+.back-btn{display:inline-flex;align-items:center;gap:5px;font-family:Jost,sans-serif;font-size:11px;font-weight:300;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.5);padding:5px 10px;border:1px solid rgba(245,237,228,0.15);border-radius:var(--radius);background:none;cursor:pointer;transition:all 0.2s;}
+.back-btn:hover{color:var(--beige);}
+.nav-sep{width:1px;height:18px;background:rgba(255,255,255,0.15);}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:17px;color:var(--beige);}
+.nav-brand span{color:var(--gold);}
+.nav-sub{font-size:12px;font-weight:300;color:rgba(245,237,228,0.45);}
+.nav-right{display:flex;gap:7px;align-items:center;}
+.nbtn{font-family:Jost,sans-serif;font-weight:300;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:5px 13px;border-radius:var(--radius);cursor:pointer;border:none;transition:all 0.2s;}
+.nbtn-ghost{background:transparent;color:var(--sand);border:1px solid rgba(210,187,159,0.3);}
+.nbtn-ghost:hover{background:rgba(210,187,159,0.1);color:var(--beige);}
+.nbtn-gold{background:var(--gold);color:var(--green-deep);font-weight:400;}
+.sflash{font-size:11px;color:var(--pale);margin-right:4px;opacity:0;transition:opacity 0.3s;}
+.sflash.on{opacity:1;}
+.tabs{background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;display:flex;overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{font-size:11px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:13px 18px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.2s;}
+.tab:hover{color:var(--green);}
+.tab.active{color:var(--green);border-bottom-color:var(--green);}
+.hero{background:linear-gradient(150deg,var(--green-deep) 0%,var(--green) 55%,var(--green-light) 100%);padding:44px 28px 38px;position:relative;overflow:hidden;}
+.hero-inner{max-width:1060px;margin:0 auto;}
+.hero-eye{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--pale);margin-bottom:10px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:36px;color:var(--white);line-height:1.05;margin-bottom:8px;}
+.hero-title em{font-style:italic;color:var(--sand);}
+.hero-desc{font-size:12.5px;font-weight:300;color:rgba(245,237,228,0.65);max-width:600px;line-height:1.75;}
+.main{max-width:1060px;margin:0 auto;padding:32px 28px 80px;}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;opacity:0;transform:translateY(10px);transition:opacity 0.35s,transform 0.35s;}
+.card.vis{opacity:1;transform:translateY(0);}
+.card-hdr{padding:16px 22px 13px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.05));display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:16px;color:var(--green);}
+.card-desc{font-size:11px;color:var(--text-light);margin-top:2px;line-height:1.5;}
+.card-body{padding:20px 22px;}
+.fg{display:grid;gap:14px;}
+.g2{grid-template-columns:1fr 1fr;}
+.g3{grid-template-columns:1fr 1fr 1fr;}
+.c2{grid-column:span 2;}
+.c3{grid-column:span 3;}
+.f label{display:block;font-size:11px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-mid);margin-bottom:5px;}
+input[type="text"],input[type="number"],input[type="date"],select,textarea{width:100%;font-family:Jost,sans-serif;font-weight:300;font-size:13px;color:var(--text-dark);background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:8px 11px;outline:none;transition:border-color 0.2s;appearance:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(27,68,54,0.07);}
+textarea{resize:vertical;min-height:72px;line-height:1.7;}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23777' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer;}
+.fhint{font-size:10.5px;color:var(--text-light);margin-top:4px;line-height:1.5;}
+.div{height:1px;background:var(--border);margin:16px 0;}
+.div-lbl{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);margin:-14px 0 12px;display:flex;align-items:center;gap:8px;}
+.div-lbl::before,.div-lbl::after{content:'';flex:1;height:1px;background:var(--border);}
+.al{border-radius:var(--radius);padding:9px 12px;font-size:12px;line-height:1.6;margin-bottom:10px;display:flex;gap:8px;align-items:flex-start;}
+.al-ic{font-size:13px;flex-shrink:0;margin-top:1px;}
+.al-i{background:rgba(27,68,54,0.05);border-left:3px solid var(--pale);color:var(--text-mid);}
+.al-w{background:rgba(217,158,50,0.07);border-left:3px solid var(--gold);color:var(--text-mid);}
+.al-c{background:rgba(145,97,121,0.07);border-left:3px solid var(--mauve);color:var(--text-mid);}
+.al-d{background:rgba(164,47,48,0.06);border-left:3px solid var(--crimson);color:var(--text-mid);}
+.ref-table{width:100%;border-collapse:collapse;}
+.ref-table th{font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:8px 12px;text-align:left;border-bottom:2px solid var(--border);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.04));}
+.ref-table td{padding:9px 12px;border-bottom:1px solid rgba(224,216,207,0.5);font-size:12px;font-weight:300;vertical-align:top;}
+.ref-table tr:last-child td{border-bottom:none;}
+.ref-table tr:hover td{background:rgba(27,68,54,0.015);}
+.ref-table td:first-child{font-weight:400;}
+.form-section{margin-bottom:24px;}
+.form-section-title{font-size:10px;font-weight:400;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.policy-section-hdr{background:linear-gradient(135deg,rgba(27,68,54,0.04),rgba(210,187,159,0.06));border-left:3px solid var(--green);border-radius:var(--radius);padding:12px 16px;margin-bottom:16px;}
+footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:center;justify-content:space-between;}
+.fb{font-family:'Cormorant Garamond',serif;font-size:13px;color:rgba(245,237,228,0.4);}
+.fb span{color:var(--sand);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.fu{animation:fadeUp 0.4s ease both;}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-left">
+    <button class="back-btn" onclick="window.location.href='/'">&#8592; All Tools</button>
+    <div class="nav-sep"></div>
+    <div class="nav-brand">Pl<span>in</span>th</div>
+    <div class="nav-sub">&nbsp;·&nbsp; Leave Management</div>
+  </div>
+  <div class="nav-right">
+    <span class="sflash" id="sflash">Saved</span>
+    <button class="nbtn nbtn-ghost" onclick="saveData()">Save</button>
+  </div>
+</nav>
+<div class="tabs">
+  <div class="tab active" onclick="showTab('fmla')" id="tab-fmla">FMLA</div>
+  <div class="tab" onclick="showTab('ada')" id="tab-ada">ADA Leave</div>
+  <div class="tab" onclick="showTab('policy')" id="tab-policy">Leave Policy</div>
+  <div class="tab" onclick="showTab('tracker')" id="tab-tracker">FMLA Tracker</div>
+  <div class="tab" onclick="showTab('requests')" id="tab-requests">Leave Log</div>
+</div>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eye">Plinth · Tool 09</div>
+    <div class="hero-title">Leave Management &amp; <em>Time Away</em></div>
+    <div class="hero-desc">FMLA eligibility, ADA leave obligations, Texas leave laws, PTO policy framework, and leave request documentation. Every leave decision documented and defensible.</div>
+  </div>
+</div>
+
+<div id="view-fmla" class="main">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">FMLA Reference &amp; Eligibility</div><div class="card-desc">Family and Medical Leave Act — federal law applying to employers with 50+ employees.</div></div>
+      <button onclick="window.print()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:Jost,sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Print / PDF</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-i" style="margin-bottom:14px"><span class="al-ic">ℹ</span><span>FMLA applies to organizations with 50 or more employees within a 75-mile radius. Eligible employees must have worked for the employer for at least 12 months and 1,250 hours in the past 12 months. Texas has no state FMLA law that expands federal protections.</span></div>
+      <table class="ref-table">
+        <thead><tr><th>Item</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>Entitlement</td><td>Up to 12 weeks of unpaid, job-protected leave per year. Up to 26 weeks for military caregiver leave.</td></tr>
+          <tr><td>Qualifying Reasons</td><td>Serious health condition of employee or immediate family member; birth/adoption/foster placement of child; qualifying military exigency; military caregiver</td></tr>
+          <tr><td>Designation</td><td>Employer must designate FMLA-qualifying leave as FMLA within 5 business days of having enough information — even if the employee hasn't requested it and even if the employer would prefer not to.</td></tr>
+          <tr><td>Notice to Employee</td><td>Provide Designation Notice (WH-382) within 5 days. Provide Rights and Responsibilities Notice (WH-381) when leave is foreseeable or within 5 days of learning leave is needed.</td></tr>
+          <tr><td>Intermittent Leave</td><td>May be taken in increments as small as one hour. Employer cannot deny. May require medical certification for intermittent leave.</td></tr>
+          <tr><td>Substitution of Paid Leave</td><td>Employer may require — or employee may elect — to substitute accrued paid leave concurrently with FMLA. The substitution must run concurrently, not consecutively.</td></tr>
+          <tr><td>Key Employer Mistakes</td><td>Failing to designate qualifying leave; discouraging employees from taking FMLA; counting FMLA absences against attendance; denying reinstatement to equivalent position; failing to maintain health benefits during FMLA</td></tr>
+        </tbody>
+      </table>
+      <div class="div" style="margin-top:16px"></div>
+      <div class="div-lbl">Pregnant Workers Fairness Act (PWFA) — Effective June 2023</div>
+      <div class="al al-w" style="margin-bottom:10px"><span class="al-ic">△</span><span>The PWFA took effect June 27, 2023 and applies to employers with 15 or more employees. It is separate from the ADA and the Pregnancy Discrimination Act. Many employers are not yet in compliance. This is an active enforcement priority for the EEOC.</span></div>
+      <table class="ref-table" style="margin-bottom:0">
+        <thead><tr><th>PWFA Requirement</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>Covered Condition</td><td>Known limitations related to, affected by, or arising out of pregnancy, childbirth, or related medical conditions — including lactation, postpartum depression, and fertility treatments</td></tr>
+          <tr><td>Reasonable Accommodation</td><td>Employer must provide reasonable accommodation for known limitations unless it causes undue hardship. Unlike ADA, the limitation does not need to rise to "disability" level.</td></tr>
+          <tr><td>Examples of Required Accommodations</td><td>More frequent breaks, schedule adjustments, telework, temporary transfer to a less strenuous position, leave, closer parking, ability to sit, access to water, exceptions to certain uniform requirements</td></tr>
+          <tr><td>No Documentation Required for Minor Adjustments</td><td>For minor adjustments (e.g., more bathroom breaks), employer cannot require documentation of the medical need. Documentation may be required for more significant accommodations.</td></tr>
+          <tr><td>Interaction with ADA</td><td>ADA may also apply if the condition rises to disability level. Analyze both statutes. PWFA is broader — apply PWFA first, then assess ADA if the condition qualifies.</td></tr>
+          <tr><td>Retaliation Prohibited</td><td>Employer may not retaliate against employees for requesting or using PWFA accommodations, opposing discriminatory practices, or participating in PWFA proceedings.</td></tr>
+        </tbody>
+      </table>
+      <div class="div"></div>
+      <div class="div-lbl">Texas-Specific Leave Protections</div>
+      <table class="ref-table">
+        <thead><tr><th>Type of Leave</th><th>Texas Law</th><th>What Employers Must Provide</th></tr></thead>
+        <tbody>
+          <tr><td>Jury Duty</td><td>Texas Labor Code § 122.001</td><td>Employer may not discharge or threaten an employee for jury service. No requirement to pay during service, but many employers provide full pay as a matter of policy. Cannot require PTO substitution for jury duty absence.</td></tr>
+          <tr><td>Voting</td><td>Texas Election Code § 276.004</td><td>Employees must be allowed sufficient time to vote. If polls are open 2 or more hours outside of work hours, no accommodation required. If not, employer must allow time off. No requirement to pay.</td></tr>
+          <tr><td>Military Leave</td><td>USERRA (federal) + Texas Government Code § 431.005</td><td>USERRA requires reemployment rights, continuation of benefits, and protection against discrimination for all military service. Texas state employees receive additional protections. Must reinstate to same position on return from service.</td></tr>
+          <tr><td>Crime Victim Leave</td><td>Texas Labor Code § 21.005 and Code of Criminal Procedure Art. 56B</td><td>Employees who are crime victims or family members of victims may not be discriminated against for attending criminal proceedings. Leave may be unpaid.</td></tr>
+          <tr><td>Foster Parent Leave</td><td>Texas Labor Code § 23.001</td><td>Employers with 15+ employees must provide foster parents with up to 10 days unpaid leave per year for activities related to foster care — school visits, court hearings, training.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div id="view-ada" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">ADA Leave as Reasonable Accommodation</div><div class="card-desc">When leave is required as a disability accommodation under the Americans with Disabilities Act.</div></div>
+      <button onclick="window.print()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:Jost,sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Print / PDF</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-c" style="margin-bottom:14px"><span class="al-ic">⚖</span><span>ADA applies to employers with 15 or more employees. A finite period of leave may be a reasonable accommodation under the ADA even when FMLA does not apply or has been exhausted. The key question is whether the additional leave would cause undue hardship. This is a fact-specific analysis — document everything and consult counsel for every ADA accommodation decision involving leave.</span></div>
+      <table class="ref-table" style="margin-bottom:0">
+        <thead><tr><th>Concept</th><th>Application</th></tr></thead>
+        <tbody>
+          <tr><td>Interactive Process</td><td>When an employee requests a leave extension or accommodation, the employer must engage in a good-faith interactive dialogue. This is not optional. Failure to engage is itself an ADA violation — independent of whether the accommodation would have been granted.</td></tr>
+          <tr><td>Indefinite Leave</td><td>ADA does not require indefinite leave. However, "indefinite" and "open-ended" are different things. A leave with no confirmed end date is not automatically unreasonable — the employer must conduct a real undue hardship analysis, not assume one.</td></tr>
+          <tr><td>Leave After FMLA Exhaustion</td><td>When FMLA ends, the ADA analysis begins. The employer cannot automatically terminate an employee because FMLA leave is exhausted if the employee has a disability and additional leave would not cause undue hardship.</td></tr>
+          <tr><td>Documentation</td><td>Maintain a written record of all accommodation requests, the interactive process, every decision made, and the specific business rationale for any denial. The documentation trail is the legal defense.</td></tr>
+          <tr><td>Medical Certification</td><td>Employer may request medical documentation sufficient to establish that the employee has a disability and that the requested accommodation is related to the limitation. Cannot require the employee's entire medical record.</td></tr>
+        </tbody>
+      </table>
+      <div class="div"></div>
+      <div class="div-lbl">Interactive Process — Step by Step</div>
+      <div class="al al-i" style="margin-bottom:12px"><span class="al-ic">ℹ</span><span>The interactive process is a legally required collaborative dialogue between employer and employee to identify an effective reasonable accommodation. Both parties must participate in good faith. The employer must initiate it when a need for accommodation is identified — even if the employee does not use the words "reasonable accommodation" or "ADA."</span></div>
+      <table class="ref-table" style="margin-bottom:0">
+        <thead><tr><th>Step</th><th>Employer Action</th><th>Documentation Required</th></tr></thead>
+        <tbody>
+          <tr><td>1. Recognize the trigger</td><td>Employee requests leave extension, mentions a health condition affecting work, or the employer observes performance issues that may be disability-related. Any of these triggers the process.</td><td>Note the date, what was said or observed, and who was present</td></tr>
+          <tr><td>2. Acknowledge and initiate</td><td>Notify the employee in writing that the organization is initiating the interactive process. Ask the employee to describe the limitation and what they believe would help. Do not assume. Do not lead.</td><td>Written notice to employee; retain copy in HR file</td></tr>
+          <tr><td>3. Gather information</td><td>Request medical certification limited to the functional limitations — not the diagnosis or full medical history. Give a reasonable deadline (typically 15 business days) and extend if needed.</td><td>Written request for certification; deadline documented</td></tr>
+          <tr><td>4. Identify accommodations</td><td>With the employee, identify potential accommodations that address the functional limitation without eliminating the essential functions of the role. Consider all options before concluding undue hardship.</td><td>Written record of options considered and rationale for acceptance or rejection</td></tr>
+          <tr><td>5. Implement and monitor</td><td>Implement the agreed accommodation and set a follow-up date (typically 30–90 days) to assess whether it is working. Document the outcome and any adjustments made.</td><td>Accommodation agreement in writing; follow-up meeting notes</td></tr>
+          <tr><td>6. Denial (if applicable)</td><td>If accommodation is denied as an undue hardship, provide written notice with specific, documented reasons referencing the cost, disruption, or operational impact. Offer alternatives if any exist. Consult legal counsel before issuing denial.</td><td>Written denial with documented undue hardship analysis; legal review notation</td></tr>
+        </tbody>
+      </table>
+      <div class="div"></div>
+      <div class="div-lbl">Undue Hardship Factors</div>
+      <div class="al al-w" style="margin-bottom:12px"><span class="al-ic">△</span><span>Undue hardship is a high bar — it means significant difficulty or expense. Cost alone is rarely sufficient for nonprofits. The DOL and EEOC have consistently found that most leave accommodations of defined duration are not undue hardships for employers with functioning operations. Document the analysis regardless of the outcome.</span></div>
+      <table class="ref-table">
+        <thead><tr><th>Factor</th><th>Analysis</th></tr></thead>
+        <tbody>
+          <tr><td>Nature and cost of the accommodation</td><td>What does it actually cost in dollars and operational disruption? For leave, the primary cost is covering the absent employee's duties. Document how long coverage has been maintained, the cost of temporary coverage, and the point at which that cost becomes unsustainable.</td></tr>
+          <tr><td>Overall financial resources</td><td>The organization's budget and financial capacity matters. A small organization with limited reserves has a stronger undue hardship argument than a large one. But even small organizations must make reasonable efforts first.</td></tr>
+          <tr><td>Impact on operations</td><td>What functions cannot be performed without this employee? Has coverage worked so far? Would extending leave meaningfully change the operational impact? If the operation has functioned for 12 weeks, it is harder to argue that 2 more weeks is an undue hardship.</td></tr>
+          <tr><td>Type of operation and workforce</td><td>The nature of the work and the availability of substitutes matters. A role requiring unique expertise or a small team with no backup has a stronger hardship argument than an administrative role in a larger organization.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- LEAVE POLICY BUILDER TAB -->
+<div id="view-policy" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Leave Policy Builder</div><div class="card-desc">Build a complete, legally compliant leave policy across all leave types. Each section adapts based on your answers. Generate a print-ready policy document for your team when complete.</div></div>
+      <div style="display:flex;gap:8px">
+        <button onclick="generateLeavePolicy()" style="padding:6px 14px;background:var(--gold);color:var(--green-deep);border:none;border-radius:var(--radius);font-family:Jost,sans-serif;font-size:11px;font-weight:400;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Generate Policy Document</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="al al-i" style="margin-bottom:20px"><span class="al-ic">&#9432;</span><span>Complete each section in order. Questions adapt based on your answers. The generated document will be formatted for staff distribution and includes plain-language explanations of what each policy means for employees. All guidance reflects Texas law and nonprofit sector best practices.</span></div>
+
+      <!-- SECTION 1: PHILOSOPHY -->
+      <div class="policy-section-hdr">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--green)">1. Leave Philosophy</div>
+        <div style="font-size:11px;color:var(--text-light);margin-top:2px">Sets the tone for every policy that follows. This language appears at the top of your policy document.</div>
+      </div>
+      <div class="fg" style="margin-bottom:20px">
+        <div class="f"><label>How does your organization think about time off?</label>
+          <select id="polPhilosophy" onchange="polSave('polPhilosophy',this.value);polUpdate()">
+            <option value="">Select an approach</option>
+            <option value="sustainable">Rest is essential to sustainable impact. We build leave into our culture, not just our policy.</option>
+            <option value="competitive">We offer competitive leave as a deliberate talent strategy to attract and retain exceptional people.</option>
+            <option value="compliance">We meet market standard and legal requirements. Leave is provided fairly and administered consistently.</option>
+            <option value="custom">Custom statement (write below)</option>
+          </select>
+          <div class="fhint">This statement will open your policy document. Mission-driven organizations often name rest and sustainability explicitly — staff notice when the org walks the talk.</div>
+        </div>
+        <div class="f" id="polPhilosophyCustomRow" style="display:none">
+          <label>Custom Philosophy Statement</label>
+          <textarea id="polPhilosophyCustom" placeholder="Write 1-3 sentences describing your organization's approach to time off and why it matters..." rows="3" oninput="polSave('polPhilosophyCustom',this.value)"></textarea>
+        </div>
+      </div>
+
+      <!-- SECTION 2: VACATION / PTO -->
+      <div class="div"></div>
+      <div class="div-lbl">2. Vacation &amp; Paid Time Off</div>
+      <div class="fg g2" style="margin-bottom:14px">
+        <div class="f">
+          <label>PTO Structure</label>
+          <select id="polPtoStructure" onchange="polSave('polPtoStructure',this.value);polUpdate()">
+            <option value="">Select</option>
+            <option value="accrual">Accrual-based (earned incrementally over time)</option>
+            <option value="frontload">Front-loaded (full amount granted at the start of each year)</option>
+            <option value="unlimited">Unlimited / flexible (no set cap)</option>
+            <option value="separate">Separate vacation and sick banks (distinct pools)</option>
+          </select>
+          <div class="fhint">Sector benchmark: 15 days/year is below competitive; 20 days is the nonprofit 50th percentile; 25+ days signals a strong talent commitment. Unlimited PTO sounds generous but often results in less time taken — set a minimum use requirement if you choose this.</div>
+        </div>
+        <div class="f" id="polPtoDaysRow">
+          <label>Vacation Days Per Year</label>
+          <input type="text" id="polPtoDays" placeholder="e.g., 20 days / 160 hours" oninput="polSave('polPtoDays',this.value)">
+          <div class="fhint">Include the number and whether hours or days. E.g., "20 days (160 hours)".</div>
+        </div>
+        <div class="f" id="polAccrualRateRow">
+          <label>Accrual Rate</label>
+          <input type="text" id="polAccrualRate" placeholder="e.g., 1.67 days per month (20 days/year)" oninput="polSave('polAccrualRate',this.value)">
+        </div>
+        <div class="f" id="polUnlimitedMinRow" style="display:none">
+          <label>Minimum Use Requirement (recommended)</label>
+          <input type="text" id="polUnlimitedMin" placeholder="e.g., Minimum 15 days per year; manager approval required above 20 consecutive days" oninput="polSave('polUnlimitedMin',this.value)">
+          <div class="fhint" style="color:var(--crimson)">Best practice for unlimited PTO: set a minimum to prevent employees from feeling like they cannot take time off. Without a minimum, unlimited policies often produce less actual rest than capped policies.</div>
+        </div>
+        <div class="f">
+          <label>Waiting Period Before First Use</label>
+          <select id="polPtoWait" onchange="polSave('polPtoWait',this.value)">
+            <option value="">Select</option>
+            <option value="none">No waiting period — eligible from Day 1</option>
+            <option value="30">30 days from hire</option>
+            <option value="60">60 days from hire</option>
+            <option value="90">90 days from hire</option>
+            <option value="firstday-year">First day of the calendar/fiscal year following hire</option>
+          </select>
+          <div class="fhint">Sector trend is moving toward Day 1 eligibility, particularly for senior hires. Long waiting periods disproportionately affect employees who most need flexibility.</div>
+        </div>
+        <div class="f" id="polCarryRow">
+          <label>Carry-Over Policy</label>
+          <select id="polCarryover" onchange="polSave('polCarryover',this.value);polUpdate()">
+            <option value="">Select</option>
+            <option value="none">No carry-over — unused balance forfeits at year-end ("use it or lose it")</option>
+            <option value="limited">Limited carry-over — specify cap</option>
+            <option value="full">Full carry-over — no cap</option>
+          </select>
+          <div class="fhint">Texas permits "use it or lose it" policies. However, a full carry-over or capped carry-over signals organizational trust. "Use it or lose it" can incentivize presenteeism — employees come in sick rather than lose days.</div>
+        </div>
+        <div class="f" id="polCarryCapRow" style="display:none">
+          <label>Carry-Over Cap (days)</label>
+          <input type="text" id="polCarryCap" placeholder="e.g., Up to 5 days may carry over into the following year" oninput="polSave('polCarryCap',this.value)">
+        </div>
+        <div class="f">
+          <label>Payout at Separation</label>
+          <select id="polPtoPayout" onchange="polSave('polPtoPayout',this.value)">
+            <option value="">Select</option>
+            <option value="yes">Yes — accrued, unused vacation is paid out as wages at separation</option>
+            <option value="no">No — balance is forfeited at separation</option>
+            <option value="voluntary">Paid out for voluntary resignation; forfeited for termination for cause</option>
+          </select>
+          <div class="fhint" style="color:var(--crimson)">Critical: if your written policy states accrued PTO is paid out, it becomes a wage under Texas Payday Law. Failure to pay is a wage violation. This language must match your handbook exactly.</div>
+        </div>
+      </div>
+
+      <!-- SECTION 3: SICK LEAVE -->
+      <div class="div"></div>
+      <div class="div-lbl">3. Sick Leave</div>
+      <div class="fg g2" style="margin-bottom:14px">
+        <div class="f">
+          <label>Sick Leave Structure</label>
+          <select id="polSickStructure" onchange="polSave('polSickStructure',this.value);polUpdate()">
+            <option value="">Select</option>
+            <option value="combined">Combined with PTO — single bank covers all absences</option>
+            <option value="separate">Separate sick leave bank, independent of vacation/PTO</option>
+            <option value="none">No separate sick leave policy</option>
+          </select>
+          <div class="fhint">Best practice: separate sick leave banks are more equitable. Employees with chronic illness or caregiving responsibilities can exhaust combined PTO banks leaving nothing for rest. Nonprofit sector standard is 7-10 days/year in a separate sick bank.</div>
+        </div>
+        <div class="f" id="polSickDaysRow" style="display:none">
+          <label>Sick Days Per Year</label>
+          <input type="text" id="polSickDays" placeholder="e.g., 10 days per year" oninput="polSave('polSickDays',this.value)">
+        </div>
+        <div class="f" id="polSickAccrualRow" style="display:none">
+          <label>Sick Leave Accrual</label>
+          <select id="polSickAccrual" onchange="polSave('polSickAccrual',this.value)">
+            <option value="">Select</option>
+            <option value="frontload">Front-loaded annually (full amount granted at year start)</option>
+            <option value="accrual">Accrual-based (e.g., 0.83 days/month)</option>
+            <option value="immediate">All days available immediately from Day 1</option>
+          </select>
+        </div>
+        <div class="f" id="polSickFamilyRow" style="display:none">
+          <label>Can Sick Leave Be Used for Family Care?</label>
+          <select id="polSickFamily" onchange="polSave('polSickFamily',this.value)">
+            <option value="">Select</option>
+            <option value="yes-any">Yes — for any ill family member or dependent</option>
+            <option value="yes-child">Yes — for a child, spouse, or parent only</option>
+            <option value="no">No — employee illness only</option>
+          </select>
+          <div class="fhint">Best practice: allow sick leave for family care. Employees who cannot use sick time for an ill child must choose between losing PTO and coming to work distracted. Restricting sick leave to the employee alone is increasingly seen as a retention risk.</div>
+        </div>
+        <div class="f" id="polSickNoteRow" style="display:none">
+          <label>Medical Documentation Required?</label>
+          <select id="polSickNote" onchange="polSave('polSickNote',this.value);polUpdate()">
+            <option value="">Select</option>
+            <option value="no">No — employee self-certification is sufficient</option>
+            <option value="3plus">Yes — after 3 or more consecutive days</option>
+            <option value="5plus">Yes — after 5 or more consecutive days</option>
+          </select>
+          <div class="fhint">Requiring a note for every absence is administratively burdensome and signals distrust. Most organizations require documentation only for extended absences that may trigger FMLA review.</div>
+        </div>
+        <div class="f" id="polSickCarryRow" style="display:none">
+          <label>Sick Leave Carry-Over</label>
+          <select id="polSickCarry" onchange="polSave('polSickCarry',this.value)">
+            <option value="">Select</option>
+            <option value="full">Full carry-over — unused sick leave accumulates year to year</option>
+            <option value="limited">Limited carry-over (specify cap)</option>
+            <option value="none">No carry-over — sick leave resets each year</option>
+          </select>
+          <div class="fhint">Allowing sick leave to carry over (often uncapped) is a best practice — it functions as a long-term disability cushion and signals that the organization values employee health as an ongoing commitment.</div>
+        </div>
+      </div>
+
+      <!-- SECTION 4: BEREAVEMENT -->
+      <div class="div"></div>
+      <div class="div-lbl">4. Bereavement Leave</div>
+      <div class="al al-i" style="margin-bottom:14px"><span class="al-ic">&#9432;</span><span>Bereavement policy is one of the most visible signals of organizational culture. How an org responds when an employee loses someone reveals what it actually values. Restrictive policies are noticed and remembered. Best practice has shifted significantly — modern bereavement policies include chosen family, pregnancy loss, and pet loss. These are not luxuries; they are signals of humanity.</span></div>
+      <div class="fg g2" style="margin-bottom:14px">
+        <div class="f">
+          <label>Paid Bereavement Leave?</label>
+          <select id="polBereavPaid" onchange="polSave('polBereavPaid',this.value)">
+            <option value="">Select</option>
+            <option value="yes">Yes — full pay during bereavement leave</option>
+            <option value="partial">Partial pay — specify</option>
+            <option value="no">No — unpaid, but position is protected</option>
+          </select>
+        </div>
+        <div class="f">
+          <label>Days for Immediate Family</label>
+          <select id="polBereavImmediate" onchange="polSave('polBereavImmediate',this.value)">
+            <option value="">Select</option>
+            <option value="3">3 days</option>
+            <option value="5">5 days</option>
+            <option value="7">7 days (one week — sector best practice)</option>
+            <option value="10">10 days</option>
+            <option value="14">14 days (two weeks)</option>
+            <option value="custom">Custom — specify in notes</option>
+          </select>
+          <div class="fhint">Sector best practice: 5-7 days for immediate family. 3 days is below market and does not account for travel, planning, or the reality of grief. 7 days (one week) is increasingly seen as the minimum that communicates genuine care.</div>
+        </div>
+        <div class="f c2">
+          <label>Who Qualifies as Immediate Family?</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px" id="polBereavImmediateDefGrid">
+            <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;text-transform:none;letter-spacing:0;font-weight:300;color:var(--text-dark);cursor:pointer"><input type="checkbox" id="bdef_spouse" onchange="polSaveCheck()" style="width:15px;height:15px;accent-color:var(--green);flex-shrink:0"> Spouse or domestic partner</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;text-transform:none;letter-spacing:0;font-weight:300;color:var(--text-dark);cursor:pointer"><input type="checkbox" id="bdef_partner" onchange="polSaveCheck()" style="width:15px;height:15px;accent-color:var(--green);flex-shrink:0"> Long-term partner (not legally married)</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;text-transform:none;letter-spacing:0;font-weight:300;color:var(--text-dark);cursor:pointer"><input type="checkbox" id="bdef_child" onchange="polSaveCheck()" style="width:15px;height:15px;accent-color:var(--green);flex-shrink:0"> Child (biological, adopted, step, foster)</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;text-transform:none;letter-spacing:0;font-weight:300;color:var(--text-dark);cursor:pointer"><input type="checkbox" id="bdef_parent" onchange="polSaveCheck()" style="width:15px;height:15px;accent-color:var(--green);flex-shrink:0"> Parent (biological, step, adoptive, in-law)</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;text-transform:none;letter-spacing:0;font-weight:300;color:var(--text-dark);cursor:pointer"><input type="checkbox" id="bdef_sibling" onchange="polSaveCheck()" style="width:15px;height:15px;accent-color:var(--green);flex-shrink:0"> Sibling</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;text-transform:none;letter-spacing:0;font-weight:300;color:var(--text-dark);cursor:pointer"><input type="checkbox" id="bdef_grandparent" onchange="polSaveCheck()" style="width:15px;height:15px;accent-color:var(--green);flex-shrink:0"> Grandparent</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;text-transform:none;letter-spacing:0;font-weight:300;color:var(--text-dark);cursor:pointer"><input type="checkbox" id="bdef_chosen" onchange="polSaveCheck()" style="width:15px;height:15px;accent-color:var(--green);flex-shrink:0"> Chosen family / close friend</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;text-transform:none;letter-spacing:0;font-weight:300;color:var(--text-dark);cursor:pointer"><input type="checkbox" id="bdef_pregnancyloss" onchange="polSaveCheck()" style="width:15px;height:15px;accent-color:var(--green);flex-shrink:0"> Pregnancy loss (miscarriage or stillbirth)</label>
+          </div>
+          <div class="fhint" style="margin-top:8px">Best practice: include chosen family and pregnancy loss. Grief does not follow legal definitions. Employees whose partners or chosen family are excluded from bereavement coverage notice — and it shapes how they experience the organization's values.</div>
+        </div>
+        <div class="f">
+          <label>Days for Extended Family</label>
+          <select id="polBereavExtended" onchange="polSave('polBereavExtended',this.value)">
+            <option value="">Select</option>
+            <option value="1">1 day</option>
+            <option value="3">3 days</option>
+            <option value="5">5 days</option>
+            <option value="none">No separate extended family provision</option>
+          </select>
+          <div class="fhint">Extended family typically includes: grandchildren, aunts/uncles, cousins, in-laws not already listed. 3 days is common.</div>
+        </div>
+        <div class="f">
+          <label>Additional Unpaid Bereavement?</label>
+          <select id="polBereavUnpaid" onchange="polSave('polBereavUnpaid',this.value)">
+            <option value="">Select</option>
+            <option value="yes">Yes — additional unpaid time available with supervisor approval</option>
+            <option value="pto">Employee may use accrued PTO for additional time</option>
+            <option value="no">No — only the designated paid days</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- SECTION 5: PARENTAL LEAVE -->
+      <div class="div"></div>
+      <div class="div-lbl">5. Parental Leave</div>
+      <div class="al al-w" style="margin-bottom:14px"><span class="al-ic">&#9651;</span><span>FMLA provides up to 12 weeks of unpaid leave for birth or adoption — it does not require paid leave. Paid parental leave is a voluntary benefit. The sector is shifting rapidly: organizations that cannot compete on salary increasingly offer parental leave as a differentiator. Sector average for primary caregiver: 8-12 weeks fully paid. Best practice: 12+ weeks.</span></div>
+      <div class="fg g2" style="margin-bottom:14px">
+        <div class="f">
+          <label>Paid Parental Leave Offered?</label>
+          <select id="polParentalOffered" onchange="polSave('polParentalOffered',this.value);polUpdate()">
+            <option value="">Select</option>
+            <option value="yes">Yes — paid parental leave beyond FMLA entitlement</option>
+            <option value="fmla-only">FMLA only — no additional paid leave provided</option>
+            <option value="no">Organization is not FMLA-covered — no parental leave policy currently</option>
+          </select>
+        </div>
+        <div class="f" id="polParentalPrimaryRow" style="display:none">
+          <label>Primary Caregiver — Weeks of Paid Leave</label>
+          <select id="polParentalPrimary" onchange="polSave('polParentalPrimary',this.value)">
+            <option value="">Select</option>
+            <option value="4">4 weeks</option>
+            <option value="6">6 weeks</option>
+            <option value="8">8 weeks</option>
+            <option value="12">12 weeks (sector best practice)</option>
+            <option value="16">16 weeks</option>
+            <option value="24">24 weeks</option>
+          </select>
+        </div>
+        <div class="f" id="polParentalSecondaryRow" style="display:none">
+          <label>Secondary Caregiver — Weeks of Paid Leave</label>
+          <select id="polParentalSecondary" onchange="polSave('polParentalSecondary',this.value)">
+            <option value="">Select</option>
+            <option value="2">2 weeks</option>
+            <option value="4">4 weeks</option>
+            <option value="6">6 weeks</option>
+            <option value="8">8 weeks</option>
+          </select>
+          <div class="fhint">A meaningful secondary caregiver benefit reduces inequity between parents and signals that the organization does not assume one parent is the default caregiver.</div>
+        </div>
+        <div class="f" id="polParentalCoversRow" style="display:none">
+          <label>Applies To</label>
+          <select id="polParentalCovers" onchange="polSave('polParentalCovers',this.value)">
+            <option value="">Select</option>
+            <option value="all">Birth, adoption, and foster placement — all equally</option>
+            <option value="birth-adoption">Birth and adoption only</option>
+            <option value="birth">Birth only</option>
+          </select>
+          <div class="fhint">Best practice: apply the same benefit to birth, adoption, and foster care. Distinctions between how parents join their families create unequal and inequitable outcomes.</div>
+        </div>
+        <div class="f" id="polParentalReturnRow" style="display:none">
+          <label>Return-to-Work Commitment?</label>
+          <select id="polParentalReturn" onchange="polSave('polParentalReturn',this.value)">
+            <option value="">Select</option>
+            <option value="none">No commitment required</option>
+            <option value="60">Employee agrees to return for at least 60 days following leave</option>
+            <option value="90">Employee agrees to return for at least 90 days following leave</option>
+          </select>
+          <div class="fhint">A return commitment is common for fully paid parental leave programs and is generally enforceable as a repayment agreement. If the employee does not return, the org may recoup a pro-rated portion of paid leave wages.</div>
+        </div>
+      </div>
+
+      <!-- SECTION 6: PERSONAL DAYS -->
+      <div class="div"></div>
+      <div class="div-lbl">6. Personal Days</div>
+      <div class="fg g2" style="margin-bottom:14px">
+        <div class="f">
+          <label>Personal Days (separate from vacation and sick)</label>
+          <select id="polPersonalDays" onchange="polSave('polPersonalDays',this.value);polUpdate()">
+            <option value="">Select</option>
+            <option value="0">No separate personal days</option>
+            <option value="2">2 personal days per year</option>
+            <option value="3">3 personal days per year</option>
+            <option value="5">5 personal days per year</option>
+          </select>
+          <div class="fhint">Personal days acknowledge that employees sometimes need time for life events that are not illness or vacation — appointments, religious observance, family obligations, mental health. They reduce friction and normalize human needs.</div>
+        </div>
+        <div class="f" id="polPersonalNoticeRow" style="display:none">
+          <label>Advance Notice Required</label>
+          <select id="polPersonalNotice" onchange="polSave('polPersonalNotice',this.value)">
+            <option value="">Select</option>
+            <option value="none">No advance notice required — employee discretion</option>
+            <option value="24h">24 hours' notice when possible</option>
+            <option value="48h">48 hours' notice required</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- SECTION 7: UNPAID LEAVE -->
+      <div class="div"></div>
+      <div class="div-lbl">7. Unpaid Leave of Absence</div>
+      <div class="fg g2" style="margin-bottom:14px">
+        <div class="f">
+          <label>Extended Unpaid Leave Available?</label>
+          <select id="polUnpaidOffered" onchange="polSave('polUnpaidOffered',this.value);polUpdate()">
+            <option value="">Select</option>
+            <option value="yes">Yes — employees may request unpaid personal leave beyond FMLA</option>
+            <option value="no">No — leave beyond FMLA is not available</option>
+          </select>
+          <div class="fhint">Extended unpaid leave (30-90 days) is a valuable retention tool for employees facing life circumstances that fall outside FMLA. It costs the organization only continuation coverage and coverage for the role — and retains experienced staff who would otherwise resign.</div>
+        </div>
+        <div class="f" id="polUnpaidDurationRow" style="display:none">
+          <label>Maximum Duration</label>
+          <select id="polUnpaidDuration" onchange="polSave('polUnpaidDuration',this.value)">
+            <option value="">Select</option>
+            <option value="30">Up to 30 days</option>
+            <option value="60">Up to 60 days</option>
+            <option value="90">Up to 90 days</option>
+            <option value="discretionary">Discretionary — determined case by case with leadership approval</option>
+          </select>
+        </div>
+        <div class="f" id="polUnpaidBenefitsRow" style="display:none">
+          <label>Benefits During Unpaid Leave</label>
+          <select id="polUnpaidBenefits" onchange="polSave('polUnpaidBenefits',this.value)">
+            <option value="">Select</option>
+            <option value="employee-pays">Employee pays full premium (employer + employee share) during leave</option>
+            <option value="employer-maintains">Employer maintains coverage at the same contribution level as during active employment</option>
+            <option value="cobra">Coverage ends — employee may elect COBRA</option>
+          </select>
+        </div>
+        <div class="f" id="polUnpaidReturnRow" style="display:none">
+          <label>Position Guarantee on Return</label>
+          <select id="polUnpaidReturn" onchange="polSave('polUnpaidReturn',this.value)">
+            <option value="">Select</option>
+            <option value="same">Same position guaranteed upon return</option>
+            <option value="equivalent">Equivalent position — same level and pay, not necessarily identical role</option>
+            <option value="best-efforts">Best efforts to reinstate — no guarantee</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- SECTION 8: HOLIDAYS AND OTHER LEAVE -->
+      <div class="div"></div>
+      <div class="div-lbl">8. Holidays &amp; Other Paid Leave</div>
+      <div class="fg g2" style="margin-bottom:14px">
+        <div class="f">
+          <label>Paid Holidays Per Year</label>
+          <input type="text" id="polHolidays" placeholder="e.g., 12 paid holidays per year" oninput="polSave('polHolidays',this.value)">
+          <div class="fhint">Nonprofit sector standard: 10-13 paid holidays. Include federal holidays plus any organizational-specific days (e.g., day after Thanksgiving, week between Christmas and New Year).</div>
+        </div>
+        <div class="f">
+          <label>Floating Holidays</label>
+          <select id="polFloating" onchange="polSave('polFloating',this.value)">
+            <option value="">Select</option>
+            <option value="0">No floating holidays</option>
+            <option value="1">1 floating holiday per year</option>
+            <option value="2">2 floating holidays per year</option>
+            <option value="3">3 floating holidays per year</option>
+          </select>
+          <div class="fhint">Floating holidays allow employees to observe religious, cultural, or personal days that are not on the standard holiday calendar. They are an equity tool — a fixed holiday calendar built around Christian and U.S. federal holidays may not reflect the full diversity of a team.</div>
+        </div>
+        <div class="f">
+          <label>Volunteer / Community Service Days</label>
+          <select id="polVolunteer" onchange="polSave('polVolunteer',this.value)">
+            <option value="">Select</option>
+            <option value="0">No paid volunteer time</option>
+            <option value="1">1 paid day per year for volunteer work</option>
+            <option value="2">2 paid days per year for volunteer work</option>
+            <option value="3">3 paid days per year for volunteer work</option>
+          </select>
+          <div class="fhint">For mission-driven organizations, paid volunteer time signals alignment between stated values and organizational practice. It also functions as a staff development and engagement benefit.</div>
+        </div>
+        <div class="f">
+          <label>Professional Development Days</label>
+          <select id="polPDDays" onchange="polSave('polPDDays',this.value)">
+            <option value="">Select</option>
+            <option value="0">No separate PD days (PD uses regular PTO)</option>
+            <option value="3">Up to 3 days per year for approved PD</option>
+            <option value="5">Up to 5 days per year for approved PD</option>
+            <option value="discretionary">Discretionary — manager and budget approval required</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- SECTION 9: NOTES -->
+      <div class="div"></div>
+      <div class="div-lbl">9. Additional Notes for Policy Document</div>
+      <div class="fg" style="margin-bottom:20px">
+        <div class="f">
+          <label>Anything else the policy document should address?</label>
+          <textarea id="polAdditional" placeholder="e.g., Religious accommodation process, mental health days language, a note about flexibility during organizational transitions, specific guidance for managers..." rows="3" oninput="polSave('polAdditional',this.value)"></textarea>
+        </div>
+      </div>
+
+      <div class="al al-c" style="margin-top:8px"><span class="al-ic">&#9432;</span><span>When you click Generate Policy Document, the tool produces a formatted print-ready document including a philosophy statement, all leave types in plain language, a manager quick-reference, and a "What This Means For You" section for each policy area. The document is designed to be distributed to staff, included in the handbook, or presented to leadership and the board.</span></div>
+
+    </div><!-- end card-body -->
+  </div><!-- end card -->
+</div><!-- end view-policy -->
+<!-- FMLA TRACKER TAB -->
+<div id="view-tracker" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">FMLA Usage Tracker</div><div class="card-desc">Track 12-week FMLA entitlement per employee in the rolling 12-month period. Required for compliance — employers must know how much FMLA each employee has used and how much remains.</div></div>
+      <button onclick="openTrackerModal()" style="padding:6px 14px;background:var(--gold);color:var(--green-deep);border:none;border-radius:var(--radius);font-family:Jost,sans-serif;font-size:11px;font-weight:400;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">+ Add Employee</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-i" style="margin-bottom:14px"><span class="al-ic">ℹ</span><span>FMLA entitlement is calculated on a rolling 12-month basis measured backward from the date of any FMLA use. An employee who used 8 weeks six months ago and now requests more leave has only 4 weeks remaining — not a full 12. Track actual days/weeks used, not just current leave periods. Intermittent leave must be tracked to the day or hour.</span></div>
+      <div id="trackerContent">
+        <div style="padding:24px;text-align:center;color:var(--text-light);font-size:12px;background:rgba(27,68,54,0.02);border-radius:var(--radius-md);border:1px dashed var(--border)">No employees tracked yet. Add an employee using the button above.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TRACKER MODAL -->
+<div id="trackerModal" style="position:fixed;inset:0;z-index:200;background:rgba(18,46,36,0.65);backdrop-filter:blur(4px);display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;">
+  <div style="background:var(--white);border-radius:var(--radius-lg);max-width:580px;width:100%;box-shadow:0 16px 64px rgba(0,0,0,0.25);margin:auto;">
+    <div style="background:linear-gradient(135deg,var(--green-deep),var(--green));padding:20px 26px;border-radius:var(--radius-lg) var(--radius-lg) 0 0;display:flex;justify-content:space-between;align-items:flex-start;">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--white)">FMLA Usage Entry</div>
+      <button onclick="closeTrackerModal()" style="background:none;border:none;color:rgba(245,237,228,0.5);font-size:20px;cursor:pointer;line-height:1;">×</button>
+    </div>
+    <div style="padding:22px 26px;">
+      <div class="fg g2">
+        <div class="f"><label>Employee Name</label><input type="text" id="trEmp" placeholder="Full name"></div>
+        <div class="f"><label>Leave Reason (general)</label>
+          <select id="trReason"><option value="">Select</option><option value="Employee serious health condition">Employee serious health condition</option><option value="Family member serious health condition">Family member serious health condition</option><option value="Birth / bonding">Birth / bonding</option><option value="Adoption / foster placement">Adoption / foster placement</option><option value="Military exigency">Military exigency</option><option value="Military caregiver">Military caregiver (26 weeks)</option></select>
+        </div>
+        <div class="f"><label>Leave Start Date</label><input type="date" id="trStart"></div>
+        <div class="f"><label>Leave End Date (actual or estimated)</label><input type="date" id="trEnd"></div>
+        <div class="f"><label>Weeks / Days Used This Period</label><input type="text" id="trUsed" placeholder="e.g., 6 weeks or 30 days"></div>
+        <div class="f"><label>Total Weeks Used (rolling 12 months)</label><input type="text" id="trTotal" placeholder="e.g., 8 of 12 weeks"></div>
+        <div class="f"><label>Intermittent?</label>
+          <select id="trIntermit"><option value="no">No — continuous block</option><option value="yes">Yes — intermittent or reduced schedule</option></select>
+        </div>
+        <div class="f"><label>Certification Received?</label>
+          <select id="trCert"><option value="">Select</option><option value="yes">Yes — on file</option><option value="pending">Pending — deadline set</option><option value="waived">Waived by employer</option><option value="na">Not required</option></select>
+        </div>
+        <div class="c2 f"><label>Notes</label><textarea id="trNotes" placeholder="Designation notice sent, certification deadline, return-to-work plan, any open issues..." rows="3"></textarea></div>
+      </div>
+    </div>
+    <div style="padding:14px 26px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;">
+      <button onclick="closeTrackerModal()" style="padding:8px 18px;border-radius:var(--radius);font-family:Jost,sans-serif;font-size:12px;font-weight:300;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--text-mid);">Cancel</button>
+      <button onclick="saveTrackerEntry()" style="padding:8px 18px;border-radius:var(--radius);font-family:Jost,sans-serif;font-size:12px;font-weight:300;cursor:pointer;border:none;background:linear-gradient(135deg,var(--green),var(--green-light));color:var(--white);">Save Entry</button>
+    </div>
+  </div>
+</div>
+
+<!-- LEAVE LOG TAB -->
+<div id="view-requests" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Leave Request Log</div><div class="card-desc">Document every leave request, approval, and FMLA designation. Each entry is a separate record — the log is cumulative.</div></div>
+      <button onclick="openLeaveModal()" style="padding:6px 14px;background:var(--gold);color:var(--green-deep);border:none;border-radius:var(--radius);font-family:Jost,sans-serif;font-size:11px;font-weight:400;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">+ New Request</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-i" style="margin-bottom:14px"><span class="al-ic">ℹ</span><span>Every leave request should be documented regardless of whether the employee used the word "FMLA." If the leave sounds like it may qualify, document that you evaluated it for FMLA eligibility and record your determination. Document denials the same way you document approvals.</span></div>
+      <div id="leaveLogContent">
+        <div style="padding:24px;text-align:center;color:var(--text-light);font-size:12px;background:rgba(27,68,54,0.02);border-radius:var(--radius-md);border:1px dashed var(--border)">No leave requests logged yet. Use the button above to add the first entry.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LEAVE REQUEST MODAL -->
+<div id="leaveModal" style="position:fixed;inset:0;z-index:200;background:rgba(18,46,36,0.65);backdrop-filter:blur(4px);display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;">
+  <div style="background:var(--white);border-radius:var(--radius-lg);max-width:620px;width:100%;box-shadow:0 16px 64px rgba(0,0,0,0.25);margin:auto;">
+    <div style="background:linear-gradient(135deg,var(--green-deep),var(--green));padding:20px 26px;border-radius:var(--radius-lg) var(--radius-lg) 0 0;display:flex;justify-content:space-between;align-items:flex-start;">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--white)" id="leaveModalTitle">New Leave Request</div>
+      <button onclick="closeLeaveModal()" style="background:none;border:none;color:rgba(245,237,228,0.5);font-size:20px;cursor:pointer;line-height:1;">×</button>
+    </div>
+    <div style="padding:22px 26px;">
+      <div class="fg g3">
+        <div class="f"><label>Employee Name</label><input type="text" id="lvEmp" placeholder="Full name"></div>
+        <div class="f"><label>Leave Type</label>
+          <select id="lvType"><option value="">Select</option><option value="FMLA">FMLA</option><option value="ADA Accommodation">ADA Accommodation</option><option value="PWFA">PWFA (Pregnant Workers Fairness Act)</option><option value="PTO / Vacation">PTO / Vacation</option><option value="Sick">Sick</option><option value="Personal">Personal</option><option value="Bereavement">Bereavement</option><option value="Jury Duty">Jury Duty</option><option value="Military">Military</option><option value="Other">Other</option></select>
+        </div>
+        <div class="f"><label>Status</label>
+          <select id="lvStatus"><option value="Pending">Pending</option><option value="Approved">Approved</option><option value="Denied">Denied</option><option value="In Progress">In Progress</option><option value="Returned">Returned</option></select>
+        </div>
+        <div class="f"><label>Start Date</label><input type="date" id="lvStart"></div>
+        <div class="f"><label>Return Date (actual or estimated)</label><input type="date" id="lvReturn"></div>
+        <div class="f"><label>FMLA Eligible?</label>
+          <select id="lvFMLAElig"><option value="Not Evaluated">Not Evaluated</option><option value="Yes — FMLA Designated">Yes — FMLA Designated</option><option value="No — Does Not Qualify">No — Does Not Qualify</option><option value="N/A — Employer Not Covered">N/A — Employer Not Covered</option><option value="N/A — Employee Not Eligible">N/A — Employee Not Eligible</option></select>
+        </div>
+        <div class="f"><label>Approved / Reviewed By</label><input type="text" id="lvApproved" placeholder="Supervisor or HR name"></div>
+        <div class="f"><label>Date of Request</label><input type="date" id="lvRequestDate"></div>
+        <div class="f"><label>Certification Required?</label>
+          <select id="lvCert"><option value="">Select</option><option value="Yes — received">Yes — received and on file</option><option value="Yes — pending">Yes — pending (deadline set)</option><option value="No">No</option></select>
+        </div>
+        <div class="c3 f"><label>Documentation Notes</label><textarea id="lvNotes" placeholder="Interactive process notes, certifications, accommodations discussed, return-to-work plan, or denial rationale..." rows="3"></textarea></div>
+      </div>
+    </div>
+    <div style="padding:14px 26px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;">
+      <button onclick="closeLeaveModal()" style="padding:8px 18px;border-radius:var(--radius);font-family:Jost,sans-serif;font-size:12px;font-weight:300;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--text-mid);">Cancel</button>
+      <button onclick="saveLeaveEntry()" style="padding:8px 18px;border-radius:var(--radius);font-family:Jost,sans-serif;font-size:12px;font-weight:300;cursor:pointer;border:none;background:linear-gradient(135deg,var(--green),var(--green-light));color:var(--white);">Save Request</button>
+    </div>
+  </div>
+</div>
+<footer>
+  <div class="fb">The Coherence Collective &nbsp;·&nbsp; <span>Plinth</span></div>
+  <div style="display:flex;gap:16px;align-items:center">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.35)">Jump to</span>
+      <select onchange="if(this.value)window.location.href=this.value" style="font-family:Jost,sans-serif;font-weight:300;font-size:11px;background:rgba(255,255,255,0.06);color:rgba(245,237,228,0.6);border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:4px 24px 4px 8px;cursor:pointer;outline:none;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(245,237,228,0.4)' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 7px center">
+        <option value="/org-profile/">01 &middot; Org Profile</option>
+        <option value="/handbook/">02 &middot; Handbook</option>
+        <option value="/job-architecture/">03 &middot; Job Architecture</option>
+        <option value="/compensation/">04 &middot; Compensation</option>
+        <option value="/offer-hiring/">05 &middot; Offer &amp; Hiring</option>
+        <option value="/onboarding/">06 &middot; Onboarding</option>
+        <option value="/pay-practices/">07 &middot; Pay Practices</option>
+        <option value="/benefits/">08 &middot; Benefits Administration</option>
+        <option value="/leave/" selected>09 &middot; Leave Management</option>
+        <option value="/performance/">10 &middot; Performance Management</option>
+        <option value="/er-investigation/">11 &middot; ER &amp; Investigation</option>
+        <option value="/separation/">12 &middot; Separation</option>
+        <option value="/compliance-calendar/">13 &middot; Compliance Calendar</option>
+        <option value="/manager-toolkit/">14 &middot; Manager Toolkit</option>
+        <option value="/analytics/">15 &middot; Analytics</option>
+      </select>
+    </div>
+    <span style="color:rgba(245,237,228,0.15)">|</span>
+    <a href="/benefits/" style="font-size:11px;color:rgba(245,237,228,0.4);text-decoration:none" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">&larr; Tool 08</a>
+    <span style="color:rgba(245,237,228,0.15)">|</span>
+    <a href="/performance/" style="font-size:11px;color:rgba(245,237,228,0.4);text-decoration:none" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">Tool 10 &rarr;</a>
+  </div>
+</footer>
+<script>
+const ALL_TABS_LEAVE = ['fmla','ada','policy','tracker','requests'];
+let profile = {};
+try{ profile = JSON.parse(localStorage.getItem('plinth_op')||'{}'); }catch(e){}
+
+let leaveData = { pto:{}, policy:{}, leaveLog:[], fmlaTracker:[] };
+
+function saveData(){
+  const pto = {};
+  ['ptoType','ptoAmount','ptoAccrual','ptoWait','ptoCarry','ptoPayout'].forEach(id=>{
+    const el=document.getElementById(id); if(el) pto[id]=el.value;
+  });
+  leaveData.pto = pto;
+  localStorage.setItem('plinth_leave', JSON.stringify(leaveData));
+  flash();
+}
+
+function flash(){
+  const fl=document.getElementById('sflash');
+  fl.classList.add('on'); setTimeout(()=>fl.classList.remove('on'),1800);
+}
+
+function showTab(tab){
+  ALL_TABS_LEAVE.forEach(t=>{
+    const v=document.getElementById('view-'+t); if(v) v.style.display=t===tab?'block':'none';
+    const el=document.getElementById('tab-'+t); if(el) el.classList.toggle('active',t===tab);
+  });
+  if(tab==='tracker') renderTracker();
+  if(tab==='requests') renderLeaveLog();
+  if(tab==='policy'){ restorePolicy(); polUpdate(); }
+}
+
+function restoreData(){
+  try{
+    const d = JSON.parse(localStorage.getItem('plinth_leave')||'{}');
+    if(d.pto){
+      Object.assign(leaveData.pto, d.pto);
+      ['ptoType','ptoAmount','ptoAccrual','ptoWait','ptoCarry','ptoPayout'].forEach(id=>{
+        const el=document.getElementById(id); if(el&&d.pto[id]!==undefined) el.value=d.pto[id];
+      });
+    }
+    if(d.policy) Object.assign(leaveData.policy, d.policy);
+    if(d.leaveLog) leaveData.leaveLog = d.leaveLog;
+    if(d.fmlaTracker) leaveData.fmlaTracker = d.fmlaTracker;
+  }catch(e){}
+}
+
+function animateCards(){
+  const obs = new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('vis'); });
+  },{threshold:0.04});
+  document.querySelectorAll('.card').forEach(c=>obs.observe(c));
+}
+
+function polSave(id,val){
+  leaveData.policy[id]=val;
+  localStorage.setItem('plinth_leave',JSON.stringify(leaveData));
+  flash();
+  polUpdate();
+}
+
+function polSaveCheck(){
+  const checks={};
+  ['bdef_spouse','bdef_partner','bdef_child','bdef_parent','bdef_sibling','bdef_grandparent','bdef_chosen','bdef_pregnancyloss'].forEach(id=>{
+    const el=document.getElementById(id);if(el)checks[id]=el.checked;
+  });
+  leaveData.policy.bereavChecks=checks;
+  localStorage.setItem('plinth_leave',JSON.stringify(leaveData));
+  flash();
+}
+
+function polUpdate(){
+  const p=leaveData.policy||{};
+  const show=(id,v)=>{const el=document.getElementById(id);if(el)el.style.display=v?'':'none';};
+  show('polPhilosophyCustomRow',p.polPhilosophy==='custom');
+  const s=p.polPtoStructure||'';
+  show('polPtoDaysRow',s&&s!=='unlimited');
+  show('polAccrualRateRow',s==='accrual');
+  show('polUnlimitedMinRow',s==='unlimited');
+  show('polCarryRow',s&&s!=='unlimited');
+  show('polCarryCapRow',p.polCarryover==='limited');
+  const sk=p.polSickStructure||'';
+  show('polSickDaysRow',sk==='separate');
+  show('polSickAccrualRow',sk==='separate');
+  show('polSickFamilyRow',sk==='separate');
+  show('polSickNoteRow',sk==='separate');
+  show('polSickCarryRow',sk==='separate');
+  const par=p.polParentalOffered||'';
+  show('polParentalPrimaryRow',par==='yes');
+  show('polParentalSecondaryRow',par==='yes');
+  show('polParentalCoversRow',par==='yes');
+  show('polParentalReturnRow',par==='yes');
+  show('polPersonalNoticeRow',p.polPersonalDays&&p.polPersonalDays!=='0');
+  const un=p.polUnpaidOffered||'';
+  show('polUnpaidDurationRow',un==='yes');
+  show('polUnpaidBenefitsRow',un==='yes');
+  show('polUnpaidReturnRow',un==='yes');
+}
+
+function restorePolicy(){
+  const p=leaveData.policy||{};
+  ['polPhilosophy','polPhilosophyCustom','polPtoStructure','polPtoDays','polAccrualRate',
+   'polUnlimitedMin','polPtoWait','polCarryover','polCarryCap','polPtoPayout',
+   'polSickStructure','polSickDays','polSickAccrual','polSickFamily','polSickNote','polSickCarry',
+   'polBereavPaid','polBereavImmediate','polBereavExtended','polBereavUnpaid',
+   'polParentalOffered','polParentalPrimary','polParentalSecondary','polParentalCovers','polParentalReturn',
+   'polPersonalDays','polPersonalNotice',
+   'polUnpaidOffered','polUnpaidDuration','polUnpaidBenefits','polUnpaidReturn',
+   'polHolidays','polFloating','polVolunteer','polPDDays','polAdditional'
+  ].forEach(id=>{const el=document.getElementById(id);if(el&&p[id]!==undefined)el.value=p[id];});
+  if(p.bereavChecks){
+    Object.entries(p.bereavChecks).forEach(([id,val])=>{const el=document.getElementById(id);if(el)el.checked=val;});
+  }
+}
+
+function generateLeavePolicy(){
+  const p=leaveData.policy||{};
+  const org=profile.legalName||'[Organization Name]';
+  const today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const philosophyText=p.polPhilosophy==='custom'?(p.polPhilosophyCustom||''):p.polPhilosophy||'';
+
+  const checks=p.bereavChecks||{};
+  const famLabels={bdef_spouse:'spouse or domestic partner',bdef_partner:'long-term partner',bdef_child:'child (biological, adopted, step, or foster)',bdef_parent:'parent (biological, step, adoptive, or in-law)',bdef_sibling:'sibling',bdef_grandparent:'grandparent',bdef_chosen:'chosen family or close friend',bdef_pregnancyloss:'pregnancy loss (miscarriage or stillbirth)'};
+  const immFam=Object.entries(checks).filter(([,v])=>v).map(([k])=>famLabels[k]).filter(Boolean);
+
+  var struct=p.polPtoStructure||'';
+  var ptoSection='';
+  if(struct==='accrual') ptoSection=org+' provides accrual-based paid time off. Employees earn '+(p.polPtoDays||'[X] days')+' per year at a rate of '+(p.polAccrualRate||'[accrual rate]')+'.';
+  else if(struct==='frontload') ptoSection=org+' provides '+(p.polPtoDays||'[X] days')+' of paid time off per year, granted in full at the start of each benefit year.';
+  else if(struct==='unlimited') ptoSection=org+' offers a flexible paid time off policy with no set annual cap. '+(p.polUnlimitedMin?'Employees are expected to take a minimum of '+p.polUnlimitedMin+'. ':'')+' Employees are encouraged to take time off regularly and are trusted to manage their availability in coordination with their supervisor.';
+  else if(struct==='separate') ptoSection=org+' maintains separate vacation and sick leave banks. Vacation: '+(p.polPtoDays||'[X] days per year')+'. See the Sick Leave section for sick bank details.';
+  if(struct&&struct!=='unlimited'){
+    var waitMap={none:'Employees are eligible to use PTO beginning on Day 1 of employment.',30:'Employees are eligible to use PTO after 30 days of employment.',60:'Employees are eligible to use PTO after 60 days of employment.',90:'Employees are eligible to use PTO after 90 days of employment.',firstday_year:'Employees are eligible to use PTO beginning the first day of the calendar year following their hire date.'};
+    if(p.polPtoWait&&waitMap[p.polPtoWait]) ptoSection+=' '+waitMap[p.polPtoWait];
+    var carryMap={none:'Unused PTO does not carry over at year-end.',limited:'Employees may carry over up to '+(p.polCarryCap||'[X] days')+' of unused PTO. Balances above the cap are forfeited at year-end.',full:'Unused PTO carries over fully from year to year.'};
+    if(p.polCarryover&&carryMap[p.polCarryover]) ptoSection+=' '+carryMap[p.polCarryover];
+    var payoutMap={yes:'Upon separation, all accrued unused vacation time will be paid out as wages.',no:'Accrued unused PTO is forfeited upon separation.',voluntary:'Accrued PTO is paid out upon voluntary resignation. Upon involuntary termination, unused PTO is forfeited.'};
+    if(p.polPtoPayout&&payoutMap[p.polPtoPayout]) ptoSection+=' '+payoutMap[p.polPtoPayout];
+  }
+
+  var sickSection='';
+  if(p.polSickStructure==='separate'){
+    sickSection=org+' provides '+(p.polSickDays||'[X]')+' days of sick leave per year';
+    if(p.polSickAccrual==='frontload') sickSection+=', granted in full at the start of each benefit year';
+    else if(p.polSickAccrual==='accrual') sickSection+=', earned on an accrual basis';
+    else if(p.polSickAccrual==='immediate') sickSection+=', available in full beginning Day 1';
+    sickSection+='.';
+    if(p.polSickFamily==='yes-any') sickSection+=' Sick leave may be used for the employee\'s own illness or to care for an ill family member or dependent.';
+    else if(p.polSickFamily==='yes-child') sickSection+=' Sick leave may be used for the employee\'s own illness or to care for an ill child, spouse, or parent.';
+    else if(p.polSickFamily==='no') sickSection+=' Sick leave is for the employee\'s own illness only.';
+    if(p.polSickNote==='no') sickSection+=' No medical documentation is required for sick leave use.';
+    else if(p.polSickNote==='3plus') sickSection+=' Documentation may be required for absences of three or more consecutive days.';
+    else if(p.polSickNote==='5plus') sickSection+=' Documentation may be required for absences of five or more consecutive days.';
+    if(p.polSickCarry==='full') sickSection+=' Unused sick leave carries over year to year with no cap.';
+    else if(p.polSickCarry==='none') sickSection+=' Unused sick leave does not carry over at year-end.';
+  } else if(p.polSickStructure==='combined'){
+    sickSection='Sick leave is drawn from the employee general PTO balance.';
+  }
+
+  var bereavSection='';
+  if(p.polBereavImmediate){
+    var paid=p.polBereavPaid==='yes'?'paid':p.polBereavPaid==='no'?'unpaid':'paid';
+    bereavSection=org+' provides '+p.polBereavImmediate+' days of '+paid+' bereavement leave';
+    if(immFam.length) bereavSection+=' upon the death of an employee '+immFam.slice(0,-1).join(', ')+(immFam.length>1?', or ':'')+immFam.slice(-1)+'.';
+    else bereavSection+=' upon the death of an immediate family member.';
+    if(p.polBereavExtended&&p.polBereavExtended!=='none') bereavSection+=' '+p.polBereavExtended+' days are provided for extended family members.';
+    if(p.polBereavUnpaid==='yes') bereavSection+=' Additional unpaid time may be approved on a case-by-case basis.';
+    else if(p.polBereavUnpaid==='pto') bereavSection+=' Employees may use accrued PTO for additional time.';
+  }
+
+  var parentalSection='';
+  if(p.polParentalOffered==='yes'){
+    parentalSection=org+' provides paid parental leave for birth, adoption, or foster placement. ';
+    if(p.polParentalPrimary) parentalSection+='Primary caregiver: up to '+p.polParentalPrimary+' weeks of fully paid leave. ';
+    if(p.polParentalSecondary) parentalSection+='Secondary caregiver: up to '+p.polParentalSecondary+' weeks of paid leave. ';
+    if(p.polParentalCovers==='all') parentalSection+='Applies equally to birth, adoption, and foster placement. ';
+    if(p.polParentalReturn==='60') parentalSection+='Employee agrees to return for a minimum of 60 days after leave.';
+    else if(p.polParentalReturn==='90') parentalSection+='Employee agrees to return for a minimum of 90 days after leave.';
+  } else if(p.polParentalOffered==='fmla-only'){
+    parentalSection='Parental leave is provided per FMLA entitlement — up to 12 weeks unpaid. No additional paid parental leave is currently provided.';
+  }
+
+  var personalSection='';
+  if(p.polPersonalDays&&p.polPersonalDays!=='0'){
+    personalSection=org+' provides '+p.polPersonalDays+' paid personal days per year. ';
+    if(p.polPersonalNotice==='none') personalSection+='No advance notice is required.';
+    else if(p.polPersonalNotice==='24h') personalSection+='24 hours notice is appreciated when possible.';
+    else if(p.polPersonalNotice==='48h') personalSection+='48 hours advance notice is required.';
+  }
+
+  var unpaidSection='';
+  if(p.polUnpaidOffered==='yes'){
+    unpaidSection='Employees may request unpaid personal leave beyond FMLA entitlement. ';
+    var durMap={'30':'Up to 30 days.','60':'Up to 60 days.','90':'Up to 90 days.','discretionary':'Duration determined case by case with senior leadership approval.'};
+    if(p.polUnpaidDuration&&durMap[p.polUnpaidDuration]) unpaidSection+=durMap[p.polUnpaidDuration]+' ';
+    var benMap={'employee-pays':'The employee is responsible for the full cost of benefit premiums during leave.','employer-maintains':'The employer will continue health insurance coverage at the same contribution level.','cobra':'Coverage ends at month-end. Employee may elect COBRA.'};
+    if(p.polUnpaidBenefits&&benMap[p.polUnpaidBenefits]) unpaidSection+=benMap[p.polUnpaidBenefits]+' ';
+    var retMap={'same':'The employee will be reinstated to the same position.','equivalent':'The employee will be reinstated to an equivalent position.','best-efforts':'The organization will make best efforts to reinstate the employee. Position availability cannot be guaranteed.'};
+    if(p.polUnpaidReturn&&retMap[p.polUnpaidReturn]) unpaidSection+=retMap[p.polUnpaidReturn];
+  }
+
+  var holidaySection='';
+  if(p.polHolidays) holidaySection+=org+' observes '+p.polHolidays+'. ';
+  if(p.polFloating&&p.polFloating!=='0') holidaySection+='Employees receive '+p.polFloating+' floating holiday(s) per year for observances of their choosing. ';
+
+  var otherSection='';
+  if(p.polVolunteer&&p.polVolunteer!=='0') otherSection+=org+' provides '+p.polVolunteer+' paid day(s) per year for volunteer or community service. ';
+  if(p.polPDDays&&p.polPDDays!=='0') otherSection+='Employees may use '+(p.polPDDays==='discretionary'?'discretionary':p.polPDDays)+' paid day(s) per year for approved professional development. ';
+
+  var _pbTitle='Leave Policy — '+org;
+  var _pbFile='leave-policy-'+org.replace(/\s+/g,'-').toLowerCase()+'.html';
+  var _pbType='Leave Policy';
+  var doc='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Leave Policy — '+org+'</title>';
+  doc+='<style>';
+  doc+='body{font-family:Georgia,serif;color:#1a1a1a;margin:0;padding:0;font-size:10.5pt;line-height:1.8;}';
+  doc+='.cover{background:#1b4436;padding:80px 72px;page-break-after:always;min-height:100vh;display:flex;flex-direction:column;}';
+  doc+='.cover-eye{font-family:Arial,sans-serif;font-size:9pt;letter-spacing:0.2em;text-transform:uppercase;color:rgba(204,207,142,0.8);margin-bottom:20px;}';
+  doc+='.cover-org{font-size:26pt;font-weight:400;color:#fff;margin-bottom:6px;}';
+  doc+='.cover-title{font-size:18pt;font-weight:300;color:rgba(245,237,228,0.75);margin-bottom:40px;}';
+  doc+='.cover-phil{font-size:13pt;font-weight:300;color:rgba(245,237,228,0.85);max-width:560px;line-height:1.7;margin:0 0 40px;}';
+  doc+='.cover-meta{border-top:1px solid rgba(255,255,255,0.15);padding-top:24px;display:flex;gap:48px;}';
+  doc+='.cmi{font-size:9pt;color:rgba(245,237,228,0.5);}';
+  doc+='.cmv{font-size:11pt;color:#fff;margin-top:3px;}';
+  doc+='.cover-spacer{flex:1;}';
+  doc+='.cover-footer{font-size:8pt;color:rgba(245,237,228,0.3);font-family:Arial,sans-serif;letter-spacing:0.08em;margin-top:40px;}';
+  doc+='.content{max-width:680px;margin:0 auto;padding:56px 40px 72px;}';
+  doc+='h2{font-size:14pt;font-weight:600;color:#1b4436;border-bottom:2px solid #1b4436;padding-bottom:5px;margin:32px 0 12px;}';
+  doc+='p{margin:0 0 12px;}';
+  doc+='.means-box{background:#f5f0ea;border-left:3px solid #D99E32;padding:12px 16px;border-radius:3px;margin:12px 0 20px;font-size:9.5pt;}';
+  doc+='.means-label{font-size:8pt;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#8a6010;margin-bottom:4px;}';
+  doc+='.legal-note{background:rgba(27,68,54,0.04);border-left:3px solid #cccf8e;padding:10px 14px;font-size:9pt;color:#444;margin:10px 0;}';
+  doc+='.mgr-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0ebe4;font-size:9.5pt;}';
+  doc+='.mgr-row:last-child{border-bottom:none;}';
+  doc+='.mgr-box{border:1px solid #e0d8cf;padding:16px 20px;border-radius:4px;margin:12px 0;}';
+  doc+='.pb{page-break-before:always;}';
+  doc+='@page{size:letter;margin:0.75in;}';
+  doc+='@media print{.cover{min-height:100vh;}.pb{page-break-before:always;}}';
+  doc+='</style></head><body>';
+
+  doc+='<div class="cover">';
+  doc+='<div class="cover-eye">Employee Leave Policy</div>';
+  doc+='<div class="cover-org">'+org+'</div>';
+  doc+='<div class="cover-title">Leave &amp; Time Away Policy</div>';
+  if(philosophyText) doc+='<p class="cover-phil">'+philosophyText+'</p>';
+  doc+='<div class="cover-meta">';
+  doc+='<div class="cmi">Effective Date<div class="cmv">'+today+'</div></div>';
+  doc+='<div class="cmi">Jurisdiction<div class="cmv">'+(profile.state||'Texas')+'</div></div>';
+  doc+='<div class="cmi">Prepared By<div class="cmv">Human Resources</div></div>';
+  doc+='</div><div class="cover-spacer"></div>';
+  doc+='<div class="cover-footer">Prepared with Plinth by The Coherence Collective, LLC &nbsp;|&nbsp; Confidential &nbsp;|&nbsp; '+today+'</div>';
+  doc+='</div>';
+
+  doc+='<div class="content">';
+  doc+='<h2>About This Policy</h2>';
+  doc+='<p>This policy governs all leave and time-away benefits provided by '+org+'. It applies to all regular full-time and part-time employees unless otherwise stated. Nothing in this policy creates a contract of employment or guarantees leave beyond what is expressly stated. Where applicable law provides greater rights than this policy, the law controls.</p>';
+  if(philosophyText) doc+='<div class="legal-note">'+philosophyText+'</div>';
+
+  if(ptoSection){
+    doc+='<h2 class="pb">Vacation &amp; Paid Time Off</h2><p>'+ptoSection+'</p>';
+    doc+='<div class="means-box"><div class="means-label">What This Means For You</div>';
+    if(struct==='unlimited') doc+='You do not have a capped balance to track. What you have is an expectation to rest and recover. Use your time intentionally and communicate with your supervisor. We mean it when we say take time off.';
+    else doc+='Your vacation time is yours. It is built into how we compensate you. Taking time off is not a sign of low commitment. It is how you show up fully for the long term.';
+    doc+='</div>';
+  }
+
+  if(sickSection){
+    doc+='<h2>Sick Leave</h2><p>'+sickSection+'</p>';
+    doc+='<div class="means-box"><div class="means-label">What This Means For You</div>When you are sick, stay home. When someone you care for needs you, be present. Do not come to work ill to protect your PTO balance. Sick leave exists so that health decisions are never made out of financial pressure.</div>';
+    doc+='<div class="legal-note">Texas does not require paid sick leave. '+org+' provides this benefit voluntarily and is committed to applying it consistently.</div>';
+  }
+
+  if(bereavSection){
+    doc+='<h2>Bereavement Leave</h2><p>'+bereavSection+'</p>';
+    doc+='<div class="means-box"><div class="means-label">What This Means For You</div>When you lose someone you love, you will have time to grieve without worrying about your job or your paycheck. Grief is not predictable and it does not follow a bureaucratic timeline. We will not ask you to compress it into one.</div>';
+    if(checks.bdef_pregnancyloss) doc+='<div class="legal-note">Bereavement leave for pregnancy loss is available regardless of gestational age. Employees are encouraged to contact HR to discuss available support.</div>';
+  }
+
+  if(parentalSection){
+    doc+='<h2>Parental Leave</h2><p>'+parentalSection+'</p>';
+    if(p.polParentalOffered==='yes') doc+='<div class="means-box"><div class="means-label">What This Means For You</div>You will have time to be present for the beginning of their child&#39;s life without losing income. We offer this because we believe the people who work here deserve to be parents fully.</div>';
+    doc+='<div class="legal-note">Parental leave under this policy runs concurrently with any FMLA entitlement for which the employee qualifies. Employees must provide reasonable advance notice when circumstances permit.</div>';
+  }
+
+  if(personalSection){
+    doc+='<h2>Personal Days</h2><p>'+personalSection+'</p>';
+    doc+='<div class="means-box"><div class="means-label">What This Means For You</div>Personal days are for the parts of life that do not fit into a category. A school meeting. A religious observance. A day when you need to be a person first. Use them without explanation.</div>';
+  }
+
+  if(unpaidSection){
+    doc+='<h2>Unpaid Leave of Absence</h2><p>'+unpaidSection+'</p>';
+    doc+='<div class="legal-note">Requests must be submitted in writing and approved by HR and senior leadership. Approval is subject to operational needs.</div>';
+  }
+
+  if(holidaySection){
+    doc+='<h2>Holidays</h2><p>'+holidaySection+'</p>';
+    doc+='<div class="means-box"><div class="means-label">What This Means For You</div>Holidays are scheduled rest. The floating holiday is yours to use for any observance, cultural day, or personal need that matters to you. No explanation is required.</div>';
+  }
+
+  if(otherSection){
+    doc+='<h2>Other Leave</h2><p>'+otherSection+'</p>';
+  }
+
+  doc+='<h2>Legally Required Leave</h2>';
+  doc+='<p>Employees are also entitled to leave required by law, including FMLA, ADA accommodation leave, military leave under USERRA, jury duty, and voting time. These rights exist independent of this policy and cannot be waived or conditioned on PTO use. Contact HR for information about any legally required leave.</p>';
+
+  doc+='<h2>How to Request Leave</h2>';
+  doc+='<p><strong>Vacation and personal days:</strong> Submit a request to your supervisor in advance. For absences of one week or more, provide at least two weeks notice when possible.</p>';
+  doc+='<p><strong>Sick leave:</strong> Notify your supervisor as early as possible on the first day of absence. Extended illness of three or more consecutive days should be reported to HR promptly.</p>';
+  doc+='<p><strong>Bereavement:</strong> Notify your supervisor as soon as possible. HR will coordinate logistics so you do not have to manage paperwork while you are grieving.</p>';
+  doc+='<p><strong>Parental, medical, or extended leave:</strong> Contact HR to initiate the formal process. Provide at least 30 days notice when the leave is foreseeable.</p>';
+
+  doc+='<h2 class="pb">Manager Quick Reference</h2>';
+  doc+='<p style="font-size:9.5pt;color:#555;margin-bottom:14px">A summary of all leave benefits. For complete policy terms, see the sections above.</p>';
+  doc+='<div class="mgr-box">';
+  var refRows=[];
+  if(ptoSection) refRows.push(['Vacation / PTO',(p.polPtoDays||'See policy')+(struct==='unlimited'?' (unlimited; minimum required)':'')]);
+  if(sickSection&&p.polSickStructure==='separate') refRows.push(['Sick Leave',p.polSickDays||'See policy']);
+  if(bereavSection) refRows.push(['Bereavement — Immediate Family',(p.polBereavImmediate||'—')+' days paid']);
+  if(p.polBereavExtended&&p.polBereavExtended!=='none') refRows.push(['Bereavement — Extended Family',p.polBereavExtended+' days']);
+  if(p.polParentalOffered==='yes'){
+    if(p.polParentalPrimary) refRows.push(['Parental — Primary Caregiver',p.polParentalPrimary+' weeks paid']);
+    if(p.polParentalSecondary) refRows.push(['Parental — Secondary Caregiver',p.polParentalSecondary+' weeks paid']);
+  }
+  if(personalSection&&p.polPersonalDays!=='0') refRows.push(['Personal Days',p.polPersonalDays+' days / year']);
+  if(p.polHolidays) refRows.push(['Paid Holidays',p.polHolidays]);
+  if(p.polFloating&&p.polFloating!=='0') refRows.push(['Floating Holidays',p.polFloating+' day(s) / year']);
+  if(p.polVolunteer&&p.polVolunteer!=='0') refRows.push(['Volunteer Days',p.polVolunteer+' day(s) / year']);
+  refRows.forEach(function(r){doc+='<div class="mgr-row"><span>'+r[0]+'</span><span style="font-weight:400;color:#1b4436">'+r[1]+'</span></div>';});
+  doc+='</div>';
+
+  if(p.polAdditional) doc+='<h2>Additional Notes</h2><p>'+p.polAdditional+'</p>';
+
+  doc+='<p style="font-size:8pt;color:#aaa;margin-top:48px;padding-top:12px;border-top:1px solid #e0d8cf;text-align:center">'+org+' &nbsp;|&nbsp; Leave Policy &nbsp;|&nbsp; '+today+' &nbsp;|&nbsp; Prepared with Plinth by The Coherence Collective, LLC</p>';
+  doc+='</div></body></html>';
+
+  var _pbTitle='Leave Policy — '+org;
+  var _pbFile='leave-policy.html';
+  var _pbType='Leave Policy';
+  var _pbC='<style>\n    .pb{position:fixed;top:0;left:0;right:0;z-index:9999;background:#1b4436;padding:10px 28px;display:flex;gap:10px;align-items:center;box-shadow:0 2px 12px rgba(0,0,0,0.3);}\n    .pb-title{font-family:Georgia,serif;font-size:11pt;color:rgba(245,237,228,0.75);flex:1;font-weight:400;}\n    .pb-btn{font-family:Arial,sans-serif;font-size:8.5pt;padding:7px 16px;border:none;border-radius:3px;cursor:pointer;letter-spacing:0.04em;font-weight:500;}\n    .pb-gold{background:#D99E32;color:#122e24;}\n    .pb-ghost{background:rgba(255,255,255,0.09);color:rgba(245,237,228,0.82);border:1px solid rgba(255,255,255,0.14);}\n    .pb-spacer{height:52px;}\n    @media print{.pb,.pb-spacer{display:none!important;}}</style>';
+
+  var _pbH='<div class="pb"><span class="pb-title">'+_pbTitle+'</span>'
+    +'<button class="pb-btn pb-gold" onclick="window.print()">&#8681; Print / Save as PDF</button>'
+    +'<button class="pb-btn pb-ghost" onclick="plDl()">&#8659; Download</button>'
+    +'<button class="pb-btn pb-ghost" onclick="plSave()">&#9729; Save to Plinth</button>'
+    +'<button class="pb-btn pb-ghost" onclick="window.close()" style="margin-left:4px">&#10005;</button>'
+    +'</div><div class="pb-spacer"></div>';
+  var _pbJS='<scr'+'ipt>'
+    +'function plDl(){var blob=new Blob([document.documentElement.outerHTML],{type:"text/html"});var url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download=_pbFile;a.click();setTimeout(function(){URL.revokeObjectURL(url);},1200);}'
+    +'function plSave(){var d=[];try{d=JSON.parse(localStorage.getItem("plinth_docs")||"[]");}catch(e){}d.push({id:"doc_"+Date.now(),title:_pbTitle,type:_pbType,date:new Date().toISOString()});localStorage.setItem("plinth_docs",JSON.stringify(d));var b=document.querySelectorAll(".pb-ghost");if(b[1]){b[1].textContent="\u2713 Saved to Plinth";b[1].style.background="rgba(27,68,54,0.5)";}}'
+    +'</s'+'cript>';
+  doc=doc.replace('</style>\n  </head>',_pbC+'</style>\n  </head>');
+  doc=doc.replace('<body>','<body>'+_pbH);
+  doc+=_pbJS;
+  var win=window.open('','_blank');
+  win.document.write(doc);
+  win.document.close();
+}
+
+// ── FMLA TRACKER ─────────────────────────────────────────────────────────────
+var editingTrackerId=null;
+function openTrackerModal(id){
+  editingTrackerId=id||null;
+  var entry=id?leaveData.fmlaTracker.find(function(e){return e.id===id;}):null;
+  ['trEmp','trUsed','trTotal','trNotes'].forEach(function(f){var el=document.getElementById(f);if(el)el.value=entry?entry[f]:'';});
+  ['trStart','trEnd'].forEach(function(f){var el=document.getElementById(f);if(el)el.value=entry?entry[f]:'';});
+  ['trReason','trIntermit','trCert'].forEach(function(f){var el=document.getElementById(f);if(el)el.value=entry?entry[f]:'';});
+  document.getElementById('trackerModal').style.display='flex';
+}
+function closeTrackerModal(){document.getElementById('trackerModal').style.display='none';}
+function saveTrackerEntry(){
+  var emp=document.getElementById('trEmp').value.trim();
+  if(!emp){document.getElementById('trEmp').focus();return;}
+  var entry={id:editingTrackerId||'tr_'+Date.now(),trEmp:emp,trReason:document.getElementById('trReason').value,trStart:document.getElementById('trStart').value,trEnd:document.getElementById('trEnd').value,trUsed:document.getElementById('trUsed').value,trTotal:document.getElementById('trTotal').value,trIntermit:document.getElementById('trIntermit').value,trCert:document.getElementById('trCert').value,trNotes:document.getElementById('trNotes').value,updatedAt:new Date().toISOString()};
+  if(editingTrackerId){var i=leaveData.fmlaTracker.findIndex(function(e){return e.id===editingTrackerId;});if(i!==-1)leaveData.fmlaTracker[i]=entry;else leaveData.fmlaTracker.push(entry);}else{leaveData.fmlaTracker.push(entry);}
+  closeTrackerModal();localStorage.setItem('plinth_leave',JSON.stringify(leaveData));renderTracker();
+}
+function deleteTrackerEntry(id){
+  if(!confirm('Delete this FMLA tracker entry?'))return;
+  leaveData.fmlaTracker=leaveData.fmlaTracker.filter(function(e){return e.id!==id;});
+  localStorage.setItem('plinth_leave',JSON.stringify(leaveData));renderTracker();
+}
+function renderTracker(){
+  var c=document.getElementById('trackerContent');if(!c)return;
+  var entries=leaveData.fmlaTracker;
+  if(!entries.length){c.innerHTML='<div style="padding:24px;text-align:center;color:var(--text-light);font-size:12px;background:rgba(27,68,54,0.02);border-radius:var(--radius-md);border:1px dashed var(--border)">No employees tracked yet. Add an employee using the button above.</div>';return;}
+  var html='<table class="ref-table"><thead><tr><th>Employee</th><th>Reason</th><th>Period</th><th>Used</th><th>Total (12mo)</th><th>Cert</th><th style="width:80px"></th></tr></thead><tbody>';
+  for(var i=0;i<entries.length;i++){
+    var e=entries[i];
+    var startD=e.trStart?new Date(e.trStart+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}):'--';
+    var endD=e.trEnd?new Date(e.trEnd+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}):'--';
+    var certColor=e.trCert==='yes'?'var(--green)':e.trCert==='pending'?'#8a6010':'var(--text-light)';
+    var certLabel=e.trCert==='yes'?'On file':e.trCert==='pending'?'Pending':e.trCert||'--';
+    html+='<tr>';
+    html+='<td style="font-weight:400">'+e.trEmp+'</td>';
+    html+='<td>'+(e.trReason||'--')+'</td>';
+    html+='<td style="white-space:nowrap">'+startD+' to '+endD+'</td>';
+    html+='<td>'+(e.trUsed||'--')+'</td>';
+    html+='<td>'+(e.trTotal||'--')+'</td>';
+    html+='<td style="color:'+certColor+'">'+certLabel+'</td>';
+    html+='<td><div style="display:flex;gap:8px">';
+    html+='<button onclick="openTrackerModal('+i+')" style="font-size:10px;color:var(--green);background:none;border:none;cursor:pointer;font-family:Jost,sans-serif">Edit</button>';
+    html+='<button onclick="deleteTrackerEntry('+i+')" style="font-size:10px;color:var(--text-light);background:none;border:none;cursor:pointer">Del</button>';
+    html+='</div></td>';
+    html+='</tr>';
+  }
+  html+='</tbody></table>';
+  c.innerHTML=html;
+}
+
+// ── LEAVE LOG ─────────────────────────────────────────────────────────────────
+var editingLeaveId=null;
+function openLeaveModal(id){
+  editingLeaveId=id||null;
+  var entry=id?leaveData.leaveLog.find(function(e){return e.id===id;}):null;
+  ['lvEmp','lvApproved','lvNotes'].forEach(function(f){var el=document.getElementById(f);if(el)el.value=entry?entry[f]:'';});
+  ['lvStart','lvReturn','lvRequestDate'].forEach(function(f){var el=document.getElementById(f);if(el)el.value=entry?entry[f]:'';});
+  ['lvType','lvStatus','lvFMLAElig','lvCert'].forEach(function(f){var el=document.getElementById(f);if(el)el.value=entry?(entry[f]||''):(f==='lvStatus'?'Pending':f==='lvFMLAElig'?'Not Evaluated':'');});
+  if(!id){var el=document.getElementById('lvRequestDate');if(el)el.value=new Date().toISOString().split('T')[0];}
+  document.getElementById('leaveModalTitle').textContent=id?'Edit Leave Request':'New Leave Request';
+  document.getElementById('leaveModal').style.display='flex';
+}
+function closeLeaveModal(){document.getElementById('leaveModal').style.display='none';}
+function saveLeaveEntry(){
+  var emp=document.getElementById('lvEmp').value.trim();
+  if(!emp){document.getElementById('lvEmp').focus();return;}
+  var entry={id:editingLeaveId||'lv_'+Date.now(),lvEmp:emp,lvType:document.getElementById('lvType').value,lvStatus:document.getElementById('lvStatus').value,lvStart:document.getElementById('lvStart').value,lvReturn:document.getElementById('lvReturn').value,lvRequestDate:document.getElementById('lvRequestDate').value,lvFMLAElig:document.getElementById('lvFMLAElig').value,lvApproved:document.getElementById('lvApproved').value,lvCert:document.getElementById('lvCert').value,lvNotes:document.getElementById('lvNotes').value,updatedAt:new Date().toISOString()};
+  if(editingLeaveId){var i=leaveData.leaveLog.findIndex(function(e){return e.id===editingLeaveId;});if(i!==-1)leaveData.leaveLog[i]=entry;else leaveData.leaveLog.push(entry);}else{leaveData.leaveLog.push(entry);}
+  closeLeaveModal();localStorage.setItem('plinth_leave',JSON.stringify(leaveData));renderLeaveLog();
+}
+function deleteLeaveEntry(id){
+  if(!confirm('Delete this leave record?'))return;
+  leaveData.leaveLog=leaveData.leaveLog.filter(function(e){return e.id!==id;});
+  localStorage.setItem('plinth_leave',JSON.stringify(leaveData));renderLeaveLog();
+}
+function renderLeaveLog(){
+  var c=document.getElementById('leaveLogContent');if(!c)return;
+  var entries=leaveData.leaveLog;
+  if(!entries.length){c.innerHTML='<div style="padding:24px;text-align:center;color:var(--text-light);font-size:12px;background:rgba(27,68,54,0.02);border-radius:var(--radius-md);border:1px dashed var(--border)">No leave requests logged yet. Use the button above to add the first entry.</div>';return;}
+  var sColor={Approved:'var(--green)',Denied:'var(--crimson)',Pending:'#8a6010','In Progress':'var(--mauve)',Returned:'var(--text-light)'};
+  var sBg={Approved:'rgba(27,68,54,0.07)',Denied:'rgba(164,47,48,0.07)',Pending:'rgba(217,158,50,0.1)','In Progress':'rgba(145,97,121,0.08)',Returned:'rgba(0,0,0,0.04)'};
+  var html='<table class="ref-table"><thead><tr><th>Employee</th><th>Type</th><th>Status</th><th>Start</th><th>Return</th><th>FMLA?</th><th>Approved By</th><th style="width:80px"></th></tr></thead><tbody>';
+  for(var i=0;i<entries.length;i++){
+    var e=entries[i];
+    var st=e.lvStatus||'';
+    var sc=sColor[st]||'var(--text-light)';
+    var sb=sBg[st]||'rgba(0,0,0,0.04)';
+    var startD=e.lvStart?new Date(e.lvStart+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'--';
+    var returnD=e.lvReturn?new Date(e.lvReturn+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'--';
+    var fmlaColor=(e.lvFMLAElig&&e.lvFMLAElig.startsWith('Yes'))?'var(--green)':(e.lvFMLAElig&&e.lvFMLAElig.startsWith('No'))?'var(--crimson)':'var(--text-light)';
+    html+='<tr>';
+    html+='<td style="font-weight:400">'+e.lvEmp+'</td>';
+    html+='<td>'+(e.lvType||'--')+'</td>';
+    html+='<td><span style="font-size:10px;padding:2px 8px;border-radius:10px;background:'+sb+';color:'+sc+'">'+st+'</span></td>';
+    html+='<td style="white-space:nowrap">'+startD+'</td>';
+    html+='<td style="white-space:nowrap">'+returnD+'</td>';
+    html+='<td style="font-size:11px;color:'+fmlaColor+'">'+(e.lvFMLAElig||'--')+'</td>';
+    html+='<td>'+(e.lvApproved||'--')+'</td>';
+    html+='<td><div style="display:flex;gap:8px">';
+    html+='<button onclick="openLeaveModal('+i+')" style="font-size:10px;color:var(--green);background:none;border:none;cursor:pointer;font-family:Jost,sans-serif">Edit</button>';
+    html+='<button onclick="deleteLeaveEntry('+i+')" style="font-size:10px;color:var(--text-light);background:none;border:none;cursor:pointer">Del</button>';
+    html+='</div></td>';
+    html+='</tr>';
+  }
+  html+='</tbody></table>';
+  c.innerHTML=html;
+}
+document.addEventListener('DOMContentLoaded',function(){restoreData();animateCards();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeLeaveModal();closeTrackerModal();}});
+</script>
+</body>
+</html>

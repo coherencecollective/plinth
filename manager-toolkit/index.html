@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Plinth · Manager Toolkit</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--green:#1b4436;--green-light:#235a47;--green-deep:#122e24;--mauve:#916179;--sand:#D2BB9F;--gold:#D99E32;--pale:#cccf8e;--crimson:#A42F30;--beige:#F5EDE4;--white:#fff;--off-white:#faf8f5;--text-dark:#1a1a1a;--text-mid:#444;--text-light:#777;--border:#e0d8cf;--shadow:0 2px 16px rgba(27,68,54,0.08);--radius:4px;--radius-md:8px;--radius-lg:12px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Jost',sans-serif;font-weight:300;font-size:14px;color:var(--text-dark);background:var(--off-white);min-height:100vh;}
+nav{position:sticky;top:0;z-index:100;background:var(--green);padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,0.2);}
+.nav-left{display:flex;align-items:center;gap:14px;}
+.back-btn{display:inline-flex;align-items:center;gap:5px;font-family:'Jost',sans-serif;font-size:11px;font-weight:300;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.5);padding:5px 10px;border:1px solid rgba(245,237,228,0.15);border-radius:var(--radius);background:none;cursor:pointer;}
+.nav-sep{width:1px;height:18px;background:rgba(255,255,255,0.15);}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:17px;color:var(--beige);}
+.nav-brand span{color:var(--gold);}
+.nav-sub{font-size:12px;font-weight:300;color:rgba(245,237,228,0.45);}
+.nav-right{display:flex;gap:7px;}
+.nbtn{font-family:'Jost',sans-serif;font-weight:300;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:5px 13px;border-radius:var(--radius);cursor:pointer;border:none;}
+.nbtn-ghost{background:transparent;color:var(--sand);border:1px solid rgba(210,187,159,0.3);}
+.tabs{background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;display:flex;scrollbar-width:none;}
+.tab{font-size:11px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:13px 18px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.2s;}
+.tab.active{color:var(--green);border-bottom-color:var(--green);}
+.hero{background:linear-gradient(150deg,var(--green-deep) 0%,var(--green) 55%,var(--green-light) 100%);padding:44px 28px 38px;}
+.hero-inner{max-width:1060px;margin:0 auto;}
+.hero-eye{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--pale);margin-bottom:10px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:36px;color:var(--white);line-height:1.05;margin-bottom:8px;}
+.hero-title em{font-style:italic;color:var(--sand);}
+.hero-desc{font-size:12.5px;color:rgba(245,237,228,0.65);max-width:600px;line-height:1.75;}
+.main{max-width:1060px;margin:0 auto;padding:32px 28px 80px;}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;opacity:0;transform:translateY(10px);transition:opacity 0.35s,transform 0.35s;}
+.card.vis{opacity:1;transform:translateY(0);}
+.card-hdr{padding:16px 22px 13px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.05));display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:16px;color:var(--green);}
+.card-desc{font-size:11px;color:var(--text-light);margin-top:2px;}
+.card-body{padding:20px 22px;}
+.guide-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+.guide-card{border:1px solid var(--border);border-radius:var(--radius-md);padding:16px 18px;cursor:pointer;transition:all 0.2s;}
+.guide-card:hover{border-color:var(--sand);transform:translateY(-1px);box-shadow:var(--shadow);}
+.guide-title{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--green);margin-bottom:4px;}
+.guide-desc{font-size:11.5px;color:var(--text-mid);line-height:1.6;}
+.guide-detail{margin-top:14px;padding:16px;background:rgba(27,68,54,0.03);border-radius:var(--radius-md);display:none;font-size:12.5px;color:var(--text-mid);line-height:1.8;}
+.guide-detail.open{display:block;}
+.script-block{background:rgba(27,68,54,0.04);border-left:3px solid var(--pale);padding:14px 16px;border-radius:0 var(--radius) var(--radius) 0;font-size:12.5px;color:var(--text-mid);line-height:1.8;margin:10px 0;}
+footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:center;justify-content:space-between;}
+.fb{font-family:'Cormorant Garamond',serif;font-size:13px;color:rgba(245,237,228,0.4);}
+.fb span{color:var(--sand);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.fu{animation:fadeUp 0.4s ease both;}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-left">
+    <button class="back-btn" onclick="window.location.href='/'">&#8592; All Tools</button>
+    <div class="nav-sep"></div>
+    <div class="nav-brand">Pl<span>in</span>th</div>
+    <div class="nav-sub">&nbsp;·&nbsp; Manager Toolkit</div>
+  </div>
+  <div class="nav-right">
+    <span style="font-size:11px;color:rgba(210,187,159,0.45);letter-spacing:0.06em">Saves automatically</span>
+  </div>
+</nav>
+<div class="tabs">
+  <div class="tab active" onclick="showTab('guides')" id="tab-guides">Reference Guides</div>
+  <div class="tab" onclick="showTab('scripts')" id="tab-scripts">Conversation Scripts</div>
+  <div class="tab" onclick="showTab('decisions')" id="tab-decisions">Decision Framework</div>
+  <div class="tab" onclick="showTab('checklist')" id="tab-checklist">Manager Checklist</div>
+</div>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eye">Plinth · Tool 14</div>
+    <div class="hero-title">Manager <em>Toolkit</em></div>
+    <div class="hero-desc">Reference guides, conversation scripts, and decision frameworks for the people-management situations managers encounter most — built for mission-driven organizations where managers are often subject-matter experts first and people managers second.</div>
+  </div>
+</div>
+
+<div id="view-guides" class="main">
+  <div style="display:flex;justify-content:flex-end;margin-bottom:14px">
+    <button onclick="window.print()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase">&#8681; Print / PDF</button>
+  </div>
+  <div class="guide-grid fu">
+    <div class="guide-card" onclick="toggleGuide('feedback')">
+      <div class="guide-title">Giving Effective Feedback</div>
+      <div class="guide-desc">How to structure feedback that is specific, timely, and actionable — not vague, personal, or retroactive.</div>
+      <div class="guide-detail" id="guide-feedback">
+        <strong>The SBI Framework: Situation · Behavior · Impact</strong><br><br>
+        <strong>Situation:</strong> Identify the specific situation — time, place, context. "In yesterday's team meeting..." not "you always..."<br><br>
+        <strong>Behavior:</strong> Describe the observable behavior — what you actually saw or heard. Not the interpretation, not the intention, not the character. "You interrupted Sarah three times while she was presenting."<br><br>
+        <strong>Impact:</strong> Describe the impact on the work, the team, or you. "It made it difficult for her to complete her thought and I noticed others pulled back from contributing."<br><br>
+        <strong>What comes next:</strong> For developmental feedback, ask what the manager can do to support. For corrective feedback, state the expected behavior going forward.<br><br>
+        <strong>What to avoid:</strong> "You always..." / "You never..." / "People think you..." / "I feel like you don't care about..." — these are interpretations, not behaviors. Feedback on character is not feedback — it is judgment.
+      </div>
+    </div>
+    <div class="guide-card" onclick="toggleGuide('1on1')">
+      <div class="guide-title">Running Effective 1:1s</div>
+      <div class="guide-desc">The 1:1 is the primary vehicle for management. It belongs to the employee, not the manager.</div>
+      <div class="guide-detail" id="guide-1on1">
+        <strong>What the 1:1 is not:</strong> A status update meeting. If your 1:1s are mostly you asking "where are you on X?" you are running a check-in, not a management conversation.<br><br>
+        <strong>A productive 1:1 structure (45 minutes):</strong><br>
+        — First 5 minutes: What's on their mind? Personal check-in. What's urgent for them today?<br>
+        — 20 minutes: Their agenda. What do they need to think through, decide, get input on, or get unblocked on?<br>
+        — 15 minutes: Manager agenda. Feedback, context, information, upcoming priorities.<br>
+        — 5 minutes: What are the commitments coming out of this conversation?<br><br>
+        <strong>Frequency:</strong> Weekly for most direct reports. Bi-weekly at minimum. Skipping 1:1s is a management choice with consequences — it signals that the employee's development is not a priority.
+      </div>
+    </div>
+    <div class="guide-card" onclick="toggleGuide('delegation')">
+      <div class="guide-title">Delegation</div>
+      <div class="guide-desc">Why managers don't delegate, what it costs, and how to do it in a way that develops people rather than just offloading work.</div>
+      <div class="guide-detail" id="guide-delegation">
+        <strong>Why managers resist delegation:</strong> "It's faster to do it myself." / "They'll do it wrong." / "I'm the only one who knows how." All three of these are management problems disguised as task problems.<br><br>
+        <strong>The delegation conversation:</strong><br>
+        1. Explain what the work is and why it matters<br>
+        2. Clarify what a good outcome looks like (not how to get there)<br>
+        3. Identify the constraints: deadline, resources, stakeholders<br>
+        4. Confirm what decision-making authority the person has<br>
+        5. Establish check-in points — not to micromanage, but to catch problems early<br><br>
+        <strong>The rule:</strong> Delegate the outcome, not the method. If you tell someone exactly how to do something, you haven't delegated — you've assigned. Development comes from owning the problem, not following instructions.
+      </div>
+    </div>
+    <div class="guide-card" onclick="toggleGuide('conflict')">
+      <div class="guide-title">Navigating Team Conflict</div>
+      <div class="guide-desc">When two team members are in conflict, the manager's role is to facilitate resolution — not absorb it, take sides, or ignore it.</div>
+      <div class="guide-detail" id="guide-conflict">
+        <strong>Step 1: Meet with each person separately first.</strong> Understand each person's perspective without the other present. Do not share what one person said with the other at this stage.<br><br>
+        <strong>Step 2: Distinguish the type of conflict.</strong><br>
+        — Task conflict (disagreement about work): Usually productive if managed well. Bring both people together and focus on the work question.<br>
+        — Relationship conflict (interpersonal tension): Higher stakes. May need facilitation or HR support.<br>
+        — Process conflict (disagreement about how work gets done): Usually easiest to resolve — often just needs clarity on roles or process.<br><br>
+        <strong>Step 3: Facilitated conversation.</strong> If appropriate, bring both parties together with a clear structure: each person states their perspective without interruption, then together identify one specific change that would make the working relationship more effective.<br><br>
+        <strong>When to escalate to HR:</strong> When the conflict involves protected class characteristics, when there is a power imbalance (especially manager-to-direct report), when you have a conflict of interest, or when the conversation has already happened and not resolved.
+      </div>
+    </div>
+    <div class="guide-card" onclick="toggleGuide('lowperf')">
+      <div class="guide-title">Managing Low Performance</div>
+      <div class="guide-desc">The sequence matters. How you address performance before it becomes a formal action determines whether the formal action holds up.</div>
+      <div class="guide-detail" id="guide-lowperf">
+        <strong>The performance conversation sequence:</strong><br>
+        1. Coaching conversation — informal, verbal, no documentation required<br>
+        2. Documented verbal warning — specific, formal, written record<br>
+        3. Written warning — formal document, signed and filed<br>
+        4. PIP — structured improvement plan with consequences stated<br>
+        5. Separation<br><br>
+        <strong>You may skip steps in serious cases.</strong> A single incident of serious misconduct (theft, harassment, safety violation) may warrant immediate termination without progressive discipline. Document why the conduct warranted skipping the progression.<br><br>
+        <strong>The most common mistake:</strong> Having many informal "conversations" with no documentation, then issuing a termination that looks sudden. From the organization's perspective, it was a long process. From any outside reviewer's perspective, there is no record that it happened.
+      </div>
+    </div>
+    <div class="guide-card" onclick="toggleGuide('change')">
+      <div class="guide-title">Communicating Change</div>
+      <div class="guide-desc">How to communicate organizational changes in a way that maintains trust — even when the news is unwelcome.</div>
+      <div class="guide-detail" id="guide-change">
+        <strong>What people need when change happens:</strong><br>
+        — What is changing<br>
+        — Why it is changing<br>
+        — What it means for them specifically<br>
+        — What is not changing<br>
+        — What happens next and when<br><br>
+        <strong>The trust variable:</strong> People will tolerate unwelcome news if they believe it was communicated honestly and they were respected in the process. They will not tolerate the same news if they feel blindsided, misled, or excluded from the conversation until the decision was already made.<br><br>
+        <strong>What managers should never say:</strong> "I can't tell you why." / "This came from above." / "I don't know anything more than you do." These responses — even when technically true — position the manager as uninformed or powerless, which destroys credibility. If you can't share the reason, say: "There are aspects of the decision I'm not in a position to share right now, but I'll tell you what I can and I'll tell you when I know more."
+      </div>
+    </div>
+    <div class="guide-card" onclick="toggleGuide('recognition')">
+      <div class="guide-title">Recognition &amp; Affirmation</div>
+      <div class="guide-desc">Recognition is not a soft skill. It is a retention tool, a performance driver, and the most underused lever available to mission-driven managers.</div>
+      <div class="guide-detail" id="guide-recognition">
+        <strong>Why managers underpractice recognition:</strong> "They know I appreciate them." / "Doing good work is their job." / "I don't want to single people out." All three are reasons managers give. None of them are reasons employees accept.<br><br>
+        <strong>Effective recognition is:</strong><br>
+        — Specific, not generic. "You handled that board presentation with a level of confidence and precision that I haven't seen before" lands differently than "good job today."<br>
+        — Timely. Recognition given three weeks after the fact reads as an afterthought.<br>
+        — Appropriate to the person. Some people value public acknowledgment. Others find it uncomfortable. Know your team.<br><br>
+        <strong>The 5:1 ratio:</strong> Research by Gottman and applied to workplaces consistently shows that high-performing teams have at least 5 positive interactions for every 1 corrective interaction. Most managers flip this ratio — they have corrective conversations readily and affirm only when performance is exceptional. The result is a team that only hears from the manager when something is wrong.<br><br>
+        <strong>Recognition that costs nothing:</strong> A specific, written thank-you. Naming someone in a team meeting for something they did well. Asking a high-performer to take the lead on a visible project. Telling their work story to leadership. These land harder than most managers expect.
+      </div>
+    </div>
+    <div class="guide-card" onclick="toggleGuide('remote')">
+      <div class="guide-title">Managing Remote &amp; Hybrid Teams</div>
+      <div class="guide-desc">Remote management is not regular management done on a screen. It requires deliberate structure that in-person environments provide automatically.</div>
+      <div class="guide-detail" id="guide-remote">
+        <strong>What remote management must replace:</strong> In-person teams have ambient information — you can see who is stuck, who is energized, who hasn't spoken in a meeting. Remote teams have none of this. Managers must create structures that generate the same information deliberately.<br><br>
+        <strong>Essential structures for remote teams:</strong><br>
+        — Weekly written check-in (asynchronous): What did you accomplish? What are you working on? What is blocking you? This replaces hallway visibility.<br>
+        — Video-on norm for 1:1s and small group meetings. Faces matter.<br>
+        — Explicit communication norms: What gets an email vs. a message vs. a meeting? Response time expectations? Time zone awareness?<br>
+        — Deliberate informal connection. Remote teams do not build culture by accident. Someone has to create the conditions.<br><br>
+        <strong>Performance management is harder remote:</strong> You cannot observe someone struggling. You will hear about performance issues later than you would in person. This means check-in questions need to be more direct: "What's getting in the way right now?" not "Everything okay?"<br><br>
+        <strong>Equity in hybrid environments:</strong> Proximity bias is real — remote employees are promoted less frequently, included in fewer informal decisions, and have less visibility with leadership. If some employees are in the office and some are not, managers must actively counteract this by creating equal access to information, feedback, and opportunity.
+      </div>
+    </div>
+    <div class="guide-card" onclick="toggleGuide('crossdiff')">
+      <div class="guide-title">Managing Across Differences</div>
+      <div class="guide-desc">Managing diverse teams well requires both awareness and skill. Awareness without skill produces performative inclusion. Skill without awareness produces blind spots.</div>
+      <div class="guide-detail" id="guide-crossdiff">
+        <strong>What "managing across differences" actually means:</strong> It means recognizing that your default assumptions about how people should communicate, ask for help, show commitment, or give feedback are culturally and contextually situated — and that your team members may not share those defaults.<br><br>
+        <strong>Common blind spots for managers:</strong><br>
+        — Assuming that employees who do not advocate for themselves do not have needs or preferences<br>
+        — Interpreting quietness in meetings as disengagement rather than a different relationship with authority<br>
+        — Conflating comfort with code-switching with actual inclusion<br>
+        — Giving critical feedback less directly to employees of color or women, then holding them to the same standards — without ever clearly communicating the problem<br><br>
+        <strong>The feedback equity problem:</strong> Studies consistently show that managers give less specific and less actionable developmental feedback to women and employees of color than to white male employees. They are more likely to receive vague praise ("great work") and less likely to receive the specific corrective feedback that enables growth. This is not benevolent — it is patronizing and it limits career development. Give everyone the feedback they need to get better.<br><br>
+        <strong>Practical questions to ask yourself:</strong> Would I give this same feedback the same way to every person on my team? Am I holding this person to a consistent standard? Have I checked my interpretation of this person's behavior against alternative explanations? Would this person say they feel equally valued and heard on this team?
+      </div>
+    </div>
+    <div class="guide-card" onclick="toggleGuide('newtodirect')">
+      <div class="guide-title">Onboarding a New Direct Report</div>
+      <div class="guide-desc">When you gain a new direct report — whether through a hire or a reorg — the first 90 days set the terms of the relationship. Most managers handle this passively.</div>
+      <div class="guide-detail" id="guide-newtodirect">
+        <strong>The first week:</strong> Have a dedicated "working with me" conversation — not onboarding logistics, but how you operate. Cover: how you prefer to communicate, how you give and receive feedback, what you care most about in how work gets done, and what you need from them to do your job well. Then ask the same questions in return.<br><br>
+        <strong>Questions that build trust fast:</strong><br>
+        — What do you do best? What do you find hardest?<br>
+        — What does a good manager do for you? What have past managers done that didn't work?<br>
+        — What should I know about how you work?<br>
+        — What are you most excited about in this role? What concerns you?<br><br>
+        <strong>The first 30 days:</strong> Your job is to listen, not to fix. Resist the urge to solve problems you observe. Instead, ask questions. Build context before forming opinions. The person on your team knows things you don't yet know.<br><br>
+        <strong>The 90-day conversation:</strong> By day 90, you should be able to answer: What does this person do exceptionally well? What development would make the biggest difference for them? What does this person need from me to do their best work? If you cannot answer all three, you have not invested enough in the relationship.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="view-scripts" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Difficult Conversation Scripts</div><div class="card-desc">Opening language for conversations most managers avoid. Adapt to the specific situation — these are frameworks, not scripts to read verbatim.</div></div>
+      <button onclick="window.print()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Print / PDF</button>
+    </div>
+    <div class="card-body">
+      <div style="margin-bottom:20px"><div style="font-size:12px;font-weight:400;color:var(--green);margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid var(--border)">Delivering Corrective Feedback</div>
+      <div class="script-block">"I need to talk with you about something specific. In [situation], I observed [behavior]. The impact was [impact]. I want to understand your perspective on what happened, and then I want us to be clear about what needs to be different going forward."</div></div>
+      <div style="margin-bottom:20px"><div style="font-size:12px;font-weight:400;color:var(--green);margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid var(--border)">Putting Someone on a Performance Improvement Plan</div>
+      <div class="script-block">"I need to have a serious conversation with you. The concerns I've raised with you about [issue] haven't been resolved, and I need to formalize the expectations and the support we're going to put in place. This is a performance improvement plan. I want to walk you through it carefully because I want you to succeed here, and I want there to be no ambiguity about what success looks like."</div></div>
+      <div style="margin-bottom:20px"><div style="font-size:12px;font-weight:400;color:var(--green);margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid var(--border)">Delivering a Termination</div>
+      <div class="script-block">"[Name], I need to let you know that we're ending your employment with [Organization], effective today. This decision has been carefully considered and it is final. Your last paycheck will be [timing]. I'm going to walk you through the next steps. Do you have questions about the logistics?"<br><br><em style="font-size:11px;color:var(--text-light)">Note: Do not explain or justify the decision at length. Do not argue. Do not apologize. State it clearly, explain next steps, and end the meeting.</em></div></div>
+      <div style="margin-bottom:20px"><div style="font-size:12px;font-weight:400;color:var(--green);margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid var(--border)">Responding to a Harassment or Discrimination Complaint</div>
+      <div class="script-block">"Thank you for telling me this. I want you to know that I take this seriously and it will be addressed. I'm going to contact HR today. In the meantime, please document what you've told me — dates, details, any witnesses — and I will make sure this is handled through the right process. Can you confirm you feel safe at work right now?"<br><br><em style="font-size:11px;color:var(--text-light)">Note: Do not investigate yourself. Do not promise confidentiality you cannot keep. Do not contact the accused before involving HR.</em></div></div>
+    </div>
+  </div>
+</div>
+
+<div id="view-decisions" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">People Management Decision Framework</div><div class="card-desc">A consistent set of questions to ask before making any significant people decision. Use this before acting — not after.</div></div>
+      <button onclick="window.print()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Print / PDF</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-c" style="margin-bottom:16px"><span class="al-ic">⚖</span><span>This framework applies to every significant people decision: discipline, termination, accommodation, PIP, demotion, or any action that could affect an employee's terms of employment. Work through every question. If any answer gives you pause, that is the signal to stop, involve HR, and resolve it before proceeding.</span></div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <div style="display:flex;gap:14px;padding:13px 14px;border-radius:var(--radius);background:rgba(27,68,54,0.04)">
+          <div style="width:26px;height:26px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:400;color:var(--white);flex-shrink:0;margin-top:1px">1</div>
+          <div><div style="font-size:13px;font-weight:400;color:var(--text-dark);margin-bottom:4px">Is this documented?</div><div style="font-size:12px;color:var(--text-mid);line-height:1.7">If the answer is no, stop. Document first. Then decide. This applies to performance concerns, accommodation requests, complaints, and disciplinary decisions. The decision is only as defensible as the paper trail behind it.</div></div>
+        </div>
+        <div style="display:flex;gap:14px;padding:13px 14px;border-radius:var(--radius)">
+          <div style="width:26px;height:26px;border-radius:50%;background:rgba(27,68,54,0.12);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:400;color:var(--green);flex-shrink:0;margin-top:1px">2</div>
+          <div><div style="font-size:13px;font-weight:400;color:var(--text-dark);margin-bottom:4px">Have we been consistent?</div><div style="font-size:12px;color:var(--text-mid);line-height:1.7">Would we make this same decision for a similarly situated employee? If the answer is no, document why the situations are meaningfully different. If there is no documented distinction, the inconsistency is a legal risk regardless of intent.</div></div>
+        </div>
+        <div style="display:flex;gap:14px;padding:13px 14px;border-radius:var(--radius);background:rgba(27,68,54,0.04)">
+          <div style="width:26px;height:26px;border-radius:50%;background:rgba(27,68,54,0.12);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:400;color:var(--green);flex-shrink:0;margin-top:1px">3</div>
+          <div><div style="font-size:13px;font-weight:400;color:var(--text-dark);margin-bottom:4px">Have I involved HR or counsel?</div><div style="font-size:12px;color:var(--text-mid);line-height:1.7">For any decision involving protected class characteristics, a medical condition, a prior complaint, a separation, or a formal PIP — HR should be involved before the decision is made, not after. If there is any doubt about whether HR is needed, that doubt is the answer.</div></div>
+        </div>
+        <div style="display:flex;gap:14px;padding:13px 14px;border-radius:var(--radius)">
+          <div style="width:26px;height:26px;border-radius:50%;background:rgba(27,68,54,0.12);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:400;color:var(--green);flex-shrink:0;margin-top:1px">4</div>
+          <div><div style="font-size:13px;font-weight:400;color:var(--text-dark);margin-bottom:4px">Have I heard from the employee?</div><div style="font-size:12px;color:var(--text-mid);line-height:1.7">For most disciplinary decisions, the employee should have had an opportunity to respond before the decision is finalized. This is both a best practice and, in some contexts, a legal requirement. An employee who never got to tell their side is a plaintiff who has a compelling opening argument.</div></div>
+        </div>
+        <div style="display:flex;gap:14px;padding:13px 14px;border-radius:var(--radius);background:rgba(27,68,54,0.04)">
+          <div style="width:26px;height:26px;border-radius:50%;background:rgba(27,68,54,0.12);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:400;color:var(--green);flex-shrink:0;margin-top:1px">5</div>
+          <div><div style="font-size:13px;font-weight:400;color:var(--text-dark);margin-bottom:4px">Am I making this decision for the right reason?</div><div style="font-size:12px;color:var(--text-mid);line-height:1.7">Is the stated reason the actual reason? Is there any possibility the decision is influenced by something that would be unlawful — age, race, sex, disability, pregnancy, protected activity, a prior complaint? If there is any doubt at all, stop and involve HR or counsel before proceeding.</div></div>
+        </div>
+        <div style="display:flex;gap:14px;padding:13px 14px;border-radius:var(--radius)">
+          <div style="width:26px;height:26px;border-radius:50%;background:rgba(27,68,54,0.12);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:400;color:var(--green);flex-shrink:0;margin-top:1px">6</div>
+          <div><div style="font-size:13px;font-weight:400;color:var(--text-dark);margin-bottom:4px">What does the documentation say?</div><div style="font-size:12px;color:var(--text-mid);line-height:1.7">Does the documentation support the decision? If the documentation does not support the decision, do not make the decision until it does — or until you understand why the gap exists. A decision that cannot be defended on paper cannot be defended in a hearing.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="view-checklist" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Manager Annual Checklist</div><div class="card-desc">Actions every people manager should complete each year, regardless of whether they receive reminders. Progress saves automatically.</div></div>
+      <button onclick="window.print()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Print / PDF</button>
+    </div>
+    <div class="card-body" id="mgrChecklistBody"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="fb">The Coherence Collective &nbsp;·&nbsp; <span>Plinth</span></div>
+  <div style="display:flex;gap:16px;align-items:center">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.35)">Jump to</span>
+      <select onchange="if(this.value)window.location.href=this.value" style="font-family:'Jost',sans-serif;font-weight:300;font-size:11px;background:rgba(255,255,255,0.06);color:rgba(245,237,228,0.6);border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:4px 24px 4px 8px;cursor:pointer;outline:none;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(245,237,228,0.4)' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 7px center">
+        <option value="/org-profile/">01 &middot; Org Profile</option><option value="/handbook/">02 &middot; Handbook</option><option value="/job-architecture/">03 &middot; Job Architecture</option><option value="/compensation/">04 &middot; Compensation</option><option value="/offer-hiring/">05 &middot; Offer &amp; Hiring</option><option value="/onboarding/">06 &middot; Onboarding</option><option value="/pay-practices/">07 &middot; Pay Practices</option><option value="/benefits/">08 &middot; Benefits Administration</option><option value="/leave/">09 &middot; Leave Management</option><option value="/performance/">10 &middot; Performance Management</option><option value="/er-investigation/">11 &middot; ER &amp; Investigation</option><option value="/separation/">12 &middot; Separation</option><option value="/compliance-calendar/">13 &middot; Compliance Calendar</option><option value="/manager-toolkit/" selected>14 &middot; Manager Toolkit</option><option value="/analytics/">15 &middot; Analytics</option>
+      </select>
+    </div>
+    <span style="color:rgba(245,237,228,0.15)">|</span>
+    <a href="/compliance-calendar/" style="font-size:11px;color:rgba(245,237,228,0.4);text-decoration:none" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">&larr; Tool 13</a>
+    <span style="color:rgba(245,237,228,0.15)">|</span>
+    <a href="/analytics/" style="font-size:11px;color:rgba(245,237,228,0.4);text-decoration:none" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">Tool 15 &rarr;</a>
+  </div>
+</footer>
+<script>
+const ALL_TABS_MGR = ['guides','scripts','decisions','checklist'];
+
+const MGR_CHECKS = [
+  {id:'m1',title:'Complete performance reviews on time',detail:'Every direct report receives a written review within the designated window. No exceptions. Late reviews signal to the team that performance feedback is not a real priority.'},
+  {id:'m2',title:'Set goals with each direct report',detail:'Every direct report has documented goals for the year agreed upon in writing before the end of Q1. Goals set in Q3 are not goals — they are retroactive accountability.'},
+  {id:'m3',title:'Conduct stay interviews',detail:'At least once per year, ask each direct report what keeps them here and what might cause them to leave. Document and act on the responses. Most managers skip this and only learn what would have retained someone after they have already left.'},
+  {id:'m4',title:'Audit documentation',detail:'Review the personnel file or notes file for each direct report. Is there documentation of every significant performance conversation that happened this year? If something were to escalate, is the record there?'},
+  {id:'m5',title:'Review compensation against bands',detail:'Know where each direct report falls in their pay band. Flag any compression or equity concerns to HR before year-end. Compensation surprises at review time are a retention risk.'},
+  {id:'m6',title:'Verify PTO accruals and carryover',detail:'Ensure each direct report has used or planned to use PTO consistent with policy. Unused PTO accumulation is both a financial liability and a burnout warning sign. If someone has not taken time off, ask why.'},
+  {id:'m7',title:'Update role documentation',detail:'If any direct report\'s role has materially changed during the year, update the job description and flag for a compensation review if appropriate. Misaligned job descriptions create classification risk and undermine fair pay.'},
+  {id:'m8',title:'Review team structure for the year ahead',detail:'Are the right roles in place for the work the team needs to do next year? Flag any structural needs or capacity gaps to leadership before budget planning closes.'},
+];
+
+let mgrChecks = {};
+try{ mgrChecks = JSON.parse(localStorage.getItem('plinth_mgr_checks')||'{}'); }catch(e){}
+
+function renderMgrChecklist(){
+  var el = document.getElementById('mgrChecklistBody'); if(!el) return;
+  var html = '';
+  for(var i=0;i<MGR_CHECKS.length;i++){
+    var item = MGR_CHECKS[i];
+    var chk = mgrChecks[item.id];
+    html += '<div style="display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid rgba(224,216,207,0.4)">';
+    html += '<div style="width:18px;height:18px;border:2px solid '+(chk?'var(--green)':'var(--border)')+';border-radius:3px;flex-shrink:0;cursor:pointer;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:10px;'+(chk?'background:var(--green);color:white;':'')+'" onclick="toggleMgrCheck(\''+item.id+'\',this)">'+(chk?'&#10003;':'')+'</div>';
+    html += '<div><div style="font-size:12.5px;color:var(--text-dark);margin-bottom:3px">'+(chk?'<s style=\'opacity:0.5\'>'+item.title+'</s>':item.title)+'</div><div style="font-size:11px;color:var(--text-light);line-height:1.65">'+item.detail+'</div></div>';
+    html += '</div>';
+  }
+  // Completion count
+  var done = Object.values(mgrChecks).filter(Boolean).length;
+  var pct = Math.round(done/MGR_CHECKS.length*100);
+  html += '<div style="margin-top:16px;padding:12px 14px;background:rgba(27,68,54,0.04);border-radius:var(--radius-md);display:flex;align-items:center;gap:12px">';
+  html += '<div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:var(--green);border-radius:3px;transition:width 0.3s"></div></div>';
+  html += '<div style="font-size:11px;color:var(--text-light);white-space:nowrap">'+done+' of '+MGR_CHECKS.length+' complete</div>';
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function toggleMgrCheck(id,el){
+  mgrChecks[id] = !mgrChecks[id];
+  el.style.background = mgrChecks[id]?'var(--green)':'';
+  el.style.borderColor = mgrChecks[id]?'var(--green)':'var(--border)';
+  el.style.color = mgrChecks[id]?'white':'';
+  el.innerHTML = mgrChecks[id]?'&#10003;':'';
+  localStorage.setItem('plinth_mgr_checks',JSON.stringify(mgrChecks));
+  // Update adjacent title strikethrough and progress bar without full re-render
+  renderMgrChecklist();
+}
+
+function toggleGuide(id){
+  document.querySelectorAll('.guide-detail').forEach(function(d){
+    if(d.id!=='guide-'+id) d.classList.remove('open');
+  });
+  var g = document.getElementById('guide-'+id);
+  if(g) g.classList.toggle('open');
+}
+
+function showTab(tab){
+  ALL_TABS_MGR.forEach(function(t){
+    var v=document.getElementById('view-'+t); if(v) v.style.display=t===tab?'block':'none';
+    var el=document.getElementById('tab-'+t); if(el) el.classList.toggle('active',t===tab);
+  });
+  if(tab==='checklist') renderMgrChecklist();
+}
+
+function animateCards(){
+  var obs = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('vis'); });
+  },{threshold:0.04});
+  document.querySelectorAll('.card,.guide-grid').forEach(function(c){ obs.observe(c); });
+}
+
+document.addEventListener('DOMContentLoaded',function(){ animateCards(); });
+</script>
+</body>
+</html>

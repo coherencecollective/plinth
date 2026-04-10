@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Plinth · Pay Practices</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--green:#1b4436;--green-light:#235a47;--green-deep:#122e24;--mauve:#916179;--sand:#D2BB9F;--gold:#D99E32;--pale:#cccf8e;--crimson:#A42F30;--beige:#F5EDE4;--white:#fff;--off-white:#faf8f5;--text-dark:#1a1a1a;--text-mid:#444;--text-light:#777;--border:#e0d8cf;--shadow:0 2px 16px rgba(27,68,54,0.08);--radius:4px;--radius-md:8px;--radius-lg:12px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Jost',sans-serif;font-weight:300;font-size:14px;color:var(--text-dark);background:var(--off-white);min-height:100vh;}
+nav{position:sticky;top:0;z-index:100;background:var(--green);padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,0.2);}
+.nav-left{display:flex;align-items:center;gap:14px;}
+.back-btn{display:inline-flex;align-items:center;gap:5px;font-family:'Jost',sans-serif;font-size:11px;font-weight:300;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.5);padding:5px 10px;border:1px solid rgba(245,237,228,0.15);border-radius:var(--radius);background:none;cursor:pointer;transition:all 0.2s;}
+.back-btn:hover{color:var(--beige);}
+.nav-sep{width:1px;height:18px;background:rgba(255,255,255,0.15);}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:17px;color:var(--beige);}
+.nav-brand span{color:var(--gold);}
+.nav-sub{font-size:12px;font-weight:300;color:rgba(245,237,228,0.45);}
+.nav-right{display:flex;gap:7px;align-items:center;}
+.nbtn{font-family:'Jost',sans-serif;font-weight:300;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:5px 13px;border-radius:var(--radius);cursor:pointer;border:none;transition:all 0.2s;}
+.nbtn-ghost{background:transparent;color:var(--sand);border:1px solid rgba(210,187,159,0.3);}
+.nbtn-ghost:hover{background:rgba(210,187,159,0.1);color:var(--beige);}
+.nbtn-gold{background:var(--gold);color:var(--green-deep);font-weight:400;}
+.sflash{font-size:11px;color:var(--pale);margin-right:4px;opacity:0;transition:opacity 0.3s;}
+.sflash.on{opacity:1;}
+.tabs{background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;display:flex;overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{font-size:11px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:13px 18px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.2s;}
+.tab:hover{color:var(--green);}
+.tab.active{color:var(--green);border-bottom-color:var(--green);}
+.hero{background:linear-gradient(150deg,var(--green-deep) 0%,var(--green) 55%,var(--green-light) 100%);padding:44px 28px 38px;position:relative;overflow:hidden;}
+.hero-inner{max-width:1060px;margin:0 auto;}
+.hero-eye{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--pale);margin-bottom:10px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:36px;color:var(--white);line-height:1.05;margin-bottom:8px;}
+.hero-title em{font-style:italic;color:var(--sand);}
+.hero-desc{font-size:12.5px;font-weight:300;color:rgba(245,237,228,0.65);max-width:600px;line-height:1.75;}
+.main{max-width:1060px;margin:0 auto;padding:32px 28px 80px;}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;opacity:0;transform:translateY(10px);transition:opacity 0.35s,transform 0.35s;}
+.card.vis{opacity:1;transform:translateY(0);}
+.card-hdr{padding:16px 22px 13px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.05));display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:16px;color:var(--green);}
+.card-desc{font-size:11px;color:var(--text-light);margin-top:2px;line-height:1.5;}
+.card-body{padding:20px 22px;}
+.fg{display:grid;gap:14px;}
+.g2{grid-template-columns:1fr 1fr;}
+.g3{grid-template-columns:1fr 1fr 1fr;}
+.c2{grid-column:span 2;}
+.c3{grid-column:span 3;}
+.f label{display:block;font-size:11px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-mid);margin-bottom:5px;}
+input[type="text"],input[type="number"],input[type="date"],select,textarea{width:100%;font-family:'Jost',sans-serif;font-weight:300;font-size:13px;color:var(--text-dark);background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:8px 11px;outline:none;transition:border-color 0.2s;appearance:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(27,68,54,0.07);}
+textarea{resize:vertical;min-height:72px;line-height:1.7;}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23777' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer;}
+.fhint{font-size:10.5px;color:var(--text-light);margin-top:4px;line-height:1.5;}
+.div{height:1px;background:var(--border);margin:16px 0;}
+.div-lbl{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);margin:-14px 0 12px;display:flex;align-items:center;gap:8px;}
+.div-lbl::before,.div-lbl::after{content:'';flex:1;height:1px;background:var(--border);}
+.al{border-radius:var(--radius);padding:9px 12px;font-size:12px;line-height:1.6;margin-bottom:10px;display:flex;gap:8px;align-items:flex-start;}
+.al-ic{font-size:13px;flex-shrink:0;margin-top:1px;}
+.al-i{background:rgba(27,68,54,0.05);border-left:3px solid var(--pale);color:var(--text-mid);}
+.al-w{background:rgba(217,158,50,0.07);border-left:3px solid var(--gold);color:var(--text-mid);}
+.al-c{background:rgba(145,97,121,0.07);border-left:3px solid var(--mauve);color:var(--text-mid);}
+.al-d{background:rgba(164,47,48,0.06);border-left:3px solid var(--crimson);color:var(--text-mid);}
+.ref-table{width:100%;border-collapse:collapse;}
+.ref-table th{font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:8px 12px;text-align:left;border-bottom:2px solid var(--border);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.04));}
+.ref-table td{padding:9px 12px;border-bottom:1px solid rgba(224,216,207,0.5);font-size:12.5px;vertical-align:top;}
+.ref-table td:first-child{font-weight:400;}
+.ref-table tr:last-child td{border-bottom:none;}
+.ref-table tr:hover td{background:rgba(27,68,54,0.015);}
+.form-section{margin-bottom:24px;}
+.form-section-title{font-size:10px;font-weight:400;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:center;justify-content:space-between;}
+.fb{font-family:'Cormorant Garamond',serif;font-size:13px;color:rgba(245,237,228,0.4);}
+.fb span{color:var(--sand);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.fu{animation:fadeUp 0.4s ease both;}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-left">
+    <button class="back-btn" onclick="window.location.href='/'">&#8592; All Tools</button>
+    <div class="nav-sep"></div>
+    <div class="nav-brand">Pl<span>in</span>th</div>
+    <div class="nav-sub">&nbsp;·&nbsp; Pay Practices</div>
+  </div>
+  <div class="nav-right">
+    <span class="sflash" id="sflash">Saved</span>
+    <button class="nbtn nbtn-ghost" onclick="saveData()">Save</button>
+  </div>
+</nav>
+<div class="tabs">
+  <div class="tab active" onclick="showTab('setup')" id="tab-setup">Payroll Setup</div>
+  <div class="tab" onclick="showTab('garnishments')" id="tab-garnishments">Garnishments</div>
+  <div class="tab" onclick="showTab('finalpay')" id="tab-finalpay">Final Pay</div>
+  <div class="tab" onclick="showTab('regularrate')" id="tab-regularrate">Regular Rate of Pay</div>
+  <div class="tab" onclick="showTab('deductions')" id="tab-deductions">Deductions &amp; Advances</div>
+  <div class="tab" onclick="showTab('exemptions')" id="tab-exemptions">Exemption Tests</div>
+  <div class="tab" onclick="showTab('errors')" id="tab-errors">Payroll Errors</div>
+  <div class="tab" onclick="showTab('records')" id="tab-records">Payroll Records</div>
+</div>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eye">Plinth · Tool 07</div>
+    <div class="hero-title">Pay Practices &amp; <em>Wage Compliance</em></div>
+    <div class="hero-desc">Texas wage payment law, payroll setup documentation, garnishment handling, final pay requirements, and pay practice policies the organization must maintain.</div>
+  </div>
+</div>
+
+<div id="view-setup" class="main">
+  <div class="card fu">
+    <div class="card-hdr"><div><div class="card-title">Payroll Configuration</div><div class="card-desc">Core payroll settings that drive compliance obligations and employee communications.</div></div></div>
+    <div class="card-body">
+      <div class="fg g3">
+        <div class="f"><label>Pay Frequency</label>
+          <select id="payFreq" onchange="saveData()">
+            <option value="">Select frequency</option>
+            <option value="semimonthly">Semi-monthly (1st &amp; 15th)</option>
+            <option value="biweekly">Bi-weekly (every 2 weeks)</option>
+            <option value="weekly">Weekly</option>
+          </select>
+          <div class="fhint">Texas requires wages to be paid at least semi-monthly. Weekly and bi-weekly are also compliant.</div>
+        </div>
+        <div class="f"><label>Payday(s)</label><input type="text" id="paydays" placeholder="e.g., 1st and 15th of each month" oninput="saveData()"></div>
+        <div class="f"><label>Payroll Provider</label><input type="text" id="payrollProvider" placeholder="e.g., Gusto, ADP, Paychex, Manual" oninput="saveData()"></div>
+        <div class="f"><label>Direct Deposit</label>
+          <select id="ddPolicy" onchange="saveData()">
+            <option value="">Select</option>
+            <option value="required">Required (written employee authorization on file)</option>
+            <option value="voluntary">Voluntary — paper check available</option>
+            <option value="paper">Paper check only</option>
+          </select>
+          <div class="fhint">Texas requires written employee authorization for mandatory direct deposit. Cannot require it without written consent.</div>
+        </div>
+        <div class="f"><label>Workweek Start Day</label>
+          <select id="workweekStart" onchange="saveData()">
+            <option value="">Select day</option>
+            <option value="sunday">Sunday</option>
+            <option value="monday">Monday</option>
+            <option value="saturday">Saturday</option>
+          </select>
+          <div class="fhint">The workweek start day determines overtime calculation for nonexempt employees. Must be consistent.</div>
+        </div>
+        <div class="f"><label>Overtime Policy</label>
+          <select id="otPolicy" onchange="saveData()">
+            <option value="">Select</option>
+            <option value="flsa">FLSA standard — 1.5x over 40 hours/week</option>
+            <option value="pre-approve">Pre-approval required before any overtime</option>
+            <option value="no-ot">No overtime — all employees exempt (verify FLSA status)</option>
+          </select>
+        </div>
+      </div>
+      <div class="div"></div>
+      <div class="al al-c"><span class="al-ic">⚖</span><span>Texas follows federal FLSA for overtime. There is no Texas state overtime law that exceeds the federal standard. Nonexempt employees must be paid 1.5x their regular rate for all hours over 40 in a workweek — not per day. The workweek is a fixed recurring period of 168 consecutive hours. An employer cannot average hours across two workweeks to avoid overtime liability.</span></div>
+    </div>
+  </div>
+  <div class="card fu" style="animation-delay:0.05s">
+    <div class="card-hdr"><div><div class="card-title">Minimum Wage Reference</div><div class="card-desc">The floors that govern all pay calculations. These affect overtime, deductions, and advance repayment.</div></div></div>
+    <div class="card-body">
+      <table class="ref-table">
+        <thead><tr><th>Jurisdiction</th><th>Current Rate</th><th>Applies To</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Federal (FLSA)</td><td style="font-weight:400;color:var(--green)">$7.25 / hour</td><td>All nonexempt employees in commerce or enterprises covered by FLSA</td><td>Has not increased since 2009. Texas has not enacted a higher state rate.</td></tr>
+          <tr><td>Texas State</td><td style="font-weight:400;color:var(--green)">$7.25 / hour</td><td>Same as federal — Texas minimum wage mirrors the federal floor</td><td>Texas law adopts the federal rate by reference. If federal rate increases, Texas rate increases automatically.</td></tr>
+          <tr><td>Tipped Employees</td><td style="font-weight:400;color:var(--green)">$2.13 / hour cash wage</td><td>Employees who regularly receive more than $30/month in tips</td><td>Employer must ensure tips plus cash wage equal at least $7.25 total. If not, employer must make up the difference. Most nonprofits do not employ tipped workers.</td></tr>
+        </tbody>
+      </table>
+      <div class="al al-i" style="margin-top:10px"><span class="al-ic">ℹ</span><span>Minimum wage is the floor for deduction calculations (cannot reduce below minimum wage), advance repayments (same), and exempt employee classification (separate salary threshold applies — see Exemption Tests tab). Verify whether any grant agreements, government contracts, or service contracts impose a higher prevailing wage rate.</span></div>
+    </div>
+  </div>
+  <div class="card fu" style="animation-delay:0.07s">
+    <div class="card-hdr"><div><div class="card-title">Pay Stub Requirements</div><div class="card-desc">Texas requires certain information to be provided with each wage payment.</div></div></div>
+    <div class="card-body">
+      <table class="ref-table">
+        <thead><tr><th>Requirement</th><th>Detail</th><th>Applies To</th></tr></thead>
+        <tbody>
+          <tr><td>Earnings statement</td><td>Must show gross wages, deductions, and net pay. May be electronic with employee access.</td><td>All employees</td></tr>
+          <tr><td>Hours worked</td><td>Actual hours worked must be shown for nonexempt employees.</td><td>Nonexempt only</td></tr>
+          <tr><td>Deduction itemization</td><td>Each deduction must be listed separately with amount. Employer cannot deduct without written authorization except taxes and court orders.</td><td>All employees</td></tr>
+          <tr><td>YTD earnings</td><td>Required on final pay stub of the year. Recommended on all stubs.</td><td>All employees</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="view-garnishments" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr"><div><div class="card-title">Wage Garnishments</div><div class="card-desc">Legal obligations for processing and responding to garnishment orders.</div></div></div>
+    <div class="card-body">
+      <div class="al al-w" style="margin-bottom:16px"><span class="al-ic">△</span><span>Failure to comply with a valid garnishment order exposes the employer to liability for the full amount of the debt. Do not ignore garnishment orders. Route immediately to payroll or HR on receipt.</span></div>
+      <table class="ref-table">
+        <thead><tr><th>Type</th><th>Maximum Withholding</th><th>Priority</th><th>Texas Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Child Support / Alimony</td><td>Up to 50% of disposable earnings (60% if not supporting another family); additional 5% if 12+ weeks in arrears</td><td>Highest — takes priority over most other garnishments</td><td>Texas enforces aggressively. National Medical Support Notices may accompany.</td></tr>
+          <tr><td>Federal Tax Levy (IRS)</td><td>Varies based on dependents and standard deduction claimed on exempt pay form</td><td>After child support</td><td>IRS Publication 1494 table determines exempt amount. Comply promptly.</td></tr>
+          <tr><td>Student Loan (federal)</td><td>15% of disposable earnings</td><td>After tax levies</td><td>Administrative wage garnishment — no court order required for federal loans.</td></tr>
+          <tr><td>Consumer Debt (court judgment)</td><td>25% of disposable earnings OR amount exceeding 30x federal minimum wage — whichever is less</td><td>Lowest priority</td><td>Texas is debtor-friendly — wages generally cannot be garnished for consumer debt except in specific circumstances. Consult counsel before withholding.</td></tr>
+        </tbody>
+      </table>
+      <div class="div"></div>
+      <div class="fg g2">
+        <div class="f"><label>Garnishment Log</label><textarea id="garnishLog" placeholder="Document each active garnishment order: employee name, order number, issuing authority, amount, start date, and current status..." rows="5" oninput="saveData()"></textarea></div>
+        <div class="f"><label>Process Notes</label><textarea id="garnishNotes" placeholder="Internal notes on garnishment processing procedures, payroll provider instructions, and any escalated situations..." rows="5" oninput="saveData()"></textarea></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="view-finalpay" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr"><div><div class="card-title">Final Pay Requirements</div><div class="card-desc">Texas law governing the timing and content of final wages.</div></div></div>
+    <div class="card-body">
+      <div class="al al-d" style="margin-bottom:16px"><span class="al-ic">⚠</span><span>Texas final pay requirements are strict and violations carry penalties. Late final pay exposes the organization to liability for the unpaid wages plus a penalty equal to the daily wage rate for each day the payment is late, up to the total amount owed.</span></div>
+      <table class="ref-table">
+        <thead><tr><th>Separation Type</th><th>Final Pay Deadline</th><th>Includes</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:400;color:var(--crimson)">Involuntary — Discharged / Laid Off</td><td><strong>Within 6 calendar days of the discharge date</strong></td><td>All earned wages. Accrued PTO only if pay policy requires payout. Deductions for unreturned equipment are generally not permitted from final wages.</td></tr>
+          <tr><td style="font-weight:400">Voluntary — Employee Resignation</td><td><strong>Next regular payday following resignation</strong></td><td>All earned wages through the last day worked. Same PTO rules apply.</td></tr>
+          <tr><td style="font-weight:400">Involuntary — Reduction in Force</td><td><strong>Within 6 calendar days</strong></td><td>Same as discharge. Document the RIF as a business decision — separate from any performance concerns.</td></tr>
+        </tbody>
+      </table>
+      <div class="div"></div>
+      <div class="al al-i"><span class="al-ic">ℹ</span><span>Texas does not require employers to pay out accrued PTO at separation unless the written policy requires it. If the handbook or employment agreement states that accrued PTO is paid out upon separation, it is a wage and must be included in final pay. Review your PTO policy language carefully before a separation event.</span></div>
+      <div class="div"></div>
+      <div class="div-lbl">Texas Payday Law — Employee Enforcement Rights</div>
+      <div class="al al-d" style="margin-bottom:12px"><span class="al-ic">⚠</span><span>Employees have the right to file a wage claim with the Texas Workforce Commission (TWC) if they believe final wages were not paid on time or in the correct amount. The TWC investigates and can order the employer to pay the wages owed plus administrative penalties. Employers who retaliate against an employee for filing a wage claim are subject to additional liability.</span></div>
+      <table class="ref-table">
+        <thead><tr><th>Element</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>Filing deadline</td><td>Employee must file within 180 days of the date the wages were due. This deadline is strictly enforced by the TWC.</td></tr>
+          <tr><td>Where to file</td><td>Texas Workforce Commission, Labor Law Section. Online at twc.texas.gov. The process is administrative — does not require an attorney.</td></tr>
+          <tr><td>What the TWC can order</td><td>Payment of all wages owed, plus a penalty up to the full amount owed in some circumstances. The TWC can also refer cases with willful violations for criminal prosecution.</td></tr>
+          <tr><td>Employer response</td><td>Employers receive notice of the claim and must respond within the TWC's prescribed timeframe. Failing to respond results in a default order against the employer.</td></tr>
+          <tr><td>Retaliation prohibition</td><td>An employer cannot terminate, reduce pay, or otherwise retaliate against an employee for filing a wage claim. Retaliation is a separate violation subject to additional penalties.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="view-regularrate" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr"><div><div class="card-title">Regular Rate of Pay</div><div class="card-desc">The foundation of accurate overtime calculation. Most nonprofit overtime errors originate here.</div></div></div>
+    <div class="card-body">
+      <div class="al al-c" style="margin-bottom:14px"><span class="al-ic">⚖</span><span>The "regular rate of pay" for overtime purposes is not the same as the hourly rate. It is a calculated rate that must include all remuneration for employment paid to or on behalf of the employee — with only specific exclusions permitted by statute. Using the base hourly rate alone when calculating overtime for employees who receive bonuses, shift differentials, or other compensation is a wage violation under the FLSA.</span></div>
+      <div class="div-lbl">What Must Be Included in the Regular Rate</div>
+      <table class="ref-table" style="margin-bottom:16px">
+        <thead><tr><th>Compensation Type</th><th>Included in Regular Rate?</th><th>How to Handle</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:400">Base hourly wages</td><td style="color:var(--crimson)">Yes — always</td><td>Divide total base wages by total hours in the workweek</td></tr>
+          <tr><td style="font-weight:400">Non-discretionary bonuses (production, attendance, performance tied to metrics)</td><td style="color:var(--crimson)">Yes — must be included</td><td>Prorate the bonus across the weeks in the bonus period; recalculate OT rate for those weeks</td></tr>
+          <tr><td style="font-weight:400">Shift differentials (evening, weekend premium)</td><td style="color:var(--crimson)">Yes</td><td>Add the differential to total straight-time pay; divide by total hours to get the regular rate</td></tr>
+          <tr><td style="font-weight:400">On-call pay</td><td style="color:var(--crimson)">Yes, if employee is required to remain on premises or use is so restricted as to constitute hours worked</td><td>Determine whether on-call time is "hours worked" first</td></tr>
+          <tr><td style="font-weight:400">Discretionary bonuses (genuinely given at employer's sole discretion, not tied to any formula or promise)</td><td style="color:var(--green)">No — excluded</td><td>Must be truly discretionary — not based on any pre-announced criteria or formula</td></tr>
+          <tr><td style="font-weight:400">Employer-paid health insurance premiums</td><td style="color:var(--green)">No — excluded</td><td>Excluded under FLSA § 207(e)(4)</td></tr>
+          <tr><td style="font-weight:400">Employer 401(k)/403(b) contributions</td><td style="color:var(--green)">No — excluded</td><td>Excluded under FLSA § 207(e)(4)</td></tr>
+          <tr><td style="font-weight:400">Overtime premium payments themselves</td><td style="color:var(--green)">No — excluded</td><td>Excluded to avoid circular calculation</td></tr>
+          <tr><td style="font-weight:400">Expense reimbursements (actual expenses)</td><td style="color:var(--green)">No — excluded</td><td>Must be actual and reasonably approximate actual expense</td></tr>
+        </tbody>
+      </table>
+      <div class="div-lbl">Calculation Example</div>
+      <div style="background:rgba(27,68,54,0.04);border-radius:var(--radius-md);padding:16px 20px;font-size:12.5px;color:var(--text-mid);line-height:1.85">
+        <strong>Scenario:</strong> Nonexempt employee works 48 hours in a workweek at $18/hour base rate and receives a $200 non-discretionary bonus for meeting a program target that week.<br><br>
+        <strong>Step 1 — Total straight-time compensation:</strong> (48 hrs × $18) + $200 bonus = $864 + $200 = $1,064<br>
+        <strong>Step 2 — Regular rate of pay:</strong> $1,064 ÷ 48 hours = $22.17/hour<br>
+        <strong>Step 3 — Overtime premium:</strong> 8 OT hours × ($22.17 × 0.5 half-time premium) = $88.67<br>
+        <strong>Step 4 — Total pay due:</strong> $1,064 (straight-time already paid) + $88.67 (OT premium) = $1,152.67<br><br>
+        <em>If the employer had simply used the $18 base rate: $18 × 1.5 × 8 = $216 OT — underpaying by $24.67 for that week alone. Across multiple employees over months, this compounds into significant wage liability.</em>
+      </div>
+      <div class="al al-w" style="margin-top:14px"><span class="al-ic">△</span><span>Organizations that pay any form of non-discretionary bonus, differential, or additional compensation to nonexempt employees should audit their overtime calculations annually. FLSA statute of limitations is 2 years (3 for willful violations). The DOL Wage and Hour Division can recover back wages for the full period. Nonprofit employers are not exempt from FLSA.</span></div>
+    </div>
+  </div>
+</div>
+
+<div id="view-deductions" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr"><div><div class="card-title">Deductions, Advances &amp; Off-Cycle Payroll</div><div class="card-desc">What employers can and cannot deduct. When and how to process payments outside the regular pay cycle.</div></div></div>
+    <div class="card-body">
+      <div class="div-lbl">Authorized Deductions</div>
+      <div class="al al-i" style="margin-bottom:12px"><span class="al-ic">ℹ</span><span>Texas follows federal law on deductions with important state-specific protections. An employer generally cannot deduct from wages without prior written authorization from the employee — except for items specifically permitted by law. Unauthorized deductions from wages are a Texas Payday Law violation.</span></div>
+      <table class="ref-table" style="margin-bottom:16px">
+        <thead><tr><th>Deduction Type</th><th>Authorization Required?</th><th>Texas Rule</th></tr></thead>
+        <tbody>
+          <tr><td>Federal and state income taxes</td><td>No — required by law</td><td>W-4 determines federal withholding amount</td></tr>
+          <tr><td>FICA (Social Security and Medicare)</td><td>No — required by law</td><td>Cannot be waived by employer or employee</td></tr>
+          <tr><td>Court-ordered garnishments</td><td>No — required by court order</td><td>Follow the order; priority rules apply when multiple garnishments exist</td></tr>
+          <tr><td>Health/dental/vision insurance premiums</td><td>Yes — written enrollment election constitutes authorization</td><td>Pre-tax deductions require Section 125 plan document</td></tr>
+          <tr><td>401(k) / 403(b) employee contributions</td><td>Yes — written deferral election</td><td>Change elections must be processed within one pay period of receiving the election form</td></tr>
+          <tr><td>Repayment of pay advances</td><td>Yes — written advance agreement specifying repayment terms and amounts</td><td>Cannot reduce pay below minimum wage in the workweek deduction occurs</td></tr>
+          <tr><td>Uniform or equipment costs</td><td>Yes — written authorization; cannot reduce below minimum wage</td><td>Texas: employer cannot deduct for required equipment if it reduces pay below minimum wage</td></tr>
+          <tr><td>Cash register shortages or theft</td><td>Generally no — cannot deduct without admission of fault and written authorization. Deducting for suspected shortages without proof or employee agreement is unlawful.</td><td>Texas Payday Law: employer must obtain written authorization; cannot deduct if employee disputes responsibility</td></tr>
+        </tbody>
+      </table>
+      <div class="div-lbl">Pay Advances</div>
+      <table class="ref-table" style="margin-bottom:16px">
+        <thead><tr><th>Element</th><th>Requirement</th></tr></thead>
+        <tbody>
+          <tr><td>Written advance agreement</td><td>Required before issuing any pay advance. Must specify the amount advanced, the repayment schedule, and the deduction amount per pay period.</td></tr>
+          <tr><td>Minimum wage floor</td><td>Repayment deductions cannot reduce the employee's net pay below federal or state minimum wage in any workweek where hours are worked.</td></tr>
+          <tr><td>Separation</td><td>If an employee separates before the advance is fully repaid, the remaining balance can be deducted from final pay only if the written advance agreement authorizes it. The deduction still cannot reduce pay below minimum wage for the final pay period.</td></tr>
+          <tr><td>Interest</td><td>Texas does not prohibit employers from charging interest on advances, but the agreement must be in writing and the terms disclosed before the advance is issued.</td></tr>
+        </tbody>
+      </table>
+      <div class="div-lbl">Off-Cycle Payroll Processing</div>
+      <table class="ref-table">
+        <thead><tr><th>Situation</th><th>Timing Requirement</th><th>How to Process</th></tr></thead>
+        <tbody>
+          <tr><td>Involuntary separation (discharge, RIF)</td><td>Within 6 calendar days of discharge date — Texas Payday Law</td><td>Manual check or expedited direct deposit. Do not wait for the regular pay cycle.</td></tr>
+          <tr><td>Missed regular payroll (payroll error)</td><td>As soon as the error is discovered — typically within 1–2 business days</td><td>Process a corrective payment. Document the error and correction in payroll records. Notify affected employees immediately.</td></tr>
+          <tr><td>Bonus or commission outside regular cycle</td><td>No specific timing requirement, but must be paid according to any written policy or agreement</td><td>Can be processed as a separate check or ACH. Must be included in regular rate of pay for OT calculation in the period earned.</td></tr>
+          <tr><td>Final paycheck — voluntary resignation</td><td>Next regular payday following the last day worked</td><td>Can process through regular cycle if payday falls within the required window. Verify the payday date falls on or before the deadline.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- EXEMPTION TESTS TAB -->
+<div id="view-exemptions" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr"><div><div class="card-title">FLSA Exemption Tests</div><div class="card-desc">To be exempt from overtime, an employee must meet both the salary basis test AND a duties test. Failing either test means the employee is nonexempt and overtime-eligible regardless of job title.</div></div></div>
+    <div class="card-body">
+      <div class="al al-d" style="margin-bottom:16px"><span class="al-ic">⚠</span><span>Job titles do not determine exemption status. An employee called "Manager" or "Director" who does not meet both the salary and duties tests is nonexempt and must be paid overtime. Misclassification is one of the most common and costly FLSA violations for nonprofit employers — and it is audited regularly by the DOL Wage and Hour Division.</span></div>
+
+      <div class="div-lbl">Salary Basis Test — Required for All White-Collar Exemptions</div>
+      <table class="ref-table" style="margin-bottom:16px">
+        <thead><tr><th>Element</th><th>Requirement</th><th>Current Threshold</th></tr></thead>
+        <tbody>
+          <tr><td>Salary basis</td><td>Employee must receive a predetermined fixed salary that is not subject to reduction based on quality or quantity of work. Deductions from salary that violate the salary basis rule destroy the exemption for the affected period.</td><td>N/A — this is a qualitative test</td></tr>
+          <tr><td>Minimum salary level</td><td>Employee must earn at least the FLSA salary threshold per week. Texas has no higher state threshold.</td><td style="font-weight:400;color:var(--green)">$684 / week ($35,568 annualized)</td></tr>
+          <tr><td>2024 DOL rule (vacated)</td><td>A 2024 DOL rule raised the threshold to $1,128/week — this rule was vacated by a federal court in November 2024. The $684/week threshold is the operative standard as of 2025. Monitor for further rulemaking.</td><td style="color:var(--gold)">$684/week — confirm current status with counsel</td></tr>
+          <tr><td>Highly compensated employees (HCE)</td><td>Employees earning $107,432 or more annually (with at least $684/week on a salary or fee basis) who customarily perform exempt duties qualify under a relaxed duties test.</td><td style="font-weight:400;color:var(--green)">$107,432 / year</td></tr>
+        </tbody>
+      </table>
+
+      <div class="div-lbl">White-Collar Duties Tests</div>
+      <table class="ref-table" style="margin-bottom:16px">
+        <thead><tr><th>Exemption</th><th>Primary Duty Requirement</th><th>Nonprofit Relevance</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:400;color:var(--green)">Executive</td><td>Primary duty is management of the enterprise or a recognized department. Customarily directs 2+ employees. Has authority to hire or fire — or whose recommendations carry particular weight.</td><td>Applies to EDs, VPs, Directors who genuinely manage staff. Does not apply to supervisors who primarily do individual work.</td></tr>
+          <tr><td style="font-weight:400;color:var(--green)">Administrative</td><td>Primary duty is non-manual work directly related to management or general business operations. Includes the exercise of discretion and independent judgment with respect to matters of significance.</td><td>The most commonly misapplied exemption. Office work is not enough — the work must involve actual discretion on matters of consequence, not just following established procedures.</td></tr>
+          <tr><td style="font-weight:400;color:var(--green)">Professional — Learned</td><td>Primary duty requires advanced knowledge in a field of science or learning customarily acquired by a prolonged course of specialized intellectual instruction.</td><td>Licensed attorneys, CPAs, engineers, architects, physicians. A degree requirement alone does not satisfy this — the work itself must require the advanced knowledge.</td></tr>
+          <tr><td style="font-weight:400;color:var(--green)">Professional — Creative</td><td>Primary duty requires invention, imagination, originality, or talent in a recognized field of artistic or creative endeavor.</td><td>Narrow. Graphic designers, writers, musicians — only if the work involves genuine creative latitude, not production work.</td></tr>
+          <tr><td style="font-weight:400;color:var(--mauve)">Computer Employee</td><td>System analysts, programmers, software engineers — with specific duties requirements. Must be paid $684/week on salary OR $27.63/hour.</td><td>Applicable to in-house tech staff. Does not apply to help desk, data entry, or general IT support roles.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="div-lbl">Common Misclassification Patterns in Nonprofits</div>
+      <table class="ref-table">
+        <thead><tr><th>Role Type</th><th>Misclassification Risk</th><th>Correct Analysis</th></tr></thead>
+        <tbody>
+          <tr><td>Program Coordinators</td><td>High — often titled and paid as exempt but primarily execute established procedures</td><td>If the role follows standard operating procedures and escalates decisions upward, it likely fails the administrative duties test. Review whether discretion is genuine.</td></tr>
+          <tr><td>Case Managers / Client Services</td><td>High — social work and client-facing roles frequently misclassified</td><td>Case managers who follow prescribed care plans with limited independent authority are typically nonexempt. Licensure alone does not create the learned professional exemption.</td></tr>
+          <tr><td>Development / Fundraising Associates</td><td>Medium — depends on actual duties and decision-making authority</td><td>If the role primarily executes campaigns under direction with limited discretion, likely nonexempt. Senior fundraisers with authority over strategy and donor relationships may qualify.</td></tr>
+          <tr><td>Communications / Marketing Staff</td><td>Medium — creative exemption is narrow</td><td>Creative exemption requires genuine artistic discretion — not execution of brand standards. Most communications roles in nonprofits are administrative or nonexempt.</td></tr>
+        </tbody>
+      </table>
+      <div class="al al-w" style="margin-top:14px"><span class="al-ic">△</span><span>When in doubt about exemption status, classify as nonexempt. The cost of tracking hours and paying overtime is far less than the cost of an FLSA misclassification investigation. Audits can recover back wages for up to 3 years (willful violations). Self-auditing exemption classifications annually is a best practice the DOL explicitly recommends.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAYROLL ERRORS TAB -->
+<div id="view-errors" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr"><div><div class="card-title">Payroll Error Correction</div><div class="card-desc">Underpayments, overpayments, and missed payroll runs. Every error has a protocol — the worst response is to wait.</div></div></div>
+    <div class="card-body">
+      <div class="al al-d" style="margin-bottom:16px"><span class="al-ic">⚠</span><span>Payroll errors — in either direction — are wage compliance events, not administrative inconveniences. Underpayments may violate the FLSA and Texas Payday Law. Overpayment recovery requires specific handling. Both require prompt action, written documentation, and employee communication.</span></div>
+
+      <div class="div-lbl">Underpayment Corrections</div>
+      <table class="ref-table" style="margin-bottom:16px">
+        <thead><tr><th>Situation</th><th>Required Action</th><th>Timing</th></tr></thead>
+        <tbody>
+          <tr><td>Employee was paid less than wages earned</td><td>Issue a corrective payment for the full underpaid amount. Do not defer to the next regular pay cycle if that would leave the employee underpaid for more than one pay period.</td><td style="color:var(--crimson)">As soon as discovered — typically within 1–2 business days</td></tr>
+          <tr><td>Overtime was calculated incorrectly</td><td>Calculate the correct regular rate and overtime owed. Issue a corrective payment for the difference. If the error recurred across multiple pay periods, calculate the total liability and correct all periods.</td><td style="color:var(--crimson)">As soon as discovered. If systemic, complete full audit before correcting to avoid multiple piecemeal payments.</td></tr>
+          <tr><td>Missed payroll run entirely</td><td>Process an off-cycle payroll immediately. Notify affected employees the same day the error is discovered — do not wait for them to ask. Document the cause and corrective action taken.</td><td style="color:var(--crimson)">Same day discovery — next business day at absolute latest</td></tr>
+          <tr><td>New hire not entered in payroll</td><td>Process a corrective payment for all unpaid periods. This may also trigger a Texas new hire reporting failure — verify and correct if needed.</td><td style="color:var(--crimson)">Immediately upon discovery</td></tr>
+        </tbody>
+      </table>
+
+      <div class="div-lbl">Overpayment Recovery</div>
+      <div class="al al-i" style="margin-bottom:12px"><span class="al-ic">ℹ</span><span>Recovering an overpayment requires written notice to the employee and, in most cases, written authorization before any deduction is taken from future wages. Texas does not permit unilateral deductions from future wages without written employee consent — except in the same pay period the overpayment occurred.</span></div>
+      <table class="ref-table" style="margin-bottom:16px">
+        <thead><tr><th>Recovery Method</th><th>Requirements</th><th>Limits</th></tr></thead>
+        <tbody>
+          <tr><td>Same-period reversal</td><td>If discovered in the same pay period, the amount can be corrected before the payroll run processes without additional authorization.</td><td>Must occur before wages are actually paid to the employee</td></tr>
+          <tr><td>Written repayment agreement</td><td>Notify the employee in writing of the overpayment and proposed recovery schedule. Obtain written authorization before taking any deduction from future pay. The agreement must specify the total amount, the per-period deduction, and the recovery period.</td><td>Deductions cannot reduce net pay below minimum wage in any workweek. Recovery spread across multiple periods is permissible and often preferable.</td></tr>
+          <tr><td>Voluntary repayment by employee</td><td>Employee may choose to repay the full amount directly. Document with a signed receipt and retain in the payroll record.</td><td>Cannot be coerced. Cannot condition continued employment on immediate lump-sum repayment.</td></tr>
+          <tr><td>Post-separation recovery</td><td>If the employee has separated, the remaining balance can be deducted from final pay only if a prior written overpayment agreement authorizes it and it does not reduce final pay below minimum wage. If no agreement exists, recovery must be through demand letter or civil action.</td><td>No self-help deductions from final pay without prior written authorization</td></tr>
+        </tbody>
+      </table>
+
+      <div class="div-lbl">Documentation Requirements</div>
+      <table class="ref-table">
+        <thead><tr><th>For Every Error Correction</th><th>Content Required</th></tr></thead>
+        <tbody>
+          <tr><td>Error memo (internal)</td><td>Date the error was discovered, nature of the error, affected employees, pay periods involved, total dollar amount, cause of the error, and corrective action taken. Retain in payroll records.</td></tr>
+          <tr><td>Employee notification</td><td>Written notice to the affected employee explaining the error, the correction, and — for overpayments — the proposed recovery plan. Retain signed acknowledgment.</td></tr>
+          <tr><td>Payroll record amendment</td><td>Update payroll records to reflect the corrected amounts. If using a payroll provider, ensure the correction is reflected in the provider's system and the tax filings for the affected period are accurate.</td></tr>
+          <tr><td>W-2 corrections (if applicable)</td><td>If the error crosses a calendar year boundary or affects reported wages, a W-2c (corrected W-2) may be required. Consult your payroll provider or CPA before year-end.</td></tr>
+        </tbody>
+      </table>
+      <div class="al al-c" style="margin-top:14px"><span class="al-ic">⚖</span><span>An employee who files a TWC wage claim for an underpayment that was not promptly corrected faces a stronger case because the delay is evidence. Correcting errors promptly and with documentation is both the legal obligation and the organizational interest. If a systemic error is discovered — affecting multiple employees over multiple periods — consult employment counsel before issuing corrections, as the DOL and TWC have different audit-trigger thresholds for self-reported violations versus complaints.</span></div>
+    </div>
+  </div>
+  <div class="card fu" style="animation-delay:0.07s">
+    <div class="card-hdr"><div><div class="card-title">Payroll Error Log</div><div class="card-desc">Document every payroll error and correction here for audit readiness.</div></div></div>
+    <div class="card-body">
+      <div class="fg g2">
+        <div class="f"><label>Error &amp; Correction Log</label>
+          <textarea id="errorLog" placeholder="Date discovered | Type of error | Affected employee(s) | Period(s) affected | Dollar amount | Corrective action taken | Date corrected | Notified employee (Y/N)" rows="7" oninput="saveData()"></textarea>
+        </div>
+        <div class="f"><label>Process Improvement Notes</label>
+          <textarea id="errorProcess" placeholder="Root cause analysis for recurring errors. Process changes made to prevent recurrence. Payroll provider escalations." rows="7" oninput="saveData()"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="view-records" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr"><div><div class="card-title">Payroll Record Retention</div><div class="card-desc">Federal and Texas record-keeping requirements for payroll documentation.</div></div></div>
+    <div class="card-body">
+      <table class="ref-table">
+        <thead><tr><th>Record Type</th><th>Retention Period</th><th>Authority</th></tr></thead>
+        <tbody>
+          <tr><td>Payroll records (hours, wages, deductions)</td><td>3 years minimum</td><td>FLSA / DOL</td></tr>
+          <tr><td>Time and attendance records</td><td>2 years minimum</td><td>FLSA / DOL</td></tr>
+          <tr><td>Form I-9</td><td>3 years from hire date OR 1 year after termination — whichever is later</td><td>USCIS</td></tr>
+          <tr><td>Form W-4</td><td>4 years after the tax is due or paid</td><td>IRS</td></tr>
+          <tr><td>Tax filings (941, W-2)</td><td>4 years</td><td>IRS</td></tr>
+          <tr><td>Garnishment orders and records</td><td>Duration of order + 3 years</td><td>DOL / State</td></tr>
+          <tr><td>FMLA records</td><td>3 years</td><td>DOL WHD</td></tr>
+          <tr><td>Workers compensation records</td><td>5 years</td><td>Texas DWC</td></tr>
+          <tr><td>General employee personnel files</td><td>7 years after termination (recommended)</td><td>Best practice / EEOC</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<footer>
+  <div class="fb">The Coherence Collective &nbsp;·&nbsp; <span>Plinth</span></div>
+  <div style="display:flex;gap:16px;align-items:center">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.35)">Jump to</span>
+      <select onchange="if(this.value)window.location.href=this.value" style="font-family:'Jost',sans-serif;font-weight:300;font-size:11px;background:rgba(255,255,255,0.06);color:rgba(245,237,228,0.6);border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:4px 24px 4px 8px;cursor:pointer;outline:none;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(245,237,228,0.4)' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 7px center">
+        <option value="/org-profile/">01 &middot; Org Profile</option>
+        <option value="/handbook/">02 &middot; Handbook</option>
+        <option value="/job-architecture/">03 &middot; Job Architecture</option>
+        <option value="/compensation/">04 &middot; Compensation</option>
+        <option value="/offer-hiring/">05 &middot; Offer &amp; Hiring</option>
+        <option value="/onboarding/">06 &middot; Onboarding</option>
+        <option value="/pay-practices/" selected>07 &middot; Pay Practices</option>
+        <option value="/benefits/">08 &middot; Benefits Administration</option>
+        <option value="/leave/">09 &middot; Leave Management</option>
+        <option value="/performance/">10 &middot; Performance Management</option>
+        <option value="/er-investigation/">11 &middot; ER &amp; Investigation</option>
+        <option value="/separation/">12 &middot; Separation</option>
+        <option value="/compliance-calendar/">13 &middot; Compliance Calendar</option>
+        <option value="/manager-toolkit/">14 &middot; Manager Toolkit</option>
+        <option value="/analytics/">15 &middot; Analytics</option>
+      </select>
+    </div>
+    <span style="color:rgba(245,237,228,0.15)">|</span>
+    <a href="/onboarding/" style="font-size:11px;color:rgba(245,237,228,0.4);text-decoration:none" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">&larr; Tool 06</a>
+    <span style="color:rgba(245,237,228,0.15)">|</span>
+    <a href="/benefits/" style="font-size:11px;color:rgba(245,237,228,0.4);text-decoration:none" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">Tool 08 &rarr;</a>
+  </div>
+</footer>
+<script>
+const ALL_TABS = ['setup','garnishments','finalpay','records','regularrate','deductions','exemptions','errors'];
+let profile = {};
+try{ profile = JSON.parse(localStorage.getItem('plinth_op')||'{}'); }catch(e){}
+
+function saveData(){
+  const fields = ['payFreq','paydays','payrollProvider','ddPolicy','workweekStart','otPolicy','garnishLog','garnishNotes','errorLog','errorProcess'];
+  const d = {};
+  fields.forEach(id=>{ const el=document.getElementById(id); if(el) d[id]=el.value; });
+  localStorage.setItem('plinth_pay', JSON.stringify(d));
+  const fl=document.getElementById('sflash');
+  fl.classList.add('on');
+  setTimeout(()=>fl.classList.remove('on'), 1800);
+}
+
+function showTab(tab){
+  ALL_TABS.forEach(t=>{
+    const v=document.getElementById('view-'+t); if(v) v.style.display=t===tab?'block':'none';
+    const el=document.getElementById('tab-'+t); if(el) el.classList.toggle('active',t===tab);
+  });
+}
+
+function restoreData(){
+  try{
+    const d = JSON.parse(localStorage.getItem('plinth_pay')||'{}');
+    const fields = ['payFreq','paydays','payrollProvider','ddPolicy','workweekStart','otPolicy','garnishLog','garnishNotes','errorLog','errorProcess'];
+    fields.forEach(id=>{ const el=document.getElementById(id); if(el && d[id]!==undefined) el.value=d[id]; });
+  }catch(e){}
+}
+
+function animateCards(){
+  const obs = new IntersectionObserver(es=>{ es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('vis'); }); },{threshold:0.04});
+  document.querySelectorAll('.card').forEach(c=>obs.observe(c));
+}
+
+document.addEventListener('DOMContentLoaded',()=>{ restoreData(); animateCards(); });
+</script>
+</body>
+</html>

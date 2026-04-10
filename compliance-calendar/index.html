@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Plinth · Compliance Calendar</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--green:#1b4436;--green-light:#235a47;--green-deep:#122e24;--mauve:#916179;--sand:#D2BB9F;--gold:#D99E32;--pale:#cccf8e;--crimson:#A42F30;--beige:#F5EDE4;--white:#fff;--off-white:#faf8f5;--text-dark:#1a1a1a;--text-mid:#444;--text-light:#777;--border:#e0d8cf;--shadow:0 2px 16px rgba(27,68,54,0.08);--radius:4px;--radius-md:8px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Jost',sans-serif;font-weight:300;font-size:14px;color:var(--text-dark);background:var(--off-white);min-height:100vh;}
+nav{position:sticky;top:0;z-index:100;background:var(--green);padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,0.2);}
+.nav-left{display:flex;align-items:center;gap:14px;}
+.back-btn{display:inline-flex;align-items:center;gap:5px;font-family:'Jost',sans-serif;font-size:11px;font-weight:300;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.5);padding:5px 10px;border:1px solid rgba(245,237,228,0.15);border-radius:var(--radius);background:none;cursor:pointer;}
+.nav-sep{width:1px;height:18px;background:rgba(255,255,255,0.15);}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:17px;color:var(--beige);}
+.nav-brand span{color:var(--gold);}
+.nav-sub{font-size:12px;font-weight:300;color:rgba(245,237,228,0.45);}
+.nav-right{display:flex;gap:7px;}
+.nbtn{font-family:'Jost',sans-serif;font-weight:300;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:5px 13px;border-radius:var(--radius);cursor:pointer;border:none;}
+.nbtn-ghost{background:transparent;color:var(--sand);border:1px solid rgba(210,187,159,0.3);}
+.sflash{font-size:11px;color:var(--pale);margin-right:4px;opacity:0;transition:opacity 0.3s;}
+.sflash.on{opacity:1;}
+.tabs{background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;display:flex;scrollbar-width:none;}
+.tab{font-size:11px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:13px 18px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.2s;}
+.tab.active{color:var(--green);border-bottom-color:var(--green);}
+.hero{background:linear-gradient(150deg,var(--green-deep) 0%,var(--green) 55%,var(--green-light) 100%);padding:44px 28px 38px;}
+.hero-inner{max-width:1060px;margin:0 auto;}
+.hero-eye{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--pale);margin-bottom:10px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:36px;color:var(--white);line-height:1.05;margin-bottom:8px;}
+.hero-title em{font-style:italic;color:var(--sand);}
+.hero-desc{font-size:12.5px;color:rgba(245,237,228,0.65);max-width:600px;line-height:1.75;}
+.main{max-width:1060px;margin:0 auto;padding:32px 28px 80px;}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;opacity:0;transform:translateY(10px);transition:opacity 0.35s,transform 0.35s;}
+.card.vis{opacity:1;transform:translateY(0);}
+.card-hdr{padding:16px 22px 13px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.05));display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:16px;color:var(--green);}
+.card-desc{font-size:11px;color:var(--text-light);margin-top:2px;}
+.card-body{padding:20px 22px;}
+.al{border-radius:var(--radius);padding:9px 12px;font-size:12px;line-height:1.6;margin-bottom:10px;display:flex;gap:8px;}
+.al-ic{font-size:13px;flex-shrink:0;}
+.al-i{background:rgba(27,68,54,0.05);border-left:3px solid var(--pale);color:var(--text-mid);}
+.cal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.cal-month{border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;}
+.cal-month-hdr{background:linear-gradient(135deg,var(--green-deep),var(--green));padding:10px 14px;}
+.cal-month-name{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--white);}
+.cal-month-body{padding:10px 14px;}
+.cal-item{padding:6px 0;border-bottom:1px solid rgba(224,216,207,0.4);font-size:11.5px;}
+.cal-item:last-child{border-bottom:none;}
+.cal-item-date{font-size:10px;font-weight:400;color:var(--text-light);margin-bottom:1px;}
+.cal-item-title{color:var(--text-dark);line-height:1.4;}
+.cal-item.urgent .cal-item-date{color:var(--crimson);}
+.cal-item.mid .cal-item-date{color:#8a6010;}
+.ref-table{width:100%;border-collapse:collapse;}
+.ref-table th{font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:8px 12px;text-align:left;border-bottom:2px solid var(--border);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.04));}
+.ref-table td{padding:9px 12px;border-bottom:1px solid rgba(224,216,207,0.5);font-size:12px;font-weight:300;vertical-align:top;}
+.ref-table td:first-child{font-weight:400;}
+.ref-table tr:last-child td{border-bottom:none;}
+footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:center;justify-content:space-between;}
+.fb{font-family:'Cormorant Garamond',serif;font-size:13px;color:rgba(245,237,228,0.4);}
+.fb span{color:var(--sand);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.fu{animation:fadeUp 0.4s ease both;}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-left">
+    <button class="back-btn" onclick="window.location.href='/'">&#8592; All Tools</button>
+    <div class="nav-sep"></div>
+    <div class="nav-brand">Pl<span>in</span>th</div>
+    <div class="nav-sub">&nbsp;·&nbsp; Compliance Calendar</div>
+  </div>
+  <div class="nav-right">
+    <span class="sflash" id="sflash">Saved</span>
+    <button class="nbtn nbtn-ghost" onclick="saveData()">Save</button>
+  </div>
+</nav>
+<div class="tabs">
+  <div class="tab active" onclick="showTab('calendar')" id="tab-calendar">Annual Calendar</div>
+  <div class="tab" onclick="showTab('posters')" id="tab-posters">Required Posters</div>
+  <div class="tab" onclick="showTab('reporting')" id="tab-reporting">Government Reporting</div>
+  <div class="tab" onclick="showTab('custom')" id="tab-custom">Custom Deadlines</div>
+</div>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eye">Plinth · Tool 13</div>
+    <div class="hero-title">Compliance <em>Calendar</em></div>
+    <div class="hero-desc">Federal and Texas HR compliance deadlines by month. Required workplace poster obligations, government reporting, and the ability to track org-specific filing dates in one place.</div>
+  </div>
+</div>
+
+<div id="view-calendar" class="main">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <div class="al al-i fu" style="margin-bottom:0;flex:1;margin-right:14px"><span class="al-ic">ℹ</span><span>This calendar reflects recurring federal and Texas HR compliance obligations. Deadlines may shift when they fall on weekends or federal holidays — verify with counsel for final dates. Some deadlines depend on employer size, benefits plan type, or other org-specific factors. Complete Tool 01 for applicability resolution.</span></div>
+    <button onclick="window.print()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;flex-shrink:0">&#8681; Print / PDF</button>
+  </div>
+  <div class="cal-grid fu">
+    <div class="cal-month"><div class="cal-month-hdr"><div class="cal-month-name">January</div></div><div class="cal-month-body">
+      <div class="cal-item urgent"><div class="cal-item-date">Jan 1</div><div class="cal-item-title">New calendar year — audit I-9s for expiring documents</div></div>
+      <div class="cal-item mid"><div class="cal-item-date">Jan 31</div><div class="cal-item-title">W-2s distributed to employees</div></div>
+      <div class="cal-item mid"><div class="cal-item-date">Jan 31</div><div class="cal-item-title">Form 941 Q4 filing (or Jan 31 deposit deadline if monthly depositor)</div></div>
+      <div class="cal-item"><div class="cal-item-date">Jan 31</div><div class="cal-item-title">FUTA Form 940 annual filing due</div></div>
+    </div></div>
+    <div class="cal-month"><div class="cal-month-hdr"><div class="cal-month-name">February</div></div><div class="cal-month-body">
+      <div class="cal-item urgent"><div class="cal-item-date">Feb 1 — OSHA</div><div class="cal-item-title">OSHA 300A Annual Summary — begin mandatory posting in workplace. Must remain posted through April 30.</div></div>
+      <div class="cal-item mid"><div class="cal-item-date">Feb 15</div><div class="cal-item-title">Q4 payroll tax deposits due (semi-weekly depositors — varies by payroll date)</div></div>
+      <div class="cal-item mid"><div class="cal-item-date">Feb 28</div><div class="cal-item-title">Paper W-2 / W-3 transmittal to SSA (if not electronic)</div></div>
+      <div class="cal-item mid"><div class="cal-item-date">Feb 28</div><div class="cal-item-title">ACA Forms 1094-C / 1095-C paper filing (ALEs)</div></div>
+    </div></div>
+    <div class="cal-month"><div class="cal-month-hdr"><div class="cal-month-name">March</div></div><div class="cal-month-body">
+      <div class="cal-item urgent"><div class="cal-item-date">Mar 1</div><div class="cal-item-title">ACA Form 1095-C furnished to employees (ALEs)</div></div>
+      <div class="cal-item mid"><div class="cal-item-date">Mar 31</div><div class="cal-item-title">Electronic W-2 / W-3 transmittal to SSA</div></div>
+      <div class="cal-item mid"><div class="cal-item-date">Mar 31</div><div class="cal-item-title">Electronic ACA Forms 1094-C / 1095-C filing</div></div>
+    </div></div>
+    <div class="cal-month"><div class="cal-month-hdr"><div class="cal-month-name">April</div></div><div class="cal-month-body">
+      <div class="cal-item urgent"><div class="cal-item-date">Apr 30 — OSHA</div><div class="cal-item-title">OSHA 300A Annual Summary — last day of mandatory posting. Remove after April 30. (Electronic submission to OSHA due March 2 for covered establishments — verify if applicable.)</div></div>
+      <div class="cal-item mid"><div class="cal-item-date">Apr 30</div><div class="cal-item-title">Form 941 Q1 filing deadline (Q1 = January–March)</div></div>
+      <div class="cal-item mid"><div class="cal-item-date">Apr 30</div><div class="cal-item-title">Q1 FUTA deposit due (if FUTA liability exceeded $500 in Q1)</div></div>
+      <div class="cal-item"><div class="cal-item-date">Apr 30</div><div class="cal-item-title">Review workplace posters — update any that have changed this year</div></div>
+    </div></div>
+    <div class="cal-month"><div class="cal-month-hdr"><div class="cal-month-name">May</div></div><div class="cal-month-body">
+      <div class="cal-item"><div class="cal-item-date">May (ongoing)</div><div class="cal-item-title">Annual benefits open enrollment planning begins for summer/fall</div></div>
+      <div class="cal-item mid"><div class="cal-item-date">May 31</div><div class="cal-item-title">Texas: Workers compensation coverage renewal check (if applicable)</div></div>
+    </div></div>
+    <div class="cal-month"><div class="cal-month-hdr"><div class="cal-month-name">June</div></div><div class="cal-month-body">
+      <div class="cal-item"><div class="cal-item-date">Jun 30</div><div class="cal-item-title">Mid-year payroll audit — verify withholding accuracy</div></div>
+      <div class="cal-item"><div class="cal-item-date">Jun 30</div><div class="cal-item-title">Review handbook for any policy updates needed</div></div>
+    </div></div>
+    <div class="cal-month"><div class="cal-month-hdr"><div class="cal-month-name">July</div></div><div class="cal-month-body">
+      <div class="cal-item urgent"><div class="cal-item-date">Jul 31</div><div class="cal-item-title">Form 941 Q2 filing deadline (Q2 = April–June)</div></div>
+      <div class="cal-item mid"><div class="cal-item-date">Jul 31</div><div class="cal-item-title">Q2 FUTA deposit due (if cumulative FUTA liability exceeded $500)</div></div>
+      <div class="cal-item mid"><div class="cal-item-date">Jul 31</div><div class="cal-item-title">PCORI fee due (Form 720) — self-insured health plans and certain HRAs</div></div>
+      <div class="cal-item"><div class="cal-item-date">Spring (variable)</div><div class="cal-item-title">EEO-1 Component 1 filing — EEOC opens the collection window annually, typically April through May. Verify the current year deadline at eeoc.gov. Applies to private employers with 100+ employees and federal contractors with 50+ employees and $50K+ in contracts.</div></div>
+    </div></div>
+    <div class="cal-month"><div class="cal-month-hdr"><div class="cal-month-name">August</div></div><div class="cal-month-body">
+      <div class="cal-item mid"><div class="cal-item-date">Aug (variable)</div><div class="cal-item-title">Open enrollment window — distribute SBCs and updated plan materials. Begin enrollment communication checklist (see Tool 08).</div></div>
+      <div class="cal-item"><div class="cal-item-date">Aug 31</div><div class="cal-item-title">Review ACA measurement periods and FTE count for ALE determination if headcount is near 50</div></div>
+    </div></div>
+    <div class="cal-month"><div class="cal-month-hdr"><div class="cal-month-name">September</div></div><div class="cal-month-body">
+      <div class="cal-item mid"><div class="cal-item-date">Jul 31 / Oct 15</div><div class="cal-item-title">Form 5500 for calendar-year plans: original deadline July 31. Extension via Form 5558 (filed by July 31) extends to October 15. Form 5500-SF available for small plans under 100 participants.</div></div>
+      <div class="cal-item mid"><div class="cal-item-date">Sep 30</div><div class="cal-item-title">CHIP Notice — annual notice to employees about CHIP premium assistance programs. Model notice available from DOL. Required for all employers offering group health plans in states with CHIP programs (including Texas).</div></div>
+    </div></div>
+    <div class="cal-month"><div class="cal-month-hdr"><div class="cal-month-name">October</div></div><div class="cal-month-body">
+      <div class="cal-item urgent"><div class="cal-item-date">Oct 14</div><div class="cal-item-title">Medicare Part D creditable coverage notices due to Medicare-eligible employees</div></div>
+      <div class="cal-item mid"><div class="cal-item-date">Oct 31</div><div class="cal-item-title">Form 941 Q3 filing deadline</div></div>
+    </div></div>
+    <div class="cal-month"><div class="cal-month-hdr"><div class="cal-month-name">November</div></div><div class="cal-month-body">
+      <div class="cal-item"><div class="cal-item-date">Nov (ongoing)</div><div class="cal-item-title">Open enrollment closes — confirm all elections are processed</div></div>
+      <div class="cal-item mid"><div class="cal-item-date">Nov 30</div><div class="cal-item-title">Plan year-end prep: benefits elections finalized, carrier changes implemented</div></div>
+    </div></div>
+    <div class="cal-month"><div class="cal-month-hdr"><div class="cal-month-name">December</div></div><div class="cal-month-body">
+      <div class="cal-item urgent"><div class="cal-item-date">Dec 31</div><div class="cal-item-title">Year-end payroll close — final payroll of year processed correctly</div></div>
+      <div class="cal-item mid"><div class="cal-item-date">Dec 31</div><div class="cal-item-title">Review I-9s for employees whose documents expire in Q1 next year</div></div>
+      <div class="cal-item"><div class="cal-item-date">Dec 31</div><div class="cal-item-title">PTO accrual reconciliation and carryover processing per policy</div></div>
+    </div></div>
+  </div>
+</div>
+
+<div id="view-posters" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Required Workplace Posters</div><div class="card-desc">Federal and Texas mandatory posters — must be displayed in a conspicuous location accessible to all employees. Remote and hybrid employers may need to provide electronic access.</div></div>
+      <button onclick="window.print()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Print / PDF</button>
+    </div>
+    <div class="card-body">
+      <table class="ref-table">
+        <thead><tr><th>Poster</th><th>Issuing Authority</th><th>Applies To</th><th>Download</th></tr></thead>
+        <tbody>
+          <tr><td>FLSA / Minimum Wage</td><td>U.S. DOL</td><td>All employers covered by FLSA</td><td>dol.gov/agencies/whd/posters</td></tr>
+          <tr><td>FMLA (WH-1420)</td><td>U.S. DOL</td><td>Employers with 50+ employees</td><td>dol.gov/agencies/whd/posters</td></tr>
+          <tr><td>OSHA Job Safety and Health</td><td>U.S. DOL / OSHA</td><td>Most employers</td><td>osha.gov/publications/posters</td></tr>
+          <tr><td>EEO Is the Law</td><td>EEOC</td><td>Employers with 15+ employees</td><td>eeoc.gov/poster</td></tr>
+          <tr><td>Employee Polygraph Protection Act</td><td>U.S. DOL</td><td>All private employers</td><td>dol.gov/agencies/whd/posters</td></tr>
+          <tr><td>USERRA (military leave)</td><td>U.S. DOL</td><td>All employers</td><td>dol.gov/agencies/vets/programs/userra</td></tr>
+          <tr><td>Texas Payday Law</td><td>Texas Workforce Commission</td><td>All Texas employers</td><td>twc.texas.gov/businesses/posters-required-workplace</td></tr>
+          <tr><td>Texas Unemployment Insurance</td><td>Texas Workforce Commission</td><td>All Texas employers</td><td>twc.texas.gov</td></tr>
+          <tr><td>Texas Workers Compensation Coverage</td><td>Texas DWC</td><td>All Texas employers (coverage notice required regardless of whether subscribed)</td><td>tdi.texas.gov/wc/employer</td></tr>
+          <tr><td>Texas Child Labor Law</td><td>Texas Workforce Commission</td><td>Employers with minors</td><td>twc.texas.gov</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="view-reporting" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Government Reporting Requirements</div><div class="card-desc">Recurring reporting obligations by employer size and benefit plan type.</div></div>
+      <button onclick="window.print()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Print / PDF</button>
+    </div>
+    <div class="card-body">
+      <table class="ref-table">
+        <thead><tr><th>Report</th><th>Threshold</th><th>Deadline</th><th>Issuing Agency</th></tr></thead>
+        <tbody>
+          <tr><td>Form 941 (payroll taxes)</td><td>All employers with employees</td><td>Quarterly: April 30, July 31, October 31, January 31</td><td>IRS</td></tr>
+          <tr><td>Form 940 (FUTA)</td><td>Employers who paid $1,500+ in wages in any quarter or had employees for 20+ weeks</td><td>Annually: January 31</td><td>IRS</td></tr>
+          <tr><td>W-2 / W-3</td><td>All employers with employees</td><td>To employees: January 31. To SSA: January 31 (electronic)</td><td>IRS / SSA</td></tr>
+          <tr><td>EEO-1 Component 1</td><td>Private employers with 100+ employees; federal contractors with 50+ employees and $50K+ contracts</td><td>Annually — typically May to July (date varies by year)</td><td>EEOC</td></tr>
+          <tr><td>ACA Forms 1094-C / 1095-C</td><td>ALEs (50+ FTEs)</td><td>To employees: March 1. To IRS: March 31 (electronic)</td><td>IRS</td></tr>
+          <tr><td>Form 5500</td><td>Qualified benefit plans with 100+ participants</td><td>July 31 (calendar year plans); 2.5 month extension available</td><td>DOL / IRS</td></tr>
+          <tr><td>OSHA 300A Annual Summary</td><td>Establishments with 10+ employees in non-exempt industries</td><td>Post Feb 1 – April 30; submit electronically by March 2 (if required)</td><td>OSHA</td></tr>
+          <tr><td>Texas New Hire Reporting</td><td>All Texas employers</td><td>Within 20 calendar days of hire</td><td>Texas OAG</td></tr>
+          <tr><td>TWC Quarterly Wage Report</td><td>All Texas employers subject to unemployment tax</td><td>Quarterly: April 30, July 31, October 31, January 31</td><td>Texas Workforce Commission</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="view-custom" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Custom Compliance Deadlines</div><div class="card-desc">Track org-specific filing dates, grant reporting deadlines, insurance renewals, and any other compliance obligations not covered above.</div></div>
+      <div style="display:flex;gap:8px">
+        <button onclick="exportDeadlines()" style="padding:6px 14px;background:var(--gold);color:var(--green-deep);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;font-weight:400;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Export List</button>
+        <button onclick="addDeadline()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">+ Add Deadline</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div id="customDeadlineList" style="margin-bottom:16px"></div>
+      <div class="al al-i" style="margin-top:8px"><span class="al-ic">ℹ</span><span>Custom deadlines are saved automatically to your Plinth session. Use the Export List button to generate a printable deadline report for distribution or filing.</span></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="fb">The Coherence Collective &nbsp;·&nbsp; <span>Plinth</span></div>
+  <div style="display:flex;gap:16px;align-items:center">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.35)">Jump to</span>
+      <select onchange="if(this.value)window.location.href=this.value" style="font-family:'Jost',sans-serif;font-weight:300;font-size:11px;background:rgba(255,255,255,0.06);color:rgba(245,237,228,0.6);border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:4px 24px 4px 8px;cursor:pointer;outline:none;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(245,237,228,0.4)' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 7px center">
+        <option value="/org-profile/">01 &middot; Org Profile</option><option value="/handbook/">02 &middot; Handbook</option><option value="/job-architecture/">03 &middot; Job Architecture</option><option value="/compensation/">04 &middot; Compensation</option><option value="/offer-hiring/">05 &middot; Offer &amp; Hiring</option><option value="/onboarding/">06 &middot; Onboarding</option><option value="/pay-practices/">07 &middot; Pay Practices</option><option value="/benefits/">08 &middot; Benefits Administration</option><option value="/leave/">09 &middot; Leave Management</option><option value="/performance/">10 &middot; Performance Management</option><option value="/er-investigation/">11 &middot; ER &amp; Investigation</option><option value="/separation/">12 &middot; Separation</option><option value="/compliance-calendar/" selected>13 &middot; Compliance Calendar</option><option value="/manager-toolkit/">14 &middot; Manager Toolkit</option><option value="/analytics/">15 &middot; Analytics</option>
+      </select>
+    </div>
+    <span style="color:rgba(245,237,228,0.15)">|</span>
+    <a href="/separation/" style="font-size:11px;color:rgba(245,237,228,0.4);text-decoration:none" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">&larr; Tool 12</a>
+    <span style="color:rgba(245,237,228,0.15)">|</span>
+    <a href="/manager-toolkit/" style="font-size:11px;color:rgba(245,237,228,0.4);text-decoration:none" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">Tool 14 &rarr;</a>
+  </div>
+</footer>
+
+<script>
+const ALL_TABS_CAL = ['calendar','posters','reporting','custom'];
+let profile = {};
+try{ profile = JSON.parse(localStorage.getItem('plinth_op')||'{}'); }catch(e){}
+
+let deadlines = [];
+try{ deadlines = JSON.parse(localStorage.getItem('plinth_deadlines')||'[]'); }catch(e){}
+
+function saveData(){
+  localStorage.setItem('plinth_deadlines', JSON.stringify(deadlines));
+  var fl=document.getElementById('sflash'); fl.classList.add('on'); setTimeout(function(){fl.classList.remove('on');},1800);
+}
+
+function showTab(tab){
+  ALL_TABS_CAL.forEach(function(t){
+    var v=document.getElementById('view-'+t); if(v) v.style.display=t===tab?'block':'none';
+    var el=document.getElementById('tab-'+t); if(el) el.classList.toggle('active',t===tab);
+  });
+  if(tab==='custom') renderDeadlines();
+}
+
+function animateCards(){
+  var obs=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('vis'); }); },{threshold:0.04});
+  document.querySelectorAll('.card').forEach(function(c){obs.observe(c);});
+}
+
+function addDeadline(){
+  deadlines.push({id:'dl_'+Date.now(),title:'',date:'',owner:'',notes:''});
+  localStorage.setItem('plinth_deadlines',JSON.stringify(deadlines));
+  renderDeadlines();
+}
+
+function deleteDeadline(idx){
+  deadlines.splice(idx,1);
+  localStorage.setItem('plinth_deadlines',JSON.stringify(deadlines));
+  renderDeadlines();
+}
+
+function updateDeadline(idx,field,val){
+  if(deadlines[idx]) deadlines[idx][field]=val;
+  localStorage.setItem('plinth_deadlines',JSON.stringify(deadlines));
+}
+
+function renderDeadlines(){
+  var container=document.getElementById('customDeadlineList');
+  if(!container) return;
+  if(!deadlines.length){
+    container.innerHTML='<div style="font-size:12px;color:var(--text-light);padding:12px 0;text-align:center;border:1px dashed var(--border);border-radius:var(--radius-md);padding:20px">No custom deadlines yet. Use the + Add Deadline button to track org-specific filing dates.</div>';
+    return;
+  }
+  var html='';
+  for(var i=0;i<deadlines.length;i++){
+    var d=deadlines[i];
+    // Sort indicator
+    var daysLeft='';
+    if(d.date){
+      var diff=Math.ceil((new Date(d.date+'T12:00:00')-new Date())/(1000*60*60*24));
+      if(diff<0) daysLeft='<span style="font-size:10px;color:var(--crimson);margin-left:6px">Overdue</span>';
+      else if(diff<=14) daysLeft='<span style="font-size:10px;color:var(--crimson);margin-left:6px">'+diff+' days</span>';
+      else if(diff<=30) daysLeft='<span style="font-size:10px;color:#8a6010;margin-left:6px">'+diff+' days</span>';
+    }
+    html+='<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:10px;align-items:start;padding:12px 0;border-bottom:1px solid rgba(224,216,207,0.4)">';
+    html+='<div>';
+    html+='<label style="font-size:10px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-light);margin-bottom:4px;display:block">Deadline Name</label>';
+    html+='<input type="text" value="'+d.title.replace(/"/g,'&quot;')+'" placeholder="e.g., Grant report to XYZ Foundation" oninput="updateDeadline('+i+',\'title\',this.value)" style="width:100%;font-family:Jost,sans-serif;font-weight:300;font-size:13px;border:1px solid var(--border);border-radius:var(--radius);padding:8px 11px">';
+    html+='</div>';
+    html+='<div>';
+    html+='<label style="font-size:10px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-light);margin-bottom:4px;display:block">Due Date'+daysLeft+'</label>';
+    html+='<input type="date" value="'+d.date+'" oninput="updateDeadline('+i+',\'date\',this.value);renderDeadlines()" style="width:100%;font-family:Jost,sans-serif;font-weight:300;font-size:13px;border:1px solid var(--border);border-radius:var(--radius);padding:8px 11px">';
+    html+='</div>';
+    html+='<div>';
+    html+='<label style="font-size:10px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-light);margin-bottom:4px;display:block">Owner</label>';
+    html+='<input type="text" value="'+(d.owner||'').replace(/"/g,'&quot;')+'" placeholder="Responsible party" oninput="updateDeadline('+i+',\'owner\',this.value)" style="width:100%;font-family:Jost,sans-serif;font-weight:300;font-size:13px;border:1px solid var(--border);border-radius:var(--radius);padding:8px 11px">';
+    html+='</div>';
+    html+='<div>';
+    html+='<label style="font-size:10px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-light);margin-bottom:4px;display:block">Notes</label>';
+    html+='<input type="text" value="'+(d.notes||'').replace(/"/g,'&quot;')+'" placeholder="Filing location, agency..." oninput="updateDeadline('+i+',\'notes\',this.value)" style="width:100%;font-family:Jost,sans-serif;font-weight:300;font-size:13px;border:1px solid var(--border);border-radius:var(--radius);padding:8px 11px">';
+    html+='</div>';
+    html+='<div style="padding-top:22px">';
+    html+='<button onclick="deleteDeadline('+i+')" style="padding:8px 10px;background:none;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;color:var(--crimson);font-size:14px">&#10005;</button>';
+    html+='</div>';
+    html+='</div>';
+  }
+  container.innerHTML=html;
+}
+
+function exportDeadlines(){
+  if(!deadlines.length){ alert('No custom deadlines to export. Add deadlines first.'); return; }
+  var org=(profile&&profile.legalName)?profile.legalName:'Organization';
+  var today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  // Sort by date
+  var sorted=[].concat(deadlines).sort(function(a,b){ return (a.date||'9999')>(b.date||'9999')?1:-1; });
+
+  var _pbTitle='Compliance Deadlines \u2014 '+org;
+  var _pbFile='compliance-deadlines.html';
+  var _pbType='Compliance Deadlines';
+
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Compliance Deadlines</title>';
+  html+='<style>body{font-family:Georgia,serif;max-width:700px;margin:0 auto;padding:48px 40px;font-size:10.5pt;line-height:1.8;color:#1a1a1a;}';
+  html+='h1{font-size:18pt;font-weight:400;color:#1b4436;}table{width:100%;border-collapse:collapse;margin-top:20px;}';
+  html+='th{font-size:9pt;font-weight:600;text-align:left;border-bottom:2px solid #1b4436;padding:8px 12px;color:#1b4436;}';
+  html+='td{padding:9px 12px;border-bottom:1px solid #e0d8cf;font-size:10pt;vertical-align:top;}';
+  html+='.overdue{color:#A42F30;font-weight:600;}';
+  html+='.soon{color:#8a6010;}';
+  html+='@page{size:letter;margin:1in;}@media print{body{padding:0;}}</style></head><body>';
+  html+='<h1>'+org+'</h1>';
+  html+='<p style="font-size:11pt;color:#555;margin-bottom:4px">Custom Compliance Deadlines</p>';
+  html+='<p style="font-size:9pt;color:#777;margin-bottom:24px">Generated: '+today+'</p>';
+  html+='<table><thead><tr><th>Deadline</th><th>Due Date</th><th>Owner</th><th>Notes</th></tr></thead><tbody>';
+  for(var i=0;i<sorted.length;i++){
+    var d=sorted[i];
+    var dateStr='';
+    var cls='';
+    if(d.date){
+      var dt=new Date(d.date+'T12:00:00');
+      dateStr=dt.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+      var diff=Math.ceil((dt-new Date())/(1000*60*60*24));
+      if(diff<0) cls=' class="overdue"';
+      else if(diff<=30) cls=' class="soon"';
+    }
+    html+='<tr><td style="font-weight:600">'+(d.title||'[Untitled]')+'</td><td'+cls+'>'+dateStr+'</td><td>'+(d.owner||'')+'</td><td>'+(d.notes||'')+'</td></tr>';
+  }
+  html+='</tbody></table>';
+  html+='<p style="font-size:8pt;color:#999;margin-top:36px;border-top:1px solid #e0d8cf;padding-top:10px">Generated via Plinth by The Coherence Collective, LLC.</p>';
+  html+='</body></html>';
+
+  // Add action bar
+  var _pbC='<style>.pb{position:fixed;top:0;left:0;right:0;z-index:9999;background:#1b4436;padding:10px 28px;display:flex;gap:10px;align-items:center;box-shadow:0 2px 12px rgba(0,0,0,0.3);}.pb-title{font-family:Georgia,serif;font-size:11pt;color:rgba(245,237,228,0.75);flex:1;font-weight:400;}.pb-btn{font-family:Arial,sans-serif;font-size:8.5pt;padding:7px 16px;border:none;border-radius:3px;cursor:pointer;letter-spacing:0.04em;font-weight:500;}.pb-gold{background:#D99E32;color:#122e24;}.pb-ghost{background:rgba(255,255,255,0.09);color:rgba(245,237,228,0.82);border:1px solid rgba(255,255,255,0.14);}.pb-spacer{height:52px;}@media print{.pb,.pb-spacer{display:none!important;}}</style>';
+  var _pbH='<div class="pb"><span class="pb-title">'+_pbTitle+'</span><button class="pb-btn pb-gold" onclick="window.print()">&#8681; Print / Save as PDF</button><button class="pb-btn pb-ghost" onclick="plDl()">&#8659; Download</button><button class="pb-btn pb-ghost" onclick="plSave()">&#9729; Save to Plinth</button><button class="pb-btn pb-ghost" onclick="window.close()" style="margin-left:4px">&#10005;</button></div><div class="pb-spacer"></div>';
+  var _pbJS='<scr'+'ipt>function plDl(){var blob=new Blob([document.documentElement.outerHTML],{type:"text/html"});var url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download="'+_pbFile+'";a.click();setTimeout(function(){URL.revokeObjectURL(url);},1200);}function plSave(){var d=[];try{d=JSON.parse(localStorage.getItem("plinth_docs")||"[]");}catch(e){}d.push({id:"doc_"+Date.now(),title:"'+_pbTitle+'",type:"'+_pbType+'",date:new Date().toISOString()});localStorage.setItem("plinth_docs",JSON.stringify(d));var b=document.querySelectorAll(".pb-ghost");if(b[1]){b[1].textContent="\u2713 Saved to Plinth";b[1].style.background="rgba(27,68,54,0.5)";}}</s'+'cript>';
+  html=html.replace('<body>','<body>'+_pbH);
+  html=html.replace('</style></head>',_pbC+'</style></head>');
+  html+=_pbJS;
+
+  var win=window.open('','_blank'); win.document.write(html); win.document.close();
+}
+
+document.addEventListener('DOMContentLoaded',function(){ animateCards(); });
+</script>
+</body>
+</html>

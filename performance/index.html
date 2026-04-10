@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Plinth · Performance Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--green:#1b4436;--green-light:#235a47;--green-deep:#122e24;--mauve:#916179;--sand:#D2BB9F;--gold:#D99E32;--pale:#cccf8e;--crimson:#A42F30;--beige:#F5EDE4;--white:#fff;--off-white:#faf8f5;--text-dark:#1a1a1a;--text-mid:#444;--text-light:#777;--border:#e0d8cf;--shadow:0 2px 16px rgba(27,68,54,0.08);--radius:4px;--radius-md:8px;--radius-lg:12px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Jost',sans-serif;font-weight:300;font-size:14px;color:var(--text-dark);background:var(--off-white);min-height:100vh;}
+nav{position:sticky;top:0;z-index:100;background:var(--green);padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,0.2);}
+.nav-left{display:flex;align-items:center;gap:14px;}
+.back-btn{display:inline-flex;align-items:center;gap:5px;font-family:'Jost',sans-serif;font-size:11px;font-weight:300;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.5);padding:5px 10px;border:1px solid rgba(245,237,228,0.15);border-radius:var(--radius);background:none;cursor:pointer;transition:all 0.2s;}
+.back-btn:hover{color:var(--beige);}
+.nav-sep{width:1px;height:18px;background:rgba(255,255,255,0.15);}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:17px;color:var(--beige);}
+.nav-brand span{color:var(--gold);}
+.nav-sub{font-size:12px;font-weight:300;color:rgba(245,237,228,0.45);}
+.nav-right{display:flex;gap:7px;align-items:center;}
+.nbtn{font-family:'Jost',sans-serif;font-weight:300;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:5px 13px;border-radius:var(--radius);cursor:pointer;border:none;transition:all 0.2s;}
+.nbtn-ghost{background:transparent;color:var(--sand);border:1px solid rgba(210,187,159,0.3);}
+.nbtn-ghost:hover{background:rgba(210,187,159,0.1);color:var(--beige);}
+.nbtn-gold{background:var(--gold);color:var(--green-deep);font-weight:400;}
+.sflash{font-size:11px;color:var(--pale);margin-right:4px;opacity:0;transition:opacity 0.3s;}
+.sflash.on{opacity:1;}
+.tabs{background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;display:flex;overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{font-size:11px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:13px 18px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.2s;}
+.tab:hover{color:var(--green);}
+.tab.active{color:var(--green);border-bottom-color:var(--green);}
+.hero{background:linear-gradient(150deg,var(--green-deep) 0%,var(--green) 55%,var(--green-light) 100%);padding:44px 28px 38px;position:relative;overflow:hidden;}
+.hero-inner{max-width:1060px;margin:0 auto;}
+.hero-eye{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--pale);margin-bottom:10px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:36px;color:var(--white);line-height:1.05;margin-bottom:8px;}
+.hero-title em{font-style:italic;color:var(--sand);}
+.hero-desc{font-size:12.5px;font-weight:300;color:rgba(245,237,228,0.65);max-width:600px;line-height:1.75;}
+.main{max-width:1060px;margin:0 auto;padding:32px 28px 80px;}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;opacity:0;transform:translateY(10px);transition:opacity 0.35s,transform 0.35s;}
+.card.vis{opacity:1;transform:translateY(0);}
+.card-hdr{padding:16px 22px 13px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.05));display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:16px;color:var(--green);}
+.card-desc{font-size:11px;color:var(--text-light);margin-top:2px;line-height:1.5;}
+.card-body{padding:20px 22px;}
+.fg{display:grid;gap:14px;}
+.g2{grid-template-columns:1fr 1fr;}
+.g3{grid-template-columns:1fr 1fr 1fr;}
+.c2{grid-column:span 2;}
+.c3{grid-column:span 3;}
+.f label{display:block;font-size:11px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-mid);margin-bottom:5px;}
+input[type="text"],input[type="number"],input[type="date"],select,textarea{width:100%;font-family:'Jost',sans-serif;font-weight:300;font-size:13px;color:var(--text-dark);background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:8px 11px;outline:none;transition:border-color 0.2s;appearance:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(27,68,54,0.07);}
+textarea{resize:vertical;min-height:72px;line-height:1.7;}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23777' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer;}
+.fhint{font-size:10.5px;color:var(--text-light);margin-top:4px;line-height:1.5;}
+.div{height:1px;background:var(--border);margin:16px 0;}
+.div-lbl{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);margin:-14px 0 12px;display:flex;align-items:center;gap:8px;}
+.div-lbl::before,.div-lbl::after{content:'';flex:1;height:1px;background:var(--border);}
+.al{border-radius:var(--radius);padding:9px 12px;font-size:12px;line-height:1.6;margin-bottom:10px;display:flex;gap:8px;align-items:flex-start;}
+.al-ic{font-size:13px;flex-shrink:0;margin-top:1px;}
+.al-i{background:rgba(27,68,54,0.05);border-left:3px solid var(--pale);color:var(--text-mid);}
+.al-w{background:rgba(217,158,50,0.07);border-left:3px solid var(--gold);color:var(--text-mid);}
+.al-c{background:rgba(145,97,121,0.07);border-left:3px solid var(--mauve);color:var(--text-mid);}
+.al-d{background:rgba(164,47,48,0.06);border-left:3px solid var(--crimson);color:var(--text-mid);}
+.ref-table{width:100%;border-collapse:collapse;}
+.ref-table th{font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);padding:8px 12px;text-align:left;border-bottom:2px solid var(--border);background:linear-gradient(135deg,rgba(27,68,54,0.03),rgba(210,187,159,0.04));}
+.ref-table td{padding:9px 12px;border-bottom:1px solid rgba(224,216,207,0.5);font-size:12px;font-weight:300;vertical-align:top;}
+.ref-table tr:last-child td{border-bottom:none;}
+.ref-table tr:hover td{background:rgba(27,68,54,0.015);}
+.ref-table td:first-child{font-weight:400;}
+.form-section{margin-bottom:24px;}
+.form-section-title{font-size:10px;font-weight:400;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-light);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:center;justify-content:space-between;}
+.fb{font-family:'Cormorant Garamond',serif;font-size:13px;color:rgba(245,237,228,0.4);}
+.fb span{color:var(--sand);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.fu{animation:fadeUp 0.4s ease both;}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-left">
+    <button class="back-btn" onclick="window.location.href='/'">&#8592; All Tools</button>
+    <div class="nav-sep"></div>
+    <div class="nav-brand">Pl<span>in</span>th</div>
+    <div class="nav-sub">&nbsp;·&nbsp; Performance Management</div>
+  </div>
+  <div class="nav-right">
+    <span class="sflash" id="sflash">Saved</span>
+    <button class="nbtn nbtn-ghost" onclick="saveData()">Save</button>
+  </div>
+</nav>
+<div class="tabs">
+  <div class="tab active" onclick="showTab('cycles')" id="tab-cycles">Review Cycles</div>
+  <div class="tab" onclick="showTab('log')" id="tab-log">Performance Log</div>
+  <div class="tab" onclick="showTab('pip')" id="tab-pip">Improvement Plans</div>
+  <div class="tab" onclick="showTab('docs')" id="tab-docs">Documentation Standards</div>
+  <div class="tab" onclick="showTab('templates')" id="tab-templates">Conversation Templates</div>
+</div>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eye">Plinth · Tool 10</div>
+    <div class="hero-title">Performance <em>Management</em></div>
+    <div class="hero-desc">Review cycles, goal frameworks, performance improvement plans, and the documentation discipline that protects the organization and develops its people.</div>
+  </div>
+</div>
+
+<div id="view-cycles" class="main">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Performance Review Configuration</div><div class="card-desc">Set the organization's review cadence and evaluation framework.</div></div>
+      <button onclick="window.print()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Print / PDF</button>
+    </div>
+    <div class="card-body">
+      <div class="fg g3">
+        <div class="f"><label>Review Frequency</label>
+          <select id="reviewFreq" onchange="saveData()"><option value="">Select</option><option value="annual">Annual</option><option value="semiannual">Semi-annual</option><option value="quarterly">Quarterly</option><option value="continuous">Continuous (ongoing feedback, no formal cycle)</option></select>
+        </div>
+        <div class="f"><label>Review Period</label><input type="text" id="reviewPeriod" placeholder="e.g., January 1 – December 31" oninput="saveData()"></div>
+        <div class="f"><label>Review Window</label><input type="text" id="reviewWindow" placeholder="e.g., January 15 – February 15" oninput="saveData()"></div>
+        <div class="f"><label>Rating Scale</label>
+          <select id="ratingScale" onchange="saveData()"><option value="">Select</option><option value="5">5-point (Exceeds, Meets+, Meets, Below, Unsatisfactory)</option><option value="4">4-point (Outstanding, Solid, Developing, Not Meeting)</option><option value="3">3-point (Exceeds, Meets, Below)</option><option value="narrative">Narrative only — no numerical rating</option></select>
+        </div>
+        <div class="f"><label>Self-Assessment Required</label>
+          <select id="selfAssess" onchange="saveData()"><option value="">Select</option><option value="yes">Yes — completed before manager review</option><option value="optional">Optional</option><option value="no">No</option></select>
+        </div>
+        <div class="f"><label>Peer Feedback</label>
+          <select id="peerFeedback" onchange="saveData()"><option value="">Select</option><option value="yes">Yes — 360-style input collected</option><option value="optional">At manager discretion</option><option value="no">No</option></select>
+        </div>
+      </div>
+      <div class="div"></div>
+      <div class="div"></div>
+      <div class="div-lbl">Goal Framework</div>
+      <div class="fg g2">
+        <div class="f"><label>Goal Setting Methodology</label>
+          <select id="goalMethod" onchange="saveData()"><option value="">Select</option><option value="smart">SMART Goals</option><option value="okr">OKRs (Objectives and Key Results)</option><option value="hybrid">Hybrid — goals + competencies</option><option value="narrative">Narrative expectations — no formal goal structure</option></select>
+        </div>
+        <div class="f"><label>Number of Goals Per Review Period</label><input type="text" id="goalCount" placeholder="e.g., 3–5 goals per employee" oninput="saveData()"></div>
+        <div class="f c2"><label>Performance Areas Evaluated</label><textarea id="perfAreas" placeholder="e.g., Job knowledge and technical skills, Communication, Collaboration, Initiative, Quality of work, Mission alignment..." oninput="saveData()"></textarea></div>
+      </div>
+      <div class="div"></div>
+      <div class="div-lbl">Annual Review Timeline — Sector Best Practice</div>
+      <div class="al al-i" style="margin-bottom:12px"><span class="al-ic">ℹ</span><span>A consistent, transparent review timeline builds trust and reduces the performance conversation from an event employees dread to a rhythm they can prepare for. Communicate the timeline to all employees at the start of the review period. Surprises in the review room are almost always a management failure.</span></div>
+      <table class="ref-table">
+        <thead><tr><th>Phase</th><th>Timing</th><th>Who Acts</th><th>Best Practice Note</th></tr></thead>
+        <tbody>
+          <tr><td>Goal Setting</td><td>First 2 weeks of each review period</td><td>Employee drafts; manager approves</td><td>Goals should be co-created, not handed down. Employee ownership of goals correlates directly with performance outcomes.</td></tr>
+          <tr><td>Mid-Cycle Check-In</td><td>Midpoint of review period</td><td>Manager and employee</td><td>Not optional. Surprises in the formal review that were not raised at mid-year are a manager failure — not a performance failure. Use this to course-correct, recognize, and recalibrate.</td></tr>
+          <tr><td>Employee Self-Assessment</td><td>2 weeks before manager review deadline</td><td>Employee</td><td>Self-assessment should precede manager review — not follow it. When employees write first, managers get insight, not validation of their own pre-formed view.</td></tr>
+          <tr><td>Manager Review Completed</td><td>1 week before review meeting</td><td>Manager; reviewed by HR</td><td>HR review before delivery catches discriminatory language, unsupported ratings, and consistency issues across the team. This is not bureaucracy — it is risk management.</td></tr>
+          <tr><td>Performance Review Meeting</td><td>Scheduled review window</td><td>Manager and employee; HR available</td><td>The meeting is a conversation, not a reading of the document. Employee should be given the written review before the meeting so they can prepare a response. Ambush reviews are bad practice.</td></tr>
+          <tr><td>Review Finalized and Filed</td><td>Within 1 week of meeting</td><td>Manager; HR</td><td>Signatures are required — employee signature acknowledges receipt, not agreement. If employee refuses to sign, note refusal with a witness. File in personnel record.</td></tr>
+          <tr><td>Compensation Decisions</td><td>Following review finalization</td><td>Manager; HR; Finance</td><td>Separate the performance conversation from the compensation conversation when possible. When combined, employees focus on pay and stop hearing feedback.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- PERFORMANCE LOG TAB -->
+<div id="view-log" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Performance Review Log</div><div class="card-desc">A cumulative record of formal performance reviews, mid-cycle check-ins, and ratings. Each entry is a separate record — the log builds over time and across employees.</div></div>
+      <button onclick="openPerfModal()" style="padding:6px 14px;background:var(--gold);color:var(--green-deep);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;font-weight:400;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">+ Add Entry</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-i" style="margin-bottom:14px"><span class="al-ic">ℹ</span><span>This log is the organization's official record of formal performance activity. It should include annual and mid-year reviews, any formal check-ins with documented outcomes, and records of ratings assigned. Consistent documentation across the team reduces exposure to disparate treatment claims.</span></div>
+      <div id="perfLogContent">
+        <div style="padding:24px;text-align:center;color:var(--text-light);font-size:12px;background:rgba(27,68,54,0.02);border-radius:var(--radius-md);border:1px dashed var(--border)">No performance entries logged yet. Add the first entry using the button above.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PERFORMANCE LOG MODAL -->
+<div id="perfModal" style="position:fixed;inset:0;z-index:200;background:rgba(18,46,36,0.65);backdrop-filter:blur(4px);display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;">
+  <div style="background:var(--white);border-radius:var(--radius-lg);max-width:620px;width:100%;box-shadow:0 16px 64px rgba(0,0,0,0.25);margin:auto;">
+    <div style="background:linear-gradient(135deg,var(--green-deep),var(--green));padding:20px 26px;border-radius:var(--radius-lg) var(--radius-lg) 0 0;display:flex;justify-content:space-between;align-items:flex-start;">
+      <div id="perfModalTitle" style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--white)">New Performance Entry</div>
+      <button onclick="closePerfModal()" style="background:none;border:none;color:rgba(245,237,228,0.5);font-size:20px;cursor:pointer;line-height:1;">×</button>
+    </div>
+    <div style="padding:22px 26px;">
+      <div class="fg g3">
+        <div class="f"><label>Employee Name</label><input type="text" id="plEmp" placeholder="Full name"></div>
+        <div class="f"><label>Review Type</label>
+          <select id="plType"><option value="Annual Review">Annual Review</option><option value="Mid-Year Check-In">Mid-Year Check-In</option><option value="90-Day Review">90-Day Review</option><option value="Quarterly Check-In">Quarterly Check-In</option><option value="Informal Check-In">Informal Check-In</option><option value="PIP Check-In">PIP Check-In</option></select>
+        </div>
+        <div class="f"><label>Review Period</label><input type="text" id="plPeriod" placeholder="e.g., Jan–Dec 2025"></div>
+        <div class="f"><label>Review Date</label><input type="date" id="plDate"></div>
+        <div class="f"><label>Overall Rating</label>
+          <select id="plRating"><option value="">N/A (narrative only)</option><option value="Exceeds Expectations">Exceeds Expectations</option><option value="Meets Expectations">Meets Expectations</option><option value="Meets Most Expectations">Meets Most Expectations</option><option value="Below Expectations">Below Expectations</option><option value="Unsatisfactory">Unsatisfactory</option></select>
+        </div>
+        <div class="f"><label>Reviewed By</label><input type="text" id="plReviewer" placeholder="Manager name"></div>
+        <div class="c3 f"><label>Key Themes and Observations</label><textarea id="plNotes" placeholder="Strengths recognized, areas for development, goal progress, any follow-up required..." rows="4"></textarea></div>
+        <div class="f c3"><label>Next Steps / Follow-Up Required</label><input type="text" id="plNext" placeholder="e.g., Mid-year check-in scheduled; coaching plan to be developed"></div>
+      </div>
+    </div>
+    <div style="padding:14px 26px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;">
+      <button onclick="closePerfModal()" style="padding:8px 18px;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:12px;font-weight:300;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--text-mid);">Cancel</button>
+      <button onclick="savePerfEntry()" style="padding:8px 18px;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:12px;font-weight:300;cursor:pointer;border:none;background:linear-gradient(135deg,var(--green),var(--green-light));color:var(--white);">Save Entry</button>
+    </div>
+  </div>
+</div>
+
+<!-- PIP TAB -->
+<div id="view-pip" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Performance Improvement Plans</div><div class="card-desc">Active and historical PIPs. Each plan is a separate record. Export any PIP as a print-ready document for signature and personnel file.</div></div>
+      <button onclick="openPIPModal()" style="padding:6px 14px;background:var(--gold);color:var(--green-deep);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;font-weight:400;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">+ New PIP</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-c" style="margin-bottom:14px"><span class="al-ic">⚖</span><span>A PIP is a legal document. It creates a record of the performance concern, the expectations communicated, the support provided, and the consequences of non-improvement. Done correctly, it protects the organization and gives the employee a genuine opportunity to succeed. Every PIP should be reviewed by HR or legal before delivery.</span></div>
+      <div id="pipLogContent">
+        <div style="padding:24px;text-align:center;color:var(--text-light);font-size:12px;background:rgba(27,68,54,0.02);border-radius:var(--radius-md);border:1px dashed var(--border)">No PIPs on file. Create one using the button above.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PIP MODAL -->
+<div id="pipModal" style="position:fixed;inset:0;z-index:200;background:rgba(18,46,36,0.65);backdrop-filter:blur(4px);display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;">
+  <div style="background:var(--white);border-radius:var(--radius-lg);max-width:680px;width:100%;box-shadow:0 16px 64px rgba(0,0,0,0.25);margin:auto;">
+    <div style="background:linear-gradient(135deg,var(--green-deep),var(--green));padding:20px 26px;border-radius:var(--radius-lg) var(--radius-lg) 0 0;display:flex;justify-content:space-between;align-items:flex-start;">
+      <div id="pipModalTitle" style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--white)">New Performance Improvement Plan</div>
+      <button onclick="closePIPModal()" style="background:none;border:none;color:rgba(245,237,228,0.5);font-size:20px;cursor:pointer;line-height:1;">×</button>
+    </div>
+    <div style="padding:22px 26px;">
+      <div class="fg g2">
+        <div class="f"><label>Employee Name</label><input type="text" id="pipEmp" placeholder="Full name"></div>
+        <div class="f"><label>Position</label><input type="text" id="pipPosition" placeholder="Current title"></div>
+        <div class="f"><label>PIP Start Date</label><input type="date" id="pipStart"></div>
+        <div class="f"><label>Duration</label>
+          <select id="pipDuration"><option value="30">30 days</option><option value="60">60 days</option><option value="90">90 days (standard)</option><option value="120">120 days</option></select>
+        </div>
+        <div class="f"><label>Status</label>
+          <select id="pipStatus"><option value="Active">Active</option><option value="Completed — Improved">Completed — Improved</option><option value="Completed — Separated">Completed — Separated</option><option value="Extended">Extended</option><option value="Closed — Other">Closed — Other</option></select>
+        </div>
+        <div class="f"><label>Reviewed by HR/Legal?</label>
+          <select id="pipReviewed"><option value="Yes — prior to delivery">Yes — prior to delivery</option><option value="Pending review">Pending review</option><option value="No">No</option></select>
+        </div>
+        <div class="c2 f"><label>Performance Concerns</label><textarea id="pipConcerns" placeholder="Specific, documented performance deficiencies with dates and observable examples. Avoid subjective language — use behavior, output, or observable conduct only." rows="4"></textarea></div>
+        <div class="c2 f"><label>Required Improvements (Measurable)</label><textarea id="pipRequirements" placeholder="What does success look like, specifically? Each requirement must be observable and measurable. Not 'improve communication' — 'submit written project updates to the team by 5pm each Friday.'" rows="4"></textarea></div>
+        <div class="c2 f"><label>Support Provided by the Organization</label><textarea id="pipSupport" placeholder="Training, coaching, additional supervision, adjusted workload, accommodations, or resources provided during the PIP period." rows="3"></textarea></div>
+        <div class="c2 f"><label>Consequences of Non-Improvement</label><textarea id="pipConsequences" placeholder="State clearly: failure to meet requirements by [end date] may result in further disciplinary action up to and including separation." rows="2"></textarea></div>
+      </div>
+    </div>
+    <div style="padding:14px 26px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;">
+      <button onclick="closePIPModal()" style="padding:8px 18px;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:12px;font-weight:300;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--text-mid);">Cancel</button>
+      <button onclick="savePIPEntry()" style="padding:8px 18px;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:12px;font-weight:300;cursor:pointer;border:none;background:linear-gradient(135deg,var(--green),var(--green-light));color:var(--white);">Save PIP</button>
+    </div>
+  </div>
+</div>
+<div id="view-docs" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Documentation Standards</div><div class="card-desc">What to document, how to write it, and what belongs in the personnel file.</div></div>
+      <button onclick="window.print()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Print / PDF</button>
+    </div>
+    <div class="card-body">
+      <div class="al al-i" style="margin-bottom:14px"><span class="al-ic">ℹ</span><span>The single most common HR failure in employment litigation is inadequate documentation. Undocumented performance conversations never happened. Verbal warnings that weren't written down don't exist. Document in real time — not retroactively.</span></div>
+      <div class="div"></div>
+      <div class="div-lbl">Progressive Discipline Framework</div>
+      <div class="al al-w" style="margin-bottom:12px"><span class="al-ic">△</span><span>Progressive discipline is appropriate for performance and minor conduct issues. Serious misconduct — harassment, theft, violence, fraud, safety violations — may warrant immediate termination without any prior steps. Document why you skipped steps when you do. A policy that says "we always give three warnings" is not a policy — it is a liability.</span></div>
+      <table class="ref-table" style="margin-bottom:16px">
+        <thead><tr><th>Step</th><th>When to Use</th><th>What Must Be Documented</th><th>How It Should Be Delivered</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--green)">1. Coaching Conversation</td><td>First observation of a performance or conduct issue. Informal. No formal record required — though a brief manager's note is best practice.</td><td>Date, issue discussed, expectations stated, employee response. Email to self is sufficient.</td><td>Private 1:1. Conversational. Not threatening. "I want to give you feedback before this becomes a bigger issue."</td></tr>
+          <tr><td style="color:var(--green)">2. Verbal Warning (Documented)</td><td>Issue continues after coaching, or initial severity warrants more formal action. Written record of what was said verbally.</td><td>Date, specific behavior, policy or expectation violated, expected change, timeframe for improvement, employee response, manager signature.</td><td>Private meeting. Serious tone. "This is a formal verbal warning." Give employee a copy of the written record.</td></tr>
+          <tr><td style="color:#8a6010">3. Written Warning</td><td>Issue continues after verbal warning, or initial severity warrants skipping step 2. Formal disciplinary document.</td><td>All elements of verbal warning plus: reference to any prior discipline, clear statement of consequences if behavior continues, employee acknowledgment of receipt.</td><td>Private meeting with HR present when possible. Give employee a copy. If employee refuses to sign, note the refusal on the document with a witness.</td></tr>
+          <tr><td style="color:var(--mauve)">4. Performance Improvement Plan (PIP)</td><td>Performance deficiency has not improved despite prior warnings, or role-specific performance failure requiring structured intervention. See PIP tab.</td><td>Concerns, requirements, support, timeline, consequences, dual signatures.</td><td>Formal meeting. Manager + HR. Present as an opportunity, not a prelude to termination — even when it is. Document the meeting itself.</td></tr>
+          <tr><td style="color:var(--crimson)">5. Separation</td><td>Performance has not improved through PIP, or conduct is serious enough to warrant termination. Always review before acting.</td><td>Complete documentation trail through all prior steps. Confirmation that termination was reviewed for consistency and protected class risk before action was taken.</td><td>Brief, direct, not argumentative. Decision is final. See Tool 12 — Separation.</td></tr>
+        </tbody>
+      </table>
+      <div class="div"></div>
+      <div class="div-lbl">ADA and FMLA Intersection with Performance</div>
+      <div class="al al-d" style="margin-bottom:12px"><span class="al-ic">⚠</span><span>This is one of the highest-risk scenarios in employment law. When performance issues coincide with a medical condition, disability, or leave — the legal landscape changes dramatically. Do not proceed with discipline or termination in this scenario without HR review and, in serious cases, employment counsel.</span></div>
+      <table class="ref-table">
+        <thead><tr><th>Scenario</th><th>What the Law Requires</th><th>What Many Employers Get Wrong</th></tr></thead>
+        <tbody>
+          <tr><td>Employee on FMLA has unmet performance expectations</td><td>FMLA leave cannot be counted as an absence against the employee. Performance standards that were unmet while on leave should generally be paused. You may hold the employee to the same standards when they return — but you cannot discipline for performance that occurred during protected leave.</td><td>Issuing discipline that includes FMLA absences in the attendance record, or failing to distinguish between pre-leave and during-leave performance issues.</td></tr>
+          <tr><td>Employee requests accommodation after discipline begins</td><td>The accommodation request triggers an obligation to engage in the interactive process — even if discipline is already underway. Continuing discipline without addressing the accommodation request is a retaliation risk.</td><td>Treating the accommodation request as irrelevant to an ongoing disciplinary process, or fast-tracking termination after an accommodation request is made.</td></tr>
+          <tr><td>Employee's performance issue may be disability-related</td><td>If the employer has reason to know that a performance issue may be related to a disability, the ADA requires consideration of whether a reasonable accommodation would enable adequate performance before proceeding to termination.</td><td>Terminating an employee for performance without ever considering whether the conduct or deficiency was connected to a disability or whether accommodation was possible.</td></tr>
+          <tr><td>Employee cannot perform essential functions due to disability</td><td>If an employee genuinely cannot perform the essential functions of the role even with accommodation, termination may be lawful. But the employer must have engaged in a good-faith interactive process first and documented why no reasonable accommodation was possible.</td><td>Skipping the interactive process and going straight to termination, leaving the organization exposed to an ADA failure-to-accommodate claim.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div id="view-templates" class="main" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr">
+      <div><div class="card-title">Performance Conversation Templates</div><div class="card-desc">Frameworks for common performance conversations. These are starting points — adapt to the person and situation. The language matters as much as the structure.</div></div>
+      <button onclick="window.print()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">&#8681; Print / PDF</button>
+    </div>
+    <div class="card-body">
+      <div class="form-section">
+        <div class="form-section-title">Mid-Cycle Check-In</div>
+        <div style="background:rgba(27,68,54,0.03);border-left:3px solid var(--pale);padding:14px 16px;border-radius:0 var(--radius) var(--radius) 0;font-size:12.5px;color:var(--text-mid);line-height:1.75">"I want to use our time today to make sure we are both clear on how things are going and where to focus the rest of the year. Before I share my perspective — what are you most proud of from the last few months? And where do you feel least clear or supported?" <em style="display:block;margin-top:8px;font-size:11.5px;color:var(--text-light)">[Listen first. Then share your observations — both strengths and areas for development. Agree on 1–2 priorities for the rest of the period. Document the conversation in a brief written summary and send it the same day.]</em></div>
+      </div>
+      <div class="form-section">
+        <div class="form-section-title">Recognition and Commendation</div>
+        <div style="background:rgba(27,68,54,0.03);border-left:3px solid var(--pale);padding:14px 16px;border-radius:0 var(--radius) var(--radius) 0;font-size:12.5px;color:var(--text-mid);line-height:1.75">"I want to be specific about what I observed and why it mattered. [Name what they did.] That kind of [skill/quality/judgment] is not common, and it made a real difference for [the team / the client / the outcome]. I want to make sure that work gets the acknowledgment it deserves." <em style="display:block;margin-top:8px;font-size:11.5px;color:var(--text-light)">[Document recognition in writing — even a brief email — and retain it. Pattern of positive documentation matters in both promotion decisions and if the employment relationship ever becomes contested.]</em></div>
+      </div>
+      <div class="form-section">
+        <div class="form-section-title">Opening a Difficult Performance Conversation</div>
+        <div style="background:rgba(27,68,54,0.03);border-left:3px solid var(--gold);padding:14px 16px;border-radius:0 var(--radius) var(--radius) 0;font-size:12.5px;color:var(--text-mid);line-height:1.75">"I want to talk with you today because I have noticed [specific behavior or pattern] and I want to address it directly. I am sharing this because I want you to succeed here, and I think we need to be honest with each other about what is working and what is not. Can you help me understand what has been happening from your perspective?" <em style="display:block;margin-top:8px;font-size:11.5px;color:var(--text-light)">[Do not soften to the point of obscuring the message. The employee must leave understanding that this is a serious concern, not a vague suggestion. Document the conversation date, what was said, and the employee response.]</em></div>
+      </div>
+      <div class="form-section">
+        <div class="form-section-title">Delivering a Written Warning</div>
+        <div style="background:rgba(27,68,54,0.03);border-left:3px solid var(--mauve);padding:14px 16px;border-radius:0 var(--radius) var(--radius) 0;font-size:12.5px;color:var(--text-mid);line-height:1.75">"I am meeting with you today to issue a formal written warning regarding [specific issue]. This is a serious matter. I want to be clear about what the concern is, what we need to see change, and what happens if it does not. I will give you a copy of this document. I want to hear your response before we close this meeting. Do you have questions about anything I have described?" <em style="display:block;margin-top:8px;font-size:11.5px;color:var(--text-light)">[HR should be present if available. Obtain employee signature acknowledging receipt — not agreement. If refused, document the refusal with a witness. File original in personnel file immediately.]</em></div>
+      </div>
+      <div class="form-section">
+        <div class="form-section-title">Introducing a PIP</div>
+        <div style="background:rgba(27,68,54,0.03);border-left:3px solid var(--crimson);padding:14px 16px;border-radius:0 var(--radius) var(--radius) 0;font-size:12.5px;color:var(--text-mid);line-height:1.75">"We have had several conversations about [issue] and I have not seen the improvement I was hoping for. At this point, I am putting a formal performance improvement plan in place. I want to be direct with you: this is serious. At the same time, this is a structured opportunity to demonstrate that you can meet the standards of this role. I am going to walk you through every requirement. I want you to ask questions, and I want to be clear about what success looks like and what happens if we do not get there." <em style="display:block;margin-top:8px;font-size:11.5px;color:var(--text-light)">[HR must be present. Both parties sign. Give the employee a copy. Schedule the first PIP check-in before leaving the meeting. Document the delivery meeting itself separately from the PIP document.]</em></div>
+      </div>
+      <div class="form-section" style="margin-bottom:0">
+        <div class="form-section-title">Year-End Review Closing</div>
+        <div style="background:rgba(27,68,54,0.03);border-left:3px solid var(--pale);padding:14px 16px;border-radius:0 var(--radius) var(--radius) 0;font-size:12.5px;color:var(--text-mid);line-height:1.75">"Before we close — I want to make sure we leave this conversation with the same understanding of where you stand, where you are going, and what you need from me. In your own words, what is your takeaway from today? And what is one thing I could do differently in how I support you this coming year?" <em style="display:block;margin-top:8px;font-size:11.5px;color:var(--text-light)">[End every formal review by asking the employee to reflect. It closes the loop, surfaces anything that did not land as intended, and signals that this is a two-way relationship. Document the response.]</em></div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer>
+  <div class="fb">The Coherence Collective &nbsp;·&nbsp; <span>Plinth</span></div>
+  <div style="display:flex;gap:16px;align-items:center">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.35)">Jump to</span>
+      <select onchange="if(this.value)window.location.href=this.value" style="font-family:'Jost',sans-serif;font-weight:300;font-size:11px;background:rgba(255,255,255,0.06);color:rgba(245,237,228,0.6);border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:4px 24px 4px 8px;cursor:pointer;outline:none;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(245,237,228,0.4)' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 7px center">
+        <option value="/org-profile/">01 &middot; Org Profile</option>
+        <option value="/handbook/">02 &middot; Handbook</option>
+        <option value="/job-architecture/">03 &middot; Job Architecture</option>
+        <option value="/compensation/">04 &middot; Compensation</option>
+        <option value="/offer-hiring/">05 &middot; Offer &amp; Hiring</option>
+        <option value="/onboarding/">06 &middot; Onboarding</option>
+        <option value="/pay-practices/">07 &middot; Pay Practices</option>
+        <option value="/benefits/">08 &middot; Benefits Administration</option>
+        <option value="/leave/">09 &middot; Leave Management</option>
+        <option value="/performance/" selected>10 &middot; Performance Management</option>
+        <option value="/er-investigation/">11 &middot; ER &amp; Investigation</option>
+        <option value="/separation/">12 &middot; Separation</option>
+        <option value="/compliance-calendar/">13 &middot; Compliance Calendar</option>
+        <option value="/manager-toolkit/">14 &middot; Manager Toolkit</option>
+        <option value="/analytics/">15 &middot; Analytics</option>
+      </select>
+    </div>
+    <span style="color:rgba(245,237,228,0.15)">|</span>
+    <a href="/leave/" style="font-size:11px;color:rgba(245,237,228,0.4);text-decoration:none" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">&larr; Tool 09</a>
+    <span style="color:rgba(245,237,228,0.15)">|</span>
+    <a href="/er-investigation/" style="font-size:11px;color:rgba(245,237,228,0.4);text-decoration:none" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">Tool 11 &rarr;</a>
+  </div>
+</footer>
+<script>
+const ALL_TABS_PERF = ['cycles','log','pip','docs','templates'];
+let profile = {};
+try{ profile = JSON.parse(localStorage.getItem('plinth_op')||'{}'); }catch(e){}
+
+const CYCLES_FIELDS = ['reviewFreq','reviewPeriod','reviewWindow','ratingScale','selfAssess','peerFeedback','goalMethod','goalCount','perfAreas'];
+let perfData = { cycles:{}, perfLog:[], pipLog:[] };
+
+function saveData(){
+  CYCLES_FIELDS.forEach(id=>{ const el=document.getElementById(id); if(el) perfData.cycles[id]=el.value; });
+  localStorage.setItem('plinth_performance', JSON.stringify(perfData));
+  const fl=document.getElementById('sflash'); fl.classList.add('on'); setTimeout(()=>fl.classList.remove('on'),1800);
+}
+
+function showTab(tab){
+  ALL_TABS_PERF.forEach(t=>{
+    const v=document.getElementById('view-'+t); if(v) v.style.display=t===tab?'block':'none';
+    const el=document.getElementById('tab-'+t); if(el) el.classList.toggle('active',t===tab);
+  });
+  if(tab==='log') renderPerfLog();
+  if(tab==='pip') renderPIPLog();
+}
+
+function restoreData(){
+  try{
+    const d = JSON.parse(localStorage.getItem('plinth_performance')||'{}');
+    if(d.cycles){ Object.assign(perfData.cycles,d.cycles); CYCLES_FIELDS.forEach(id=>{ const el=document.getElementById(id); if(el&&d.cycles[id]!==undefined) el.value=d.cycles[id]; }); }
+    if(d.perfLog) perfData.perfLog=d.perfLog;
+    if(d.pipLog) perfData.pipLog=d.pipLog;
+  }catch(e){}
+}
+
+function animateCards(){
+  const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');});},{threshold:0.04});
+  document.querySelectorAll('.card').forEach(c=>obs.observe(c));
+}
+
+// ── PERFORMANCE LOG ───────────────────────────────────────────────────────────
+var editingPerfIdx = null;
+
+function openPerfModal(idx){
+  editingPerfIdx = (idx!==undefined&&idx!==null) ? idx : null;
+  var entry = editingPerfIdx!==null ? perfData.perfLog[editingPerfIdx] : null;
+  ['plEmp','plPeriod','plNotes','plNext','plReviewer'].forEach(function(f){ var el=document.getElementById(f); if(el) el.value=entry?entry[f]||'':''; });
+  ['plDate'].forEach(function(f){ var el=document.getElementById(f); if(el) el.value=entry?entry[f]||'':''; });
+  var plType=document.getElementById('plType'); if(plType) plType.value=entry?entry.plType||'Annual Review':'Annual Review';
+  var plRating=document.getElementById('plRating'); if(plRating) plRating.value=entry?entry.plRating||'':'';
+  if(!entry){ var d=document.getElementById('plDate'); if(d) d.value=new Date().toISOString().split('T')[0]; }
+  document.getElementById('perfModalTitle').textContent = editingPerfIdx!==null ? 'Edit Performance Entry' : 'New Performance Entry';
+  document.getElementById('perfModal').style.display='flex';
+}
+
+function closePerfModal(){ document.getElementById('perfModal').style.display='none'; }
+
+function savePerfEntry(){
+  var emp=document.getElementById('plEmp').value.trim();
+  if(!emp){ document.getElementById('plEmp').focus(); return; }
+  var entry={
+    plEmp:emp, plType:document.getElementById('plType').value,
+    plPeriod:document.getElementById('plPeriod').value,
+    plDate:document.getElementById('plDate').value,
+    plRating:document.getElementById('plRating').value,
+    plReviewer:document.getElementById('plReviewer').value,
+    plNotes:document.getElementById('plNotes').value,
+    plNext:document.getElementById('plNext').value
+  };
+  if(editingPerfIdx!==null) perfData.perfLog[editingPerfIdx]=entry;
+  else perfData.perfLog.push(entry);
+  closePerfModal();
+  localStorage.setItem('plinth_performance',JSON.stringify(perfData));
+  renderPerfLog();
+}
+
+function deletePerfEntry(idx){
+  if(!confirm('Delete this performance record?')) return;
+  perfData.perfLog.splice(idx,1);
+  localStorage.setItem('plinth_performance',JSON.stringify(perfData));
+  renderPerfLog();
+}
+
+
+function exportPerfEntry(idx){
+  var e=perfData.perfLog[idx]; if(!e) return;
+  var org=(profile&&profile.legalName)?profile.legalName:'Organization';
+  var today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  var reviewD=e.plDate?new Date(e.plDate+'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'[Date]';
+  var _pbTitle='Performance Review — '+e.plEmp;
+  var _pbFile='performance-review-'+e.plEmp.replace(/\s+/g,'-').toLowerCase()+'.html';
+  var _pbType='Performance Review';
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Performance Review</title>';
+  html+='<style>body{font-family:Georgia,serif;max-width:700px;margin:0 auto;padding:48px 40px;font-size:10.5pt;line-height:1.8;color:#1a1a1a;}h1{font-size:18pt;font-weight:400;color:#1b4436;}h2{font-size:12pt;font-weight:600;color:#1a1a1a;margin:20px 0 8px;border-bottom:1px solid #e0d8cf;padding-bottom:5px;}.meta{background:#f5f0ea;padding:14px 18px;border-radius:4px;margin:20px 0;font-size:9.5pt;line-height:2;}p{margin:0 0 12px;}@page{size:letter;margin:1in;}</style></head><body>';
+  html+='<h1>'+org+'</h1>';
+  html+='<p style="font-size:12pt;color:#555;margin-bottom:24px">Performance Review Documentation &nbsp;|&nbsp; '+today+'</p>';
+  html+='<div class="meta"><strong>Employee:</strong> '+e.plEmp+'<br><strong>Review Type:</strong> '+(e.plType||'')+'<br><strong>Period:</strong> '+(e.plPeriod||'')+'<br><strong>Review Date:</strong> '+reviewD+'<br><strong>Reviewed By:</strong> '+(e.plReviewer||'')+'<br><strong>Rating:</strong> '+(e.plRating||'Narrative only')+'</div>';
+  if(e.plNotes) html+='<h2>Key Themes and Observations</h2><p style="white-space:pre-wrap">'+e.plNotes+'</p>';
+  if(e.plNext) html+='<h2>Next Steps / Follow-Up</h2><p>'+e.plNext+'</p>';
+  html+='<p style="font-size:8pt;color:#999;margin-top:36px;border-top:1px solid #e0d8cf;padding-top:10px">Generated via Plinth by The Coherence Collective, LLC. File in personnel record. Review with employee before filing.</p>';
+  html+='</body></html>';
+  var _pbC='<style>'+'\n    .pb{position:fixed;top:0;left:0;right:0;z-index:9999;background:#1b4436;padding:10px 28px;display:flex;gap:10px;align-items:center;box-shadow:0 2px 12px rgba(0,0,0,0.3);}\n    .pb-title{font-family:Georgia,serif;font-size:11pt;color:rgba(245,237,228,0.75);flex:1;font-weight:400;}\n    .pb-btn{font-family:Arial,sans-serif;font-size:8.5pt;padding:7px 16px;border:none;border-radius:3px;cursor:pointer;letter-spacing:0.04em;font-weight:500;}\n    .pb-gold{background:#D99E32;color:#122e24;}\n    .pb-ghost{background:rgba(255,255,255,0.09);color:rgba(245,237,228,0.82);border:1px solid rgba(255,255,255,0.14);}\n    .pb-spacer{height:52px;}\n    @media print{.pb,.pb-spacer{display:none!important;}}'+'</style>';
+  var _pbH='<div class="pb"><span class="pb-title">'+_pbTitle+'</span>'
+    +'<button class="pb-btn pb-gold" onclick="window.print()">&#8681; Print / Save as PDF</button>'
+    +'<button class="pb-btn pb-ghost" onclick="plDl()">&#8659; Download</button>'
+    +'<button class="pb-btn pb-ghost" onclick="plSave()">&#9729; Save to Plinth</button>'
+    +'<button class="pb-btn pb-ghost" onclick="window.close()" style="margin-left:4px">&#10005;</button>'
+    +'</div><div class="pb-spacer"></div>';
+  html=html.replace('<body>','<body>'+_pbH);
+  html=html.replace('</style>\\n  </head>',_pbC+'</style>\\n  </head>');
+  var _pbJS='<scr'+'ipt>'
+    +'function plDl(){var blob=new Blob([document.documentElement.outerHTML],{type:"text/html"});var url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download=_pbFile;a.click();setTimeout(function(){URL.revokeObjectURL(url);},1200);}'
+    +'function plSave(){var d=[];try{d=JSON.parse(localStorage.getItem("plinth_docs")||"[]");}catch(e){}d.push({id:"doc_"+Date.now(),title:_pbTitle,type:_pbType,date:new Date().toISOString()});localStorage.setItem("plinth_docs",JSON.stringify(d));var b=document.querySelectorAll(".pb-ghost");if(b[1]){b[1].textContent="\u2713 Saved to Plinth";b[1].style.background="rgba(27,68,54,0.5)";}}'
+    +'</s'+'cript>';
+  html+=_pbJS;
+  var win=window.open('','_blank'); win.document.write(html); win.document.close();
+}
+
+function renderPerfLog(){
+  var c=document.getElementById('perfLogContent'); if(!c) return;
+  if(!perfData.perfLog.length){
+    c.innerHTML='<div style="padding:24px;text-align:center;color:var(--text-light);font-size:12px;background:rgba(27,68,54,0.02);border-radius:var(--radius-md);border:1px dashed var(--border)">No performance entries logged yet. Add the first entry using the button above.</div>';
+    return;
+  }
+  var ratingColor={
+    'Exceeds Expectations':'var(--green)',
+    'Meets Expectations':'var(--text-mid)',
+    'Meets Most Expectations':'#8a6010',
+    'Below Expectations':'var(--mauve)',
+    'Unsatisfactory':'var(--crimson)'
+  };
+  var html='<table class="ref-table"><thead><tr><th>Employee</th><th>Review Type</th><th>Period</th><th>Date</th><th>Rating</th><th>Reviewed By</th><th style="width:80px"></th></tr></thead><tbody>';
+  for(var i=0;i<perfData.perfLog.length;i++){
+    var e=perfData.perfLog[i];
+    var rc=ratingColor[e.plRating]||'var(--text-light)';
+    var dateD=e.plDate?new Date(e.plDate+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'--';
+    html+='<tr>';
+    html+='<td style="font-weight:400">'+e.plEmp+'</td>';
+    html+='<td>'+(e.plType||'--')+'</td>';
+    html+='<td>'+(e.plPeriod||'--')+'</td>';
+    html+='<td style="white-space:nowrap">'+dateD+'</td>';
+    html+='<td style="color:'+rc+';font-size:11px">'+(e.plRating||'Narrative only')+'</td>';
+    html+='<td>'+(e.plReviewer||'--')+'</td>';
+    html+='<td><div style="display:flex;gap:8px">';
+    html+='<button onclick="openPerfModal('+i+')" style="font-size:10px;color:var(--green);background:none;border:none;cursor:pointer;font-family:Jost,sans-serif">Edit</button>'+'<button onclick="exportPerfEntry('+i+')" style="font-size:10px;color:var(--gold);background:none;border:none;cursor:pointer;font-family:Jost,sans-serif">Export</button>';
+    html+='<button onclick="deletePerfEntry('+i+')" style="font-size:10px;color:var(--text-light);background:none;border:none;cursor:pointer">Del</button>';
+    html+='</div></td>';
+    html+='</tr>';
+  }
+  html+='</tbody></table>';
+  c.innerHTML=html;
+}
+
+// ── PIP LOG ───────────────────────────────────────────────────────────────────
+var editingPIPIdx = null;
+
+function openPIPModal(idx){
+  editingPIPIdx = (idx!==undefined&&idx!==null) ? idx : null;
+  var entry = editingPIPIdx!==null ? perfData.pipLog[editingPIPIdx] : null;
+  ['pipEmp','pipPosition','pipConcerns','pipRequirements','pipSupport','pipConsequences'].forEach(function(f){ var el=document.getElementById(f); if(el) el.value=entry?entry[f]||'':''; });
+  var pipStart=document.getElementById('pipStart'); if(pipStart) pipStart.value=entry?entry.pipStart||'':'';
+  var pipDuration=document.getElementById('pipDuration'); if(pipDuration) pipDuration.value=entry?entry.pipDuration||'90':'90';
+  var pipStatus=document.getElementById('pipStatus'); if(pipStatus) pipStatus.value=entry?entry.pipStatus||'Active':'Active';
+  var pipReviewed=document.getElementById('pipReviewed'); if(pipReviewed) pipReviewed.value=entry?entry.pipReviewed||'Pending review':'Pending review';
+  document.getElementById('pipModalTitle').textContent = editingPIPIdx!==null ? 'Edit Performance Improvement Plan' : 'New Performance Improvement Plan';
+  document.getElementById('pipModal').style.display='flex';
+}
+
+function closePIPModal(){ document.getElementById('pipModal').style.display='none'; }
+
+function savePIPEntry(){
+  var emp=document.getElementById('pipEmp').value.trim();
+  if(!emp){ document.getElementById('pipEmp').focus(); return; }
+  var entry={
+    pipEmp:emp, pipPosition:document.getElementById('pipPosition').value,
+    pipStart:document.getElementById('pipStart').value,
+    pipDuration:document.getElementById('pipDuration').value,
+    pipStatus:document.getElementById('pipStatus').value,
+    pipReviewed:document.getElementById('pipReviewed').value,
+    pipConcerns:document.getElementById('pipConcerns').value,
+    pipRequirements:document.getElementById('pipRequirements').value,
+    pipSupport:document.getElementById('pipSupport').value,
+    pipConsequences:document.getElementById('pipConsequences').value
+  };
+  if(editingPIPIdx!==null) perfData.pipLog[editingPIPIdx]=entry;
+  else perfData.pipLog.push(entry);
+  closePIPModal();
+  localStorage.setItem('plinth_performance',JSON.stringify(perfData));
+  renderPIPLog();
+}
+
+function deletePIPEntry(idx){
+  if(!confirm('Delete this PIP record?')) return;
+  perfData.pipLog.splice(idx,1);
+  localStorage.setItem('plinth_performance',JSON.stringify(perfData));
+  renderPIPLog();
+}
+
+function exportPIP(idx){
+  var e=perfData.pipLog[idx];
+  if(!e) return;
+  var org=profile&&profile.legalName?profile.legalName:'Organization';
+  var today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  var startFmt=e.pipStart?new Date(e.pipStart+'T12:00:00').toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}):'[Date]';
+  var _pbTitle='Performance Improvement Plan — '+e.pipEmp;
+  var _pbFile='pip-'+e.pipEmp.replace(/\s+/g,'-').toLowerCase()+'.html';
+  var _pbType='PIP';
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Performance Improvement Plan</title>';
+  html+='<style>body{font-family:Georgia,serif;max-width:700px;margin:0 auto;padding:48px 40px;color:#1a1a1a;line-height:1.8;font-size:10.5pt;}';
+  html+='h1{font-size:18pt;font-weight:400;color:#1b4436;}h2{font-size:12pt;font-weight:600;color:#1a1a1a;margin:20px 0 8px;padding-bottom:5px;border-bottom:1px solid #e0d8cf;}';
+  html+='p{margin:0 0 12px;white-space:pre-wrap;}.meta{background:#f5f0ea;padding:14px 18px;border-radius:4px;margin-bottom:24px;font-size:9.5pt;}';
+  html+='.sig{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px;}.sig-line{border-top:1px solid #1a1a1a;padding-top:6px;font-size:9pt;color:#555;}';
+  html+='.confidential{font-size:8pt;color:#A42F30;border:1px solid #A42F30;padding:4px 10px;display:inline-block;margin-bottom:20px;letter-spacing:0.08em;text-transform:uppercase;}';
+  html+='@page{size:letter;margin:1in;}</style></head><body>';
+  html+='<div class="confidential">Confidential — Personnel Record</div>';
+  html+='<h1>'+org+'</h1>';
+  html+='<p style="font-size:12pt;color:#555;margin-bottom:4px">Performance Improvement Plan</p>';
+  html+='<p style="font-size:9pt;color:#777;margin-bottom:24px">Prepared: '+today+'</p>';
+  html+='<div class="meta"><strong>Employee:</strong> '+e.pipEmp+'<br><strong>Position:</strong> '+(e.pipPosition||'[Position]')+'<br><strong>PIP Start Date:</strong> '+startFmt+'<br><strong>Duration:</strong> '+e.pipDuration+' days</div>';
+  html+='<h2>Performance Concerns</h2><p>'+(e.pipConcerns||'[Document specific, observed performance deficiencies with dates and examples.]')+'</p>';
+  html+='<h2>Required Improvements</h2><p>'+(e.pipRequirements||'[State specific, measurable improvements required.]')+'</p>';
+  html+='<h2>Support Provided by the Organization</h2><p>'+(e.pipSupport||'[Document training, coaching, or resources provided.]')+'</p>';
+  html+='<h2>Consequences of Non-Improvement</h2><p>'+(e.pipConsequences||'Failure to meet the requirements outlined above may result in further disciplinary action up to and including separation.')+'</p>';
+  html+='<div class="sig"><div><div class="sig-line">Manager Signature &amp; Date</div></div><div><div class="sig-line">Employee Signature &amp; Date<br><span style="font-size:8.5pt;color:#777">Signature acknowledges receipt, not agreement</span></div></div></div>';
+  html+='<p style="font-size:8pt;color:#999;margin-top:32px;border-top:1px solid #e0d8cf;padding-top:10px">Generated via Plinth by The Coherence Collective, LLC. Review with HR or employment counsel before delivering to employee.</p>';
+  html+='</body></html>';
+
+  var _pbC='<style>'+'\n    .pb{position:fixed;top:0;left:0;right:0;z-index:9999;background:#1b4436;padding:10px 28px;display:flex;gap:10px;align-items:center;box-shadow:0 2px 12px rgba(0,0,0,0.3);}\n    .pb-title{font-family:Georgia,serif;font-size:11pt;color:rgba(245,237,228,0.75);flex:1;font-weight:400;}\n    .pb-btn{font-family:Arial,sans-serif;font-size:8.5pt;padding:7px 16px;border:none;border-radius:3px;cursor:pointer;letter-spacing:0.04em;font-weight:500;}\n    .pb-gold{background:#D99E32;color:#122e24;}\n    .pb-ghost{background:rgba(255,255,255,0.09);color:rgba(245,237,228,0.82);border:1px solid rgba(255,255,255,0.14);}\n    .pb-spacer{height:52px;}\n    @media print{.pb,.pb-spacer{display:none!important;}}'+'</style>';
+  var _pbH='<div class="pb"><span class="pb-title">'+_pbTitle+'</span>'
+    +'<button class="pb-btn pb-gold" onclick="window.print()">&#8681; Print / Save as PDF</button>'
+    +'<button class="pb-btn pb-ghost" onclick="plDl()">&#8659; Download</button>'
+    +'<button class="pb-btn pb-ghost" onclick="plSave()">&#9729; Save to Plinth</button>'
+    +'<button class="pb-btn pb-ghost" onclick="window.close()" style="margin-left:4px">&#10005;</button>'
+    +'</div><div class="pb-spacer"></div>';
+  html=html.replace('<body>','<body>'+_pbH);
+  html=html.replace('</style>\\n  </head>',_pbC+'</style>\\n  </head>');
+  var _pbJS='<scr'+'ipt>'
+    +'function plDl(){var blob=new Blob([document.documentElement.outerHTML],{type:"text/html"});var url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download=_pbFile;a.click();setTimeout(function(){URL.revokeObjectURL(url);},1200);}'
+    +'function plSave(){var d=[];try{d=JSON.parse(localStorage.getItem("plinth_docs")||"[]");}catch(e){}d.push({id:"doc_"+Date.now(),title:_pbTitle,type:_pbType,date:new Date().toISOString()});localStorage.setItem("plinth_docs",JSON.stringify(d));var b=document.querySelectorAll(".pb-ghost");if(b[1]){b[1].textContent="\u2713 Saved to Plinth";b[1].style.background="rgba(27,68,54,0.5)";}}'
+    +'</s'+'cript>';
+  html+=_pbJS;
+  var win=window.open('','_blank'); win.document.write(html); win.document.close();
+}
+
+function renderPIPLog(){
+  var c=document.getElementById('pipLogContent'); if(!c) return;
+  if(!perfData.pipLog.length){
+    c.innerHTML='<div style="padding:24px;text-align:center;color:var(--text-light);font-size:12px;background:rgba(27,68,54,0.02);border-radius:var(--radius-md);border:1px dashed var(--border)">No PIPs on file. Create one using the button above.</div>';
+    return;
+  }
+  var statusColor={'Active':'var(--crimson)','Completed \u2014 Improved':'var(--green)','Completed \u2014 Separated':'var(--mauve)','Extended':'#8a6010','Closed \u2014 Other':'var(--text-light)'};
+  var html='<table class="ref-table"><thead><tr><th>Employee</th><th>Position</th><th>Start Date</th><th>Duration</th><th>Status</th><th>HR Reviewed?</th><th style="width:110px"></th></tr></thead><tbody>';
+  for(var i=0;i<perfData.pipLog.length;i++){
+    var e=perfData.pipLog[i];
+    var startD=e.pipStart?new Date(e.pipStart+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'--';
+    var sc=statusColor[e.pipStatus]||'var(--text-light)';
+    html+='<tr>';
+    html+='<td style="font-weight:400">'+e.pipEmp+'</td>';
+    html+='<td>'+(e.pipPosition||'--')+'</td>';
+    html+='<td style="white-space:nowrap">'+startD+'</td>';
+    html+='<td>'+(e.pipDuration?e.pipDuration+' days':'--')+'</td>';
+    html+='<td style="color:'+sc+';font-size:11px">'+(e.pipStatus||'--')+'</td>';
+    html+='<td style="font-size:11px;color:'+(e.pipReviewed==='Yes \u2014 prior to delivery'?'var(--green)':'var(--text-light)')+'">'+(e.pipReviewed||'--')+'</td>';
+    html+='<td><div style="display:flex;gap:6px">';
+    html+='<button onclick="openPIPModal('+i+')" style="font-size:10px;color:var(--green);background:none;border:none;cursor:pointer;font-family:Jost,sans-serif">Edit</button>';
+    html+='<button onclick="exportPIP('+i+')" style="font-size:10px;color:var(--gold);background:none;border:none;cursor:pointer;font-family:Jost,sans-serif">Export</button>';
+    html+='<button onclick="deletePIPEntry('+i+')" style="font-size:10px;color:var(--text-light);background:none;border:none;cursor:pointer">Del</button>';
+    html+='</div></td>';
+    html+='</tr>';
+  }
+  html+='</tbody></table>';
+  c.innerHTML=html;
+}
+
+document.addEventListener('DOMContentLoaded',function(){ restoreData(); animateCards(); });
+document.addEventListener('keydown',function(e){ if(e.key==='Escape'){ closePerfModal(); closePIPModal(); }});
+</script>
+</body>
+</html>
