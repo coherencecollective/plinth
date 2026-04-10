@@ -275,6 +275,8 @@ footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:c
   <div class="tab active" onclick="showTab('framework')" id="tab-framework">Architecture Framework</div>
   <div class="tab" onclick="showTab('library')" id="tab-library">Role Library <span class="tab-ct" id="roleCount">0</span></div>
   <div class="tab" onclick="showTab('matrix')" id="tab-matrix">Level Matrix</div>
+  <div class="tab" onclick="showTab('health')" id="tab-health">Architecture Health</div>
+  <div class="tab" onclick="showTab('equity')" id="tab-equity">Equity Audit</div>
   <div class="tab" onclick="showTab('import')" id="tab-import">Import Existing Roles</div>
   <div class="tab" onclick="showTab('export')" id="tab-export">Export</div>
 </div>
@@ -501,8 +503,8 @@ footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:c
 <div id="view-library" class="main wide" style="display:none">
   <div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px" class="fu">
-      <div>
-        <select id="filterTrack" onchange="renderLibrary()" style="width:auto;display:inline-block;margin-right:8px;font-size:12px;padding:6px 28px 6px 10px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <select id="filterTrack" onchange="renderLibrary()" style="width:auto;font-size:12px;padding:6px 28px 6px 10px">
           <option value="">All Tracks</option>
           <option value="ic">Individual Contributor</option>
           <option value="lead">Lead</option>
@@ -510,8 +512,16 @@ footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:c
           <option value="mom">Manager of Managers</option>
           <option value="exec">Executive</option>
         </select>
-        <select id="filterFunction" onchange="renderLibrary()" style="width:auto;display:inline-block;font-size:12px;padding:6px 28px 6px 10px">
+        <select id="filterFunction" onchange="renderLibrary()" style="width:auto;font-size:12px;padding:6px 28px 6px 10px">
           <option value="">All Functions</option>
+        </select>
+        <select id="filterStatus" onchange="renderLibrary()" style="width:auto;font-size:12px;padding:6px 28px 6px 10px">
+          <option value="">All Statuses</option>
+          <option value="active">Active</option>
+          <option value="open">Open Requisition</option>
+          <option value="proposed">Proposed</option>
+          <option value="review">Under Review</option>
+          <option value="eliminated">Eliminated</option>
         </select>
       </div>
       <button class="nbtn nbtn-gold" onclick="openAddRole()">+ Add Role</button>
@@ -529,6 +539,26 @@ footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:c
     </div>
     <div class="card-body">
       <div id="matrixContent" style="overflow-x:auto"></div>
+    </div>
+  </div>
+</div>
+
+<!-- HEALTH TAB -->
+<div id="view-health" class="main wide" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr"><div><div class="card-title">Architecture Health Analysis</div><div class="card-desc">Structural diagnosis of the role library. Flags span of control problems, title inconsistencies, FLSA risks, and pyramid imbalances before they become people problems.</div></div><button onclick="renderHealth()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase">Run Analysis</button></div>
+    <div class="card-body" id="healthContent">
+      <div style="font-size:12px;color:var(--text-light);padding:16px 0">Add roles to the library, then run the analysis to see structural findings.</div>
+    </div>
+  </div>
+</div>
+
+<!-- EQUITY AUDIT TAB -->
+<div id="view-equity" class="main wide" style="display:none">
+  <div class="card fu">
+    <div class="card-hdr"><div><div class="card-title">Architecture Equity Audit</div><div class="card-desc">Identifies title inconsistencies, level inflation, and structural patterns that may signal inequitable role design. This is a screening tool — not a statistical analysis.</div></div><button onclick="renderEquity()" style="padding:6px 14px;background:var(--green);color:var(--white);border:none;border-radius:var(--radius);font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase">Run Audit</button></div>
+    <div class="card-body" id="equityContent">
+      <div style="font-size:12px;color:var(--text-light);padding:16px 0">Add roles to the library, then run the audit to identify potential equity concerns.</div>
     </div>
   </div>
 </div>
@@ -602,7 +632,7 @@ footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:c
         <div class="fg g2">
           <div class="f c2"><label>Job Title <span class="req">*</span></label><input type="text" id="rTitle" placeholder="e.g., Program Manager, Communications Specialist" oninput="runFLSA()"></div>
           <div class="f"><label>Career Track <span class="req">*</span></label>
-            <select id="rTrack" onchange="saveArch();runFLSA();updateLevelOptions()">
+            <select id="rTrack" onchange="saveArch();runFLSA();updateLevelOptions();suggestSalaryRange()">
               <option value="">Select track</option>
               <option value="ic">Individual Contributor</option>
               <option value="lead">Lead</option>
@@ -635,7 +665,7 @@ footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:c
           <div class="f"><label>Direct Reports</label><input type="text" id="rDirectReports" placeholder="e.g., 2-4 Program Coordinators, or None"></div>
           <div class="f"><label>Pay Band <span class="tip">(set in Tool 04 — Compensation)</span></label>
             <input type="text" id="rSalary" readonly style="background:rgba(27,68,54,0.03);color:var(--text-light);cursor:default" placeholder="Complete Tool 04 to assign pay band">
-            <div class="fhint">Pay bands are calculated in Tool 04 and written back to this record automatically. Do not enter manually.</div>
+            <div class="fhint" id="rSalaryHint">Pay bands are calculated in Tool 04 and written back automatically. Sector benchmarks appear when a track is selected.</div>
           </div>
         </div>
       </div>
@@ -670,7 +700,18 @@ footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:c
           <div class="f"><label>Key Responsibilities <span class="tip">(one per line)</span></label><textarea id="rResponsibilities" placeholder="Lead day-to-day program implementation across assigned sites&#10;Manage relationships with community partners and stakeholders&#10;Compile and analyze program data for reporting purposes" rows="6"></textarea></div>
           <div class="f"><label>Minimum Qualifications <span class="tip">(one per line)</span></label><textarea id="rMinQuals" placeholder="Bachelor's degree in related field or equivalent experience&#10;2+ years of program management experience&#10;Strong written and verbal communication skills" rows="5"></textarea></div>
           <div class="f"><label>Preferred Qualifications <span class="tip">(one per line)</span></label><textarea id="rPrefQuals" placeholder="Experience in nonprofit or social impact settings&#10;Bilingual (English/Spanish)" rows="3"></textarea></div>
-          <div class="f"><label>Essential Functions <span class="tip">(ADA language — what the person must be able to do physically/cognitively)</span></label><textarea id="rEssFunc" placeholder="Ability to remain in a stationary position for extended periods&#10;Ability to communicate effectively in person and remotely&#10;Ability to move about the workplace to access files and equipment" rows="4"></textarea></div>
+          <div class="f"><label>Essential Functions <span class="tip">(ADA — what the person must be able to do physically/cognitively to perform the role)</span></label><textarea id="rEssFunc" placeholder="Ability to remain in a stationary position for extended periods&#10;Ability to communicate effectively in person and remotely&#10;Ability to move about the workplace to access files and equipment" rows="4"></textarea>
+            <div style="font-size:10.5px;color:var(--text-light);margin-top:4px;line-height:1.5">Under the ADA, essential functions are the fundamental duties of the position — the things the role exists to do. A function is essential if: (1) the position exists specifically to perform it, (2) there are a limited number of other employees who can perform it, or (3) it is highly specialized. Properly defining essential functions determines the scope of the accommodation obligation.</div>
+          </div>
+          <div class="f"><label>Role Status</label>
+            <select id="rStatus" onchange="">
+              <option value="active">Active — currently filled</option>
+              <option value="open">Open Requisition — currently recruiting</option>
+              <option value="proposed">Proposed — not yet approved</option>
+              <option value="review">Under Review — being redesigned</option>
+              <option value="eliminated">Eliminated — no longer active</option>
+            </select>
+          </div>
           <div class="f"><label>Advisor Notes <span class="tip">(internal only — not included in external JD)</span></label><textarea id="rAdvisorNotes" placeholder="Notes on misclassification risk, title history, compensation concerns, succession considerations..." rows="3"></textarea></div>
         </div>
       </div>
@@ -686,13 +727,14 @@ footer{background:var(--green-deep);padding:13px 28px;display:flex;align-items:c
 <footer><div class="fb">The Coherence Collective &nbsp;·&nbsp; <span>Plinth</span></div><div style="display:flex;gap:16px;align-items:center">
     <div style="display:flex;align-items:center;gap:8px">
     <span style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,237,228,0.35)">Jump to</span>
-    <select onchange="if(this.value)window.location.href=this.value" style="font-family:'Jost',sans-serif;font-weight:300;font-size:11px;background:rgba(255,255,255,0.06);color:rgba(245,237,228,0.6);border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:4px 24px 4px 8px;cursor:pointer;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(245,237,228,0.4)' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center"><option value="org-profile.html"  >01 · Org Profile</option><option value="handbook.html"  >02 · Handbook</option><option value="job-architecture.html" selected >03 · Job Architecture</option><option value="compensation.html"  >04 · Compensation</option><option value=""  disabled>05 · Offer & Hiring — coming soon</option><option value=""  disabled>06 · Onboarding — coming soon</option><option value=""  disabled>07 · Pay Practices — coming soon</option><option value=""  disabled>08 · Benefits — coming soon</option><option value=""  disabled>09 · Leave — coming soon</option><option value=""  disabled>10 · Performance — coming soon</option><option value=""  disabled>11 · ER & Investigation — coming soon</option><option value=""  disabled>12 · Separation — coming soon</option><option value=""  disabled>13 · Compliance Calendar — coming soon</option><option value=""  disabled>14 · Manager Toolkit — coming soon</option><option value=""  disabled>15 · Analytics — coming soon</option></select>
+    <select onchange="if(this.value)window.location.href=this.value" style="font-family:'Jost',sans-serif;font-weight:300;font-size:11px;background:rgba(255,255,255,0.06);color:rgba(245,237,228,0.6);border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:4px 24px 4px 8px;cursor:pointer;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(245,237,228,0.4)' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center"><option value="org-profile.html" >01 &middot; Org Profile</option><option value="handbook.html" >02 &middot; Handbook</option><option value="job-architecture.html" selected>03 &middot; Job Architecture</option><option value="compensation.html" >04 &middot; Compensation</option><option value="offer-hiring.html" >05 &middot; Offer &amp; Hiring</option><option value="onboarding.html">06 &middot; Onboarding</option><option value="pay-practices.html">07 &middot; Pay Practices</option><option value="benefits.html">08 &middot; Benefits Administration</option><option value="leave.html">09 &middot; Leave Management</option><option value="performance.html">10 &middot; Performance Management</option><option value="er-investigation.html">11 &middot; ER &amp; Investigation</option><option value="separation.html">12 &middot; Separation</option><option value="compliance-calendar.html">13 &middot; Compliance Calendar</option><option value="manager-toolkit.html">14 &middot; Manager Toolkit</option><option value="analytics.html">15 &middot; Analytics</option></select>
   </div>
     <span style="color:rgba(245,237,228,0.15)">|</span><a href="handbook.html" style="font-size:11px;color:rgba(245,237,228,0.4);letter-spacing:0.06em;text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">&larr; Tool 02: Handbook</a><span style="color:rgba(245,237,228,0.2)">|</span><a href="compensation.html" style="font-size:11px;color:rgba(245,237,228,0.4);letter-spacing:0.06em;text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='rgba(245,237,228,0.7)'" onmouseout="this.style.color='rgba(245,237,228,0.4)'">Tool 04: Compensation &rarr;</a></div></footer>
 
 <script>
 // ── STATE ─────────────────────────────────────────────────────────────────────
 let profile = {};
+let compData = {};
 let arch = {
   convention: 'nonprofit',
   customLevels: { ic:'', lead:'', mgr:'', mom:'', exec:'' },
@@ -749,6 +791,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function loadProfile(){
   try{ const r = localStorage.getItem('plinth_op'); if(r) profile = JSON.parse(r); }catch(e){}
+  // Load compensation data for salary bridge
+  try{ const c = localStorage.getItem('plinth_comp'); if(c) compData = JSON.parse(c); }catch(e){}
   const tw2 = (parseInt(profile.wft)||0)+(parseInt(profile.wpt6)||0)+(parseInt(profile.wpt)||0);
   const name = profile.legalName || 'No client loaded';
   document.getElementById('heroClientName').textContent = name;
@@ -984,9 +1028,9 @@ function openEditRole(id){
   document.getElementById('modalSub').textContent = role.title || '';
   // Populate form
   const fields = ['rTitle','rTrack','rLevel','rFunction','rEmpType','rReportsTo','rDirectReports',
-    'rSalary','rSalaryNum','rDutyType','rSummary','rResponsibilities','rMinQuals','rPrefQuals','rEssFunc','rAdvisorNotes'];
+    'rSalary','rSalaryNum','rDutyType','rSummary','rResponsibilities','rMinQuals','rPrefQuals','rEssFunc','rStatus','rAdvisorNotes'];
   const keys = ['title','track','level','function','empType','reportsTo','directReports',
-    'salary','salaryNum','dutyType','summary','responsibilities','minQuals','prefQuals','essFunc','advisorNotes'];
+    'salary','salaryNum','dutyType','summary','responsibilities','minQuals','prefQuals','essFunc','status','advisorNotes'];
   updateFunctionDropdowns();
   fields.forEach((f,i) => {
     const el = document.getElementById(f);
@@ -1039,6 +1083,7 @@ function saveRole(){
     prefQuals: document.getElementById('rPrefQuals')?.value,
     essFunc: document.getElementById('rEssFunc')?.value,
     advisorNotes: document.getElementById('rAdvisorNotes')?.value,
+    status: document.getElementById('rStatus')?.value || 'active',
     flsaStatus, flsaReasoning,
     updatedAt: new Date().toISOString()
   };
@@ -1074,9 +1119,11 @@ function renderLibrary(){
   if(!grid) return;
   const trackFilter = document.getElementById('filterTrack')?.value || '';
   const funcFilter = document.getElementById('filterFunction')?.value || '';
+  const statusFilter = document.getElementById('filterStatus')?.value || '';
   let roles = arch.roles;
   if(trackFilter) roles = roles.filter(r=>r.track===trackFilter);
   if(funcFilter) roles = roles.filter(r=>r.function===funcFilter);
+  if(statusFilter) roles = roles.filter(r=>(r.status||'active')===statusFilter);
   grid.innerHTML = '';
   if(roles.length === 0){
     grid.innerHTML = `<div style="grid-column:1/-1;padding:40px;text-align:center;background:var(--white);border:2px dashed var(--border);border-radius:var(--radius-md);color:var(--text-light);font-size:12px">
@@ -1092,15 +1139,26 @@ function renderLibrary(){
       const tagClass = TRACK_TAG_CLASSES[r.track] || 'rt-track-ic';
       const flsaTagClass = { exempt:'rt-flsa-exempt', nonexempt:'rt-flsa-nonexempt', review:'rt-flsa-review' }[r.flsaStatus] || 'rt-flsa-review';
       const flsaLabel = { exempt:'Exempt', nonexempt:'Nonexempt', review:'FLSA Review' }[r.flsaStatus] || 'FLSA Review';
+      const statusBadge = {
+        active: '',
+        open: '<span style="font-size:9px;padding:1px 6px;border-radius:8px;background:rgba(27,68,54,0.1);color:var(--green);font-weight:400;letter-spacing:0.05em;text-transform:uppercase">Open Req</span>',
+        proposed: '<span style="font-size:9px;padding:1px 6px;border-radius:8px;background:rgba(217,158,50,0.12);color:#8a6010;font-weight:400;letter-spacing:0.05em;text-transform:uppercase">Proposed</span>',
+        review: '<span style="font-size:9px;padding:1px 6px;border-radius:8px;background:rgba(145,97,121,0.1);color:var(--mauve);font-weight:400;letter-spacing:0.05em;text-transform:uppercase">Under Review</span>',
+        eliminated: '<span style="font-size:9px;padding:1px 6px;border-radius:8px;background:rgba(164,47,48,0.07);color:var(--crimson);font-weight:400;letter-spacing:0.05em;text-transform:uppercase">Eliminated</span>',
+      }[r.status||'active'] || '';
       card.innerHTML = `
         <div class="role-card-accent ${accentClass}"></div>
         <div class="role-card-body">
-          <div class="role-title">${r.title}</div>
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:2px">
+            <div class="role-title">${r.title}</div>
+            ${statusBadge}
+          </div>
           <div class="role-family">${r.function||'Function not set'} · ${r.level||'Level not set'}</div>
           <div class="role-tags">
             <span class="role-tag ${tagClass}">${TRACK_LABELS[r.track]||r.track}</span>
             <span class="role-tag ${flsaTagClass}">${flsaLabel}</span>
             ${r.empType?`<span class="role-tag" style="background:rgba(0,0,0,0.04);color:var(--text-light)">${r.empType==='ft'?'Full-time':r.empType==='pt'?'Part-time':'Variable'}</span>`:''}
+            ${r.salary?`<span class="role-tag" style="background:rgba(27,68,54,0.05);color:var(--green);font-size:10px">${r.salary}</span>`:''}
           </div>
         </div>
         <div class="role-card-footer">
@@ -1489,6 +1547,197 @@ function showTab(tab){
   });
   if(tab==='library') renderLibrary();
   if(tab==='matrix') renderMatrix();
+}
+
+function showTab(tab){
+  ['framework','library','matrix','health','equity','import','export'].forEach(t => {
+    const view = document.getElementById('view-'+t);
+    if(view) view.style.display = t===tab ? (t==='framework'?'grid':'block') : 'none';
+    const tabEl = document.getElementById('tab-'+t);
+    if(tabEl) tabEl.classList.toggle('active', t===tab);
+  });
+  if(tab==='library') renderLibrary();
+  if(tab==='matrix') renderMatrix();
+  if(tab==='health') renderHealth();
+  if(tab==='equity') renderEquity();
+}
+
+// ── COMPENSATION BRIDGE ───────────────────────────────────────────────────────
+function suggestSalaryRange(){
+  const track = document.getElementById('rTrack')?.value;
+  const level = document.getElementById('rLevel')?.value;
+  const salaryEl = document.getElementById('rSalary');
+  if(!salaryEl) return;
+  // Try to pull from plinth_comp pay bands
+  try{
+    const c = localStorage.getItem('plinth_comp');
+    if(c){
+      const d = JSON.parse(c);
+      if(d.bands && d.bands.length > 0){
+        const match = d.bands.find(b => b.track === track || b.level === level);
+        if(match && match.min && match.max){
+          salaryEl.value = `$${parseInt(match.min).toLocaleString()} – $${parseInt(match.max).toLocaleString()}`;
+          return;
+        }
+      }
+    }
+  }catch(e){}
+  // Fallback: sector benchmarks by track
+  const benchmarks = {
+    ic: { label: 'Individual Contributor', range: '$40,000 – $75,000', note: 'Typical nonprofit IC range. Complete Tool 04 for org-specific bands.' },
+    lead: { label: 'Lead', range: '$55,000 – $80,000', note: 'Leads without formal management authority. Verify FLSA classification.' },
+    manager: { label: 'Manager', range: '$65,000 – $95,000', note: 'First-line managers. Must meet $35,568 FLSA threshold. Complete Tool 04.' },
+    mom: { label: 'Manager of Managers / Director', range: '$85,000 – $130,000', note: 'Directors and VPs. Complete Tool 04 for org-specific executive bands.' },
+    exec: { label: 'Executive', range: '$100,000 – $250,000+', note: 'Executive compensation requires board approval and rebuttable presumption process.' },
+  };
+  if(track && benchmarks[track]){
+    const b = benchmarks[track];
+    salaryEl.value = b.range;
+    const hint = salaryEl.nextElementSibling;
+    if(hint) hint.textContent = `Sector benchmark for ${b.label} track. ${b.note}`;
+  }
+}
+
+// ── ARCHITECTURE HEALTH ───────────────────────────────────────────────────────
+function renderHealth(){
+  const roles = arch.roles;
+  const container = document.getElementById('healthContent');
+  if(!container) return;
+  if(roles.length === 0){ container.innerHTML='<div style="font-size:12px;color:var(--text-light);padding:16px 0">Add roles to the library to run the analysis.</div>'; return; }
+
+  const findings = [];
+  const warnings = [];
+  const ok = [];
+
+  // Count by track
+  const counts = { ic:0, lead:0, manager:0, mom:0, exec:0 };
+  roles.forEach(r => { if(counts[r.track]!==undefined) counts[r.track]++; });
+
+  // Pyramid health
+  const totalMgmt = counts.manager + counts.mom + counts.exec;
+  const totalIC = counts.ic + counts.lead;
+  if(totalIC > 0 && totalMgmt > 0){
+    const ratio = totalIC / totalMgmt;
+    if(ratio < 2) warnings.push({ label:'Inverted pyramid', detail:`${totalMgmt} management-track roles vs. ${totalIC} IC/Lead roles. Healthy orgs typically have 3–5 ICs per manager. An inverted or flat pyramid creates excessive management overhead, slows decision-making, and inflates payroll.` });
+    else if(ratio >= 3) ok.push(`Pyramid ratio: ${ratio.toFixed(1)} ICs per manager (healthy range 3–5)`);
+  }
+
+  // Span of control
+  roles.filter(r=>r.track==='manager'||r.track==='mom').forEach(r=>{
+    const drText = r.directReports || '';
+    const drMatch = drText.match(/(\d+)/);
+    if(drMatch){
+      const dr = parseInt(drMatch[1]);
+      if(dr > 8) warnings.push({ label:`Span of control: ${r.title}`, detail:`${r.directReports} direct reports is above the recommended maximum of 5–8 for most management roles. Spans above 8 are associated with lower performance quality, delayed feedback, and manager burnout.` });
+      else if(dr < 2 && r.track === 'manager') findings.push({ label:`Narrow span: ${r.title}`, detail:`${r.directReports} direct reports. Managers with fewer than 2 direct reports may signal a structural problem — consider whether the role warrants management classification.` });
+    }
+  });
+
+  // FLSA review flags
+  const flsaReview = roles.filter(r=>r.flsaStatus==='review');
+  if(flsaReview.length > 0) warnings.push({ label:`${flsaReview.length} role(s) require FLSA review`, detail:`The following roles have not been fully classified: ${flsaReview.map(r=>r.title).join(', ')}. Unresolved FLSA status creates wage and hour compliance risk.` });
+  else if(roles.length > 0) ok.push(`All ${roles.length} roles have a recorded FLSA determination`);
+
+  // Missing functions
+  const noFunc = roles.filter(r=>!r.function);
+  if(noFunc.length > 0) findings.push({ label:`${noFunc.length} role(s) missing function assignment`, detail:`${noFunc.map(r=>r.title).join(', ')}. Function assignment is required for the level matrix and architecture reporting.` });
+
+  // Duplicate titles
+  const titles = roles.map(r=>r.title.toLowerCase().trim());
+  const dupes = titles.filter((t,i)=>titles.indexOf(t)!==i);
+  if(dupes.length > 0) findings.push({ label:'Duplicate role titles', detail:`Duplicate titles found: ${[...new Set(dupes)].join(', ')}. Duplicate titles create confusion in the org chart and may indicate classification inconsistency.` });
+
+  // No salary
+  const noSalary = roles.filter(r=>!r.salary&&!r.salaryNum);
+  if(noSalary.length > 0) findings.push({ label:`${noSalary.length} role(s) without salary data`, detail:`Roles without pay data: ${noSalary.map(r=>r.title).join(', ')}. Complete Tool 04 — Compensation and allow pay bands to populate.` });
+
+  const flag = (item, type) => `<div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid rgba(224,216,207,0.4)">
+    <div style="width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px;background:${type==='warn'?'var(--gold)':type==='critical'?'var(--crimson)':'var(--pale)'}"></div>
+    <div><div style="font-size:12.5px;font-weight:400;color:var(--text-dark);margin-bottom:2px">${item.label}</div><div style="font-size:11.5px;color:var(--text-mid);line-height:1.65">${item.detail}</div></div>
+  </div>`;
+
+  let html = '';
+  if(warnings.length + findings.length === 0 && ok.length > 0){
+    html = `<div style="padding:16px;background:rgba(204,207,142,0.12);border-radius:var(--radius-md);margin-bottom:16px"><div style="font-size:13px;font-weight:400;color:var(--green);margin-bottom:8px">No structural issues detected</div><div style="font-size:12px;color:var(--text-mid)">${ok.join(' · ')}</div></div>`;
+  } else {
+    if(warnings.length) html += `<div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border)">Priority Findings</div>${warnings.map(w=>flag(w,'warn')).join('')}<div style="height:16px"></div>`;
+    if(findings.length) html += `<div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border)">Structural Notes</div>${findings.map(f=>flag(f,'critical')).join('')}<div style="height:16px"></div>`;
+    if(ok.length) html += `<div style="font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border)">No Issues</div>${ok.map(o=>`<div style="font-size:12px;color:var(--text-mid);padding:6px 0;display:flex;gap:10px;align-items:center"><span style="color:var(--pale);font-size:14px">✓</span>${o}</div>`).join('')}`;
+  }
+  container.innerHTML = html || '<div style="font-size:12px;color:var(--text-light);padding:8px 0">Analysis complete. No findings to report.</div>';
+}
+
+// ── ARCHITECTURE EQUITY AUDIT ─────────────────────────────────────────────────
+function renderEquity(){
+  const roles = arch.roles;
+  const container = document.getElementById('equityContent');
+  if(!container) return;
+  if(roles.length === 0){ container.innerHTML='<div style="font-size:12px;color:var(--text-light);padding:16px 0">Add roles to the library to run the audit.</div>'; return; }
+
+  const findings = [];
+  const TRACK_LABELS = { ic:'Individual Contributor', lead:'Lead', manager:'Manager', mom:'Manager of Managers', exec:'Executive' };
+
+  // Title convention inconsistency within tracks
+  const byTrack = {};
+  roles.forEach(r=>{
+    if(!byTrack[r.track]) byTrack[r.track]=[];
+    byTrack[r.track].push(r);
+  });
+  Object.entries(byTrack).forEach(([track, trackRoles])=>{
+    if(trackRoles.length < 2) return;
+    // Check for track label inconsistency — e.g., Manager track with no "Manager" in title
+    const trackKeywords = { manager:['manager','mgr'], mom:['director','vp','vice president'], exec:['executive','director','chief','president'], lead:['lead','senior'] };
+    const kw = trackKeywords[track];
+    if(kw){
+      const mismatched = trackRoles.filter(r=>!kw.some(k=>r.title.toLowerCase().includes(k)));
+      if(mismatched.length > 0){
+        findings.push({ type:'title-mismatch', label:`Title mismatch in ${TRACK_LABELS[track]} track`, detail:`These ${TRACK_LABELS[track]}-track roles do not include conventional track keywords in their title: ${mismatched.map(r=>r.title).join(', ')}. Inconsistent titling makes it difficult to communicate level and track externally and can create inequitable salary anchoring.` });
+      }
+    }
+  });
+
+  // Salary variance within same track and level
+  const byTrackLevel = {};
+  roles.forEach(r=>{
+    if(r.salaryNum){
+      const key = `${r.track}|${r.level}`;
+      if(!byTrackLevel[key]) byTrackLevel[key]=[];
+      byTrackLevel[key].push({ title:r.title, salary:parseInt(r.salaryNum) });
+    }
+  });
+  Object.entries(byTrackLevel).forEach(([key, group])=>{
+    if(group.length < 2) return;
+    const salaries = group.map(g=>g.salary);
+    const min = Math.min(...salaries), max = Math.max(...salaries);
+    const variance = ((max-min)/min*100).toFixed(0);
+    if(parseInt(variance) > 20){
+      findings.push({ type:'salary-variance', label:`Salary variance within ${key.replace('|',' — ')} level`, detail:`${group.map(g=>`${g.title}: $${g.salary.toLocaleString()}`).join(' · ')}. A ${variance}% salary spread within the same track and level requires documentation of the rationale. Without documentation, this spread may create pay equity exposure.` });
+    }
+  });
+
+  // Check for "Acting" or "Interim" titles that have persisted
+  const interim = roles.filter(r=>/acting|interim|temp/i.test(r.title));
+  if(interim.length > 0){
+    findings.push({ type:'interim', label:`Interim or acting titles in library`, detail:`${interim.map(r=>r.title).join(', ')}. Interim titles should be converted to permanent classifications or removed. Holding interim designations for extended periods — particularly for employees doing manager-level work — creates reclassification liability and perceived inequity.` });
+  }
+
+  // Proposed roles without salary data
+  const proposedNoSalary = roles.filter(r=>r.status==='proposed'&&!r.salaryNum);
+  if(proposedNoSalary.length > 0){
+    findings.push({ type:'proposed', label:`Proposed roles without salary modeling`, detail:`${proposedNoSalary.map(r=>r.title).join(', ')}. Proposed roles should have salary estimates before being presented to leadership. Presenting a role without compensation modeling forces a reactive discussion rather than an informed one.` });
+  }
+
+  if(findings.length === 0){
+    container.innerHTML = `<div style="padding:16px;background:rgba(204,207,142,0.12);border-radius:var(--radius-md)"><div style="font-size:13px;font-weight:400;color:var(--green);margin-bottom:6px">No equity concerns identified</div><div style="font-size:12px;color:var(--text-mid)">The current role library shows no flagged title inconsistencies, salary variance, or structural equity concerns. This audit is a screening tool — it does not substitute for a formal pay equity analysis on individual compensation data.</div></div>`;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="al al-i" style="margin-bottom:16px"><span class="al-ic">ℹ</span><span>This audit identifies structural patterns in the role library that may warrant investigation. It does not analyze individual employee compensation data and cannot detect all forms of inequity. Use findings as a starting point for deeper investigation, not as a compliance determination.</span></div>
+    ${findings.map(f=>`<div style="padding:12px 0;border-bottom:1px solid rgba(224,216,207,0.4)">
+      <div style="font-size:12.5px;font-weight:400;color:var(--text-dark);margin-bottom:3px">${f.label}</div>
+      <div style="font-size:11.5px;color:var(--text-mid);line-height:1.7">${f.detail}</div>
+    </div>`).join('')}`;
 }
 
 // ── ANIMATIONS ────────────────────────────────────────────────────────────────
