@@ -577,7 +577,7 @@ footer{background:var(--green-deep);padding:14px 32px;display:flex;align-items:c
 
 <script>
 // ── PASSWORD ──────────────────────────────────────────────────────────────────
-const PW = 'YOUR_PASSWORD_HERE'; // ← replace this with your password before uploading
+const PW = 'AmplifyingImpact2026!'; // ← replace this with your password before uploading
 
 function checkPW(){
   const v = document.getElementById('pwInput').value;
@@ -590,7 +590,7 @@ function checkPW(){
     const err = document.getElementById('gateErr');
     err.classList.add('show');
     document.getElementById('pwInput').value = '';
-    if(sessionStorage.getItem('plinth_auth')==='1'){document.getElementById('gate').style.display='none';document.getElementById('app').style.display='block';initApp();}else{document.getElementById('pwInput').focus();}
+    document.getElementById('pwInput').focus();
     setTimeout(()=>err.classList.remove('show'), 3000);
   }
 }
@@ -614,7 +614,7 @@ window.addEventListener('load', ()=>{
     document.getElementById('app').style.display = 'block';
     initApp();
   }
-  if(sessionStorage.getItem('plinth_auth')==='1'){document.getElementById('gate').style.display='none';document.getElementById('app').style.display='block';initApp();}else{document.getElementById('pwInput').focus();}
+  document.getElementById('pwInput').focus();
 });
 
 // ── CLIENT DATA ───────────────────────────────────────────────────────────────
@@ -772,26 +772,26 @@ function openClient(id){
   renderClients();
 
   // Navigate to Tool 01
-  window.location.href = '/org-profile/';
+  window.location.href = 'org-profile.html';
 }
 
 function openTool(tool){
   const toolMap = {
-    'org-profile': '/org-profile/',
-    'handbook': '/handbook/',
-    'job-architecture': '/job-architecture/',
-    'compensation': '/compensation/',
-    'offer-hiring': '/offer-hiring/',
-    'onboarding': '/onboarding/',
-    'pay-practices': '/pay-practices/',
-    'benefits': '/benefits/',
-    'leave': '/leave/',
-    'performance': '/performance/',
-    'er-investigation': '/er-investigation/',
-    'separation': '/separation/',
-    'compliance-calendar': '/compliance-calendar/',
-    'manager-toolkit': '/manager-toolkit/',
-    'analytics': '/analytics/'
+    'org-profile': 'org-profile.html',
+    'handbook': 'handbook.html',
+    'job-architecture': 'job-architecture.html',
+    'compensation': 'compensation.html',
+    'offer-hiring': 'offer-hiring.html',
+    'onboarding': 'onboarding.html',
+    'pay-practices': 'pay-practices.html',
+    'benefits': 'benefits.html',
+    'leave': 'leave.html',
+    'performance': 'performance.html',
+    'er-investigation': 'er-investigation.html',
+    'separation': 'separation.html',
+    'compliance-calendar': 'compliance-calendar.html',
+    'manager-toolkit': 'manager-toolkit.html',
+    'analytics': 'analytics.html'
   };
   const url = toolMap[tool];
   if(!url) return;
@@ -855,7 +855,7 @@ function createClient(){
   renderClients();
   updateStats();
   // Go straight to Tool 01
-  window.location.href = '/org-profile/';
+  window.location.href = 'org-profile.html';
 }
 
 // ── MODAL ─────────────────────────────────────────────────────────────────────
